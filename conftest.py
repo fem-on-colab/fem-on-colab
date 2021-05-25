@@ -49,8 +49,12 @@ def pytest_collect_file(path, parent):
             exporter.exclude_input_prompt = True
             code, _ = exporter.from_filename(path)
             code = code.rstrip("\n") + "\n"
-            if "get_ipython" in code and "from IPython import get_ipython" not in code:
-                code = code.replace("# coding: utf-8", "# coding: utf-8\n\nfrom IPython import get_ipython")
+            if "get_ipython" in code:
+                input_lines = code.split("\n")
+                output_lines = [line + "  # noqa: E501" if "get_ipython" in line else line for line in input_lines]
+                code = "\n".join(output_lines)
+                if "from IPython import get_ipython" not in code:
+                    code = code.replace("# coding: utf-8", "# coding: utf-8\n\nfrom IPython import get_ipython")
             with open(path.new(ext=".py"), "w", encoding="utf-8") as f:
                 f.write(code)
             # Collect the corresponding .py file
