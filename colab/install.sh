@@ -33,6 +33,9 @@ PYTHONUSERBASE=/usr pip3 install --user numpy==1.19.5
 # Cython
 PYTHONUSERBASE=/usr pip3 install --user Cython==0.29.23
 
+# sympy
+PYTHONUSERBASE=/usr pip3 install --user sympy==1.7.1
+
 # pytest (for testing)
 PYTHONUSERBASE=/usr pip3 install --user pytest pytest_flake8
 
