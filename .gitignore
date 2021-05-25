@@ -1,0 +1,10 @@
+*~
+*.bak
+*.cache
+*.egg
+*.egg-info
+*.py[cod]
+.ipynb_checkpoints
+.pytest_cache
+build
+dist
