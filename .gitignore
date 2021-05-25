@@ -8,3 +8,4 @@
 .pytest_cache
 build
 dist
+**/test.py
