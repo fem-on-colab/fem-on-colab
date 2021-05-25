@@ -34,15 +34,22 @@ jobs:
         shell: bash
       - name: Build library
         run: |
-          bash ./${{ github.event.inputs.library }}/build.sh
-      - name: Test library
+          LIBRARY=${{ github.event.inputs.library }}
+          [[ -f ${LIBRARY}/build.sh ]] && bash ${LIBRARY}/build.sh || true
+        shell: bash
+      - name: Test library, and check if a release is needed
+        id: test
         run: |
-          LIBRARY_CAPITAL=$(echo ${{ github.event.inputs.library }} | tr a-z A-Z)
-          declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${{ github.event.inputs.library }}-install.tar.gz"
-          bash ./${{ github.event.inputs.library }}/install.sh
-          pytest ./${{ github.event.inputs.library }}/test.ipynb
+          LIBRARY=${{ github.event.inputs.library }}
+          LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
+          declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
+          bash ${LIBRARY}/install.sh
+          pytest ${LIBRARY}/test.ipynb
+          [[ -f "${LIBRARY_CAPITAL}_ARCHIVE_PATH" ]] && NEEDS_RELEASE="yes" || NEEDS_RELEASE="no"
+          echo "::set-output name=needs_release::${NEEDS_RELEASE}"
         shell: bash
       - name: Add release to repository
+        if: steps.test.outputs.needs_release == 'yes'
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
