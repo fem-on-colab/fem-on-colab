@@ -1,0 +1,43 @@
+name: Release new FEM on Colab package
+
+on:
+  workflow_dispatch:
+    inputs:
+      library:
+        description: "Library to build"
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Colab base image
+        run: |
+          source ./colab/install.sh
+          echo "$PATH" > $GITHUB_PATH
+          echo "PYTHONPATH=$PYTHONPATH" >> $GITHUB_ENV
+          echo "LD_PRELOAD=$LD_PRELOAD" >> $GITHUB_ENV
+          echo "INSTALL_PREFIX=$INSTALL_PREFIX" >> $GITHUB_ENV
+        shell: bash
+      - name: Build library
+        run: |
+          bash ./${{ github.event.inputs.library }}/build.sh
+      - name: Test library
+        run: |
+          LIBRARY_CAPITAL=$(echo ${{ github.event.inputs.library }} | tr a-z A-Z)
+          declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${{ github.event.inputs.library }}-install.tar.gz"
+          bash ./${{ github.event.inputs.library }}/install.sh
+          pytest ./${{ github.event.inputs.library }}/test.ipynb
+      - name: Add release to repository
+        run: |
+          echo TODO
+
+  deploy:
+    if: github.repository == 'fem-on-colab/fem-on-colab' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update website
+        run: |
+          echo TODO

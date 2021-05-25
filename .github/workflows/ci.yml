@@ -1,0 +1,23 @@
+name: FEM on Colab CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: pip3 -q install --upgrade jupyter Pygments pytest pytest_flake8
+      - name: Run flake8 checks
+        run: |
+          pytest --flake8 -m flake8 .
+          pytest --flake8 -m flake8 .github
+      - name: Check for stray outputs, counts and metadata in ipynb files
+        uses: ./.github/actions/jupyter/check_metadata
