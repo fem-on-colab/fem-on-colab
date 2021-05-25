@@ -29,6 +29,7 @@ jobs:
           declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${{ github.event.inputs.library }}-install.tar.gz"
           bash ./${{ github.event.inputs.library }}/install.sh
           pytest ./${{ github.event.inputs.library }}/test.ipynb
+        shell: bash
       - name: Add release to repository
         run: |
           echo TODO
