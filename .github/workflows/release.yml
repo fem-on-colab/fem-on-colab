@@ -11,7 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu:18.04
     steps:
-      - uses: actions/checkout@v2
+      - name: Store the current date and time
+        id: date_time
+        run: echo "::set-output name=date_time::$(date '+%Y%m%d-%H%M%S')"
+      - name: Install git
+        run: |
+          apt update
+          apt install -y -qq git
+      - uses: actions/checkout@v1
+      - name: Compute short SHA of the commit
+        id: sha_short
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Print release name, release date and git commit sha
+        run: echo "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }}"
       - name: Setup Colab base image
         run: |
           source ./colab/install.sh
@@ -31,11 +43,22 @@ jobs:
           pytest ./${{ github.event.inputs.library }}/test.ipynb
         shell: bash
       - name: Add release to repository
-        run: |
-          echo TODO
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          automatic_release_tag: ${{ github.event.inputs.library }}-${{ steps.date_time.outputs.date_time }}-${{ steps.sha_short.outputs.sha_short }}
+          title: "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }}"
+          files: ${{ github.event.inputs.library }}-install.tar.gz
+      - name: Remove older releases from repository
+        uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          keep_latest: 3
+          delete_tag_pattern: ${{ github.event.inputs.library }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
   deploy:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && github.ref == 'refs/heads/main'
+    if: github.repository == 'fem-on-colab/fem-on-colab'
     runs-on: ubuntu-latest
     needs: [build]
     steps:
