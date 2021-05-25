@@ -49,20 +49,21 @@ jobs:
           automatic_release_tag: ${{ github.event.inputs.library }}-${{ steps.date_time.outputs.date_time }}-${{ steps.sha_short.outputs.sha_short }}
           title: "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }}"
           files: ${{ github.event.inputs.library }}-install.tar.gz
-      - name: Remove older releases from repository
-        uses: dev-drprasad/delete-older-releases@v0.2.0
-        with:
-          keep_latest: 3
-          delete_tag_pattern: ${{ github.event.inputs.library }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-  deploy:
-    if: github.repository == 'fem-on-colab/fem-on-colab'
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Update website
+      - name: Prepare release file for website
         run: |
-          echo TODO
+          LIBRARY=${{ github.event.inputs.library }}
+          DATETIME=${{ steps.date_time.outputs.date_time }}
+          SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+          mkdir -p _build/html/releases
+          cp ./${LIBRARY}/install.sh _build/html/releases/${LIBRARY}-install.sh
+          sed -i "s|ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" _build/html/releases/${LIBRARY}-install.sh
+      - name: Upload release file to website
+        if: github.repository == 'fem-on-colab/fem-on-colab'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          external_repository: fem-on-colab/fem-on-colab.github.io
+          publish_dir: _build/html
+          keep_files: true
+          user_name: 'GitHub Actions'
+          user_email: '41898282+github-actions[bot]@users.noreply.github.com'
