@@ -25,17 +25,23 @@ jobs:
       - name: Print release name, release date and git commit sha
         run: echo "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }}"
       - name: Setup Colab base image
+        id: colab
         run: |
           source ./colab/install.sh
-          echo "$PATH" > $GITHUB_PATH
-          echo "PYTHONPATH=$PYTHONPATH" >> $GITHUB_ENV
-          echo "LD_PRELOAD=$LD_PRELOAD" >> $GITHUB_ENV
-          echo "INSTALL_PREFIX=$INSTALL_PREFIX" >> $GITHUB_ENV
+          echo "::set-output name=path::${PATH}"
+          echo "::set-output name=pythonpath::${PYTHONPATH}"
+          echo "::set-output name=ld_preload::${LD_PRELOAD}"
+          echo "::set-output name=install_prefix::${INSTALL_PREFIX}"
         shell: bash
       - name: Build library
         run: |
           LIBRARY=${{ github.event.inputs.library }}
           [[ -f ${LIBRARY}/build.sh ]] && bash ${LIBRARY}/build.sh || true
+        env:
+          PATH: ${{ steps.colab.outputs.path }}
+          PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
+          LD_PRELOAD: ${{ steps.colab.outputs.ld_preload }}
+          INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
         shell: bash
       - name: Test library, and check if a release is needed
         id: test
@@ -47,6 +53,10 @@ jobs:
           pytest ${LIBRARY}/test.ipynb
           [[ -f "${LIBRARY_CAPITAL}_ARCHIVE_PATH" ]] && NEEDS_RELEASE="yes" || NEEDS_RELEASE="no"
           echo "::set-output name=needs_release::${NEEDS_RELEASE}"
+        env:
+          PATH: ${{ steps.colab.outputs.path }}
+          PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
+          LD_PRELOAD: ${{ steps.colab.outputs.ld_preload }}
         shell: bash
       - name: Add release to repository
         if: steps.test.outputs.needs_release == 'yes'
