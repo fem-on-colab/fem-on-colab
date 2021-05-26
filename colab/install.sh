@@ -6,7 +6,7 @@
 
 # Common
 apt update
-apt install -y -qq build-essential curl git jq rsync software-properties-common unzip wget
+apt install -y -qq autoconf bison build-essential curl flex git jq rsync software-properties-common unzip wget
 
 # CMake (actually newer than the one on Colab)
 wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
