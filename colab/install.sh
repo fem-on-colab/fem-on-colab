@@ -6,7 +6,13 @@
 
 # Common
 apt update
-apt install -y -qq build-essential cmake curl git jq rsync software-properties-common unzip wget
+apt install -y -qq build-essential curl git jq rsync software-properties-common unzip wget
+
+# CMake (actually newer than the one on Colab)
+wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ bionic main'
+apt update
+apt install -y -qq cmake
 
 # Google performance tools
 apt install -y -qq google-perftools
