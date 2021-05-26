@@ -46,6 +46,11 @@ jobs:
       - name: Test library, and check if a release is needed
         id: test
         run: |
+          ALL_LIBRARIES=($(find * -maxdepth 0 -mindepth 0 -type d))
+          for ANY_LIBRARY in "${ALL_LIBRARIES[@]}"; do
+             ANY_LIBRARY_CAPITAL=$(echo ${ANY_LIBRARY} | tr a-z A-Z)
+             declare -x "${ANY_LIBRARY_CAPITAL}_INSTALL_SCRIPT_PATH"="$PWD/${ANY_LIBRARY}/install.sh"
+          done
           LIBRARY=${{ github.event.inputs.library }}
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
           declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
@@ -69,11 +74,18 @@ jobs:
       - name: Prepare release file for website
         run: |
           LIBRARY=${{ github.event.inputs.library }}
+          LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
           DATETIME=${{ steps.date_time.outputs.date_time }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
           mkdir -p _build/html/releases
           cp ./${LIBRARY}/install.sh _build/html/releases/${LIBRARY}-install.sh
-          sed -i "s|ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" _build/html/releases/${LIBRARY}-install.sh
+          sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" _build/html/releases/${LIBRARY}-install.sh
+          ALL_LIBRARIES=($(find * -maxdepth 0 -mindepth 0 -type d))
+          for ANY_LIBRARY in "${ALL_LIBRARIES[@]}"; do
+             ANY_LIBRARY_CAPITAL=$(echo ${ANY_LIBRARY} | tr a-z A-Z)
+             sed -i "s|${ANY_LIBRARY_CAPITAL}_INSTALL_SCRIPT_PATH_IN|https://fem-on-colab.github.io/releases/${ANY_LIBRARY}-install.sh|g" _build/html/releases/${LIBRARY}-install.sh
+          done
+        shell: bash
       - name: Upload release file to website
         if: github.repository == 'fem-on-colab/fem-on-colab'
         uses: peaceiris/actions-gh-pages@v3
