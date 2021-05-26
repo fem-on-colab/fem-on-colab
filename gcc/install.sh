@@ -10,10 +10,13 @@ set -x
 # Install gcc 11
 add-apt-repository -y ppa:ubuntu-toolchain-r/test
 apt update
-apt install -y -qq gcc-11 g++-11 libgcc1
+apt install -y -qq gcc-11 gfortran-11 g++-11 libgcc1
 update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 7
+# update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-7 7 # was never installed
 update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 7
 update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 11
+update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-11 11
 update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 11
 update-alternatives --set gcc /usr/bin/gcc-11
+update-alternatives --set gfortran /usr/bin/gfortran-11
 update-alternatives --set g++ /usr/bin/g++-11
