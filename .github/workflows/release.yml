@@ -43,23 +43,30 @@ jobs:
           LD_PRELOAD: ${{ steps.colab.outputs.ld_preload }}
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
         shell: bash
-      - name: Test library, and check if a release is needed
-        id: test
+      - name: Test library
         run: |
           LIBRARY=${{ github.event.inputs.library }}
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
           declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
           bash ${LIBRARY}/install.sh
           pytest ${LIBRARY}/test.ipynb
-          [[ -f "${LIBRARY_CAPITAL}_ARCHIVE_PATH" ]] && NEEDS_RELEASE="yes" || NEEDS_RELEASE="no"
-          echo "::set-output name=needs_release::${NEEDS_RELEASE}"
         env:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
           LD_PRELOAD: ${{ steps.colab.outputs.ld_preload }}
         shell: bash
+      - name: Check if a release is needed
+        id: check_release
+        run: |
+          LIBRARY=${{ github.event.inputs.library }}
+          LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
+          declare "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
+          PATH_TO_CHECK=${LIBRARY_CAPITAL}_ARCHIVE_PATH
+          [[ -f "${!PATH_TO_CHECK}" ]] && NEEDS_RELEASE="yes" || NEEDS_RELEASE="no"
+          echo "::set-output name=needs_release::${NEEDS_RELEASE}"
+        shell: bash
       - name: Add release to repository
-        if: steps.test.outputs.needs_release == 'yes'
+        if: steps.check_release.outputs.needs_release == 'yes'
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
