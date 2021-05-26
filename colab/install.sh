@@ -18,7 +18,8 @@ apt update
 apt install -y -qq libpython3.7-dev python3.7
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
-update-alternatives  --set python3 /usr/bin/python3.7
+update-alternatives --set python3 /usr/bin/python3.7
+sed -i 's|#!/usr/bin/python3|#!/usr/bin/python3.6|' /usr/bin/add-apt-repository
 PIP_RELEASE_URL=$(curl -s https://pypi.org/pypi/pip/json | jq -r ".urls[0].url")
 PIP_RELEASE_FILE=${PIP_RELEASE_URL##*/}
 wget ${PIP_RELEASE_URL} -O ${PIP_RELEASE_FILE}
