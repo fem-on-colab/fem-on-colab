@@ -17,6 +17,7 @@ find . -type f -name '*.egg' -exec unzip -o {} -d {}.tmp \; -exec rm -f {} \; -e
 find . -mindepth 1 -maxdepth 1 -type d -name '*.egg' -print0 | xargs -0 -I folder find folder -mindepth 1 -maxdepth 1 -type d ! -name "*EGG-INFO*" ! -name "*share*" -print0 | xargs -0 -I file ln -s file .
 rm -f easy-install.pth
 cd -
+find $INSTALL_PREFIX -type d -empty -delete
 tar czf ${1}-install.tar.gz $INSTALL_PREFIX
 rm -rf $INSTALL_PREFIX
 mkdir -p $INSTALL_PREFIX
