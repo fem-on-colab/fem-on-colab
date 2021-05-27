@@ -30,7 +30,6 @@ jobs:
           source ./colab/install.sh
           echo "::set-output name=path::${PATH}"
           echo "::set-output name=pythonpath::${PYTHONPATH}"
-          echo "::set-output name=ld_preload::${LD_PRELOAD}"
           echo "::set-output name=install_prefix::${INSTALL_PREFIX}"
           echo "::set-output name=cppflags::${CPPFLAGS}"
           echo "::set-output name=ldflags::${LDFLAGS}"
@@ -42,7 +41,6 @@ jobs:
         env:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
-          LD_PRELOAD: ${{ steps.colab.outputs.ld_preload }}
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
           CPPFLAGS: ${{ steps.colab.outputs.cppflags }}
           LDFLAGS: ${{ steps.colab.outputs.ldflags }}
@@ -57,7 +55,6 @@ jobs:
         env:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
-          LD_PRELOAD: ${{ steps.colab.outputs.ld_preload }}
         shell: bash
       - name: Check if a release is needed
         id: check_release

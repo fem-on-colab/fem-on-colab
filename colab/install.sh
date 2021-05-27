@@ -14,10 +14,6 @@ apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ bionic main'
 apt update
 apt install -y -qq cmake
 
-# Google performance tools
-apt install -y -qq google-perftools
-export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
-
 # Python 3.7
 add-apt-repository -y ppa:deadsnakes/ppa
 apt update
