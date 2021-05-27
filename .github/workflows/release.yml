@@ -32,6 +32,8 @@ jobs:
           echo "::set-output name=pythonpath::${PYTHONPATH}"
           echo "::set-output name=ld_preload::${LD_PRELOAD}"
           echo "::set-output name=install_prefix::${INSTALL_PREFIX}"
+          echo "::set-output name=cppflags::${CPPFLAGS}"
+          echo "::set-output name=ldflags::${LDFLAGS}"
         shell: bash
       - name: Build library
         run: |
@@ -42,6 +44,8 @@ jobs:
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
           LD_PRELOAD: ${{ steps.colab.outputs.ld_preload }}
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
+          CPPFLAGS: ${{ steps.colab.outputs.cppflags }}
+          LDFLAGS: ${{ steps.colab.outputs.ldflags }}
         shell: bash
       - name: Test library
         run: |

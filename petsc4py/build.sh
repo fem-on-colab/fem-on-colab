@@ -42,10 +42,11 @@ cd /tmp/petsc-src
     --download-pnetcdf \
     --download-eigen \
     --prefix=$INSTALL_PREFIX \
-    CPPFLAGS="-fPIC" \
-    COPTFLAGS="-g -O3" \
-    CXXOPTFLAGS="-g -O3" \
-    FOPTFLAGS="-g -O3"
+    CPPFLAGS="-fPIC $CPPFLAGS" \
+    COPTFLAGS="-g -O3 $CPPFLAGS" \
+    CXXOPTFLAGS="-g -O3 $CPPFLAGS" \
+    FOPTFLAGS="-g -O3" \
+    LDFLAGS="$LDFLAGS"
 PETSC_ARCH=$(grep "^PETSC_ARCH" $PWD/lib/petsc/conf/petscvariables | sed "s/PETSC_ARCH=//")
 make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH all
 make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH install
