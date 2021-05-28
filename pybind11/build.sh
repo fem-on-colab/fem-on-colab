@@ -21,6 +21,3 @@ make -j $(nproc)
 make install
 python3 setup.py install --prefix=$INSTALL_PREFIX
 cd -
-
-# Prepare for installation
-source scripts/prepare_for_installation.sh pybind11

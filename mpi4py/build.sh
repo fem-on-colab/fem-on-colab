@@ -12,6 +12,3 @@ GCC_INSTALL_SCRIPT_PATH="gcc/install.sh" MPI4PY_ARCHIVE_PATH="skip" source mpi4p
 
 # Install mpi4py
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user git+https://github.com/mpi4py/mpi4py.git
-
-# Prepare for installation
-source scripts/prepare_for_installation.sh mpi4py

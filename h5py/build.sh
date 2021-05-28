@@ -28,7 +28,3 @@ cd -
 
 # Install h5py
 CC=mpicc HDF5_MPI="ON" HDF5_DIR=$INSTALL_PREFIX pip3 install --no-binary=h5py --prefix=$INSTALL_PREFIX git+https://github.com/h5py/h5py.git
-
-# Prepare for installation
-source scripts/prepare_for_installation.sh h5py-full
-source scripts/remove_dependencies_from_archive.sh h5py $PWD/h5py-full-install.tar.gz /tmp/mpi4py-install.tar.gz

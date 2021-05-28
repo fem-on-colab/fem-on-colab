@@ -56,7 +56,3 @@ cd -
 cd /tmp/petsc-src/src/binding/petsc4py/
 PETSC_DIR=$INSTALL_PREFIX python3 setup.py install --prefix=$INSTALL_PREFIX
 cd -
-
-# Prepare for installation
-source scripts/prepare_for_installation.sh petsc4py-full
-source scripts/remove_dependencies_from_archive.sh petsc4py $PWD/petsc4py-full-install.tar.gz /tmp/h5py-install.tar.gz /tmp/mpi4py-install.tar.gz

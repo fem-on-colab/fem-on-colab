@@ -45,6 +45,31 @@ jobs:
           CPPFLAGS: ${{ steps.colab.outputs.cppflags }}
           LDFLAGS: ${{ steps.colab.outputs.ldflags }}
         shell: bash
+      - name: Force loading libstdc++.so from newest gcc
+        run: |
+          ERROR_LIBRARIES=($(find $INSTALL_PREFIX -name '*\.so' -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
+          for ERROR_LIBRARY in "${ERROR_LIBRARIES[@]}"; do
+            echo "Patching $ERROR_LIBRARY"
+            patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so $ERROR_LIBRARY
+          done
+        env:
+          INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
+        shell: bash
+      - name: Package library
+        run: |
+          LIBRARY=${{ github.event.inputs.library }}
+          DEPENDENCIES=($(find /tmp -name '*-install\.tar.gz'))
+          if [ "${#DEPENDENCIES[@]}" -gt "0" ]; then
+            source scripts/prepare_for_installation.sh ${LIBRARY}-full
+            source scripts/remove_dependencies_from_archive.sh ${LIBRARY} $PWD/${LIBRARY}-full-install.tar.gz ${DEPENDENCIES[@]}
+          else
+            source scripts/prepare_for_installation.sh ${LIBRARY}
+          fi
+        env:
+          PATH: ${{ steps.colab.outputs.path }}
+          PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
+          INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
+        shell: bash
       - name: Test library
         run: |
           LIBRARY=${{ github.event.inputs.library }}
@@ -56,22 +81,11 @@ jobs:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
         shell: bash
-      - name: Force loading libstdc++.so from newest gcc
-        run: |
-          ERROR_LIBRARIES=($(find /usr/local -name '*\.so' -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
-          for ERROR_LIBRARY in "${ERROR_LIBRARIES[@]}"; do
-            echo "Patching $ERROR_LIBRARY"
-            patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so $ERROR_LIBRARY
-          done
-        shell: bash
       - name: Check if a release is needed
         id: check_release
         run: |
           LIBRARY=${{ github.event.inputs.library }}
-          LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
-          declare "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
-          PATH_TO_CHECK=${LIBRARY_CAPITAL}_ARCHIVE_PATH
-          [[ -f "${!PATH_TO_CHECK}" ]] && NEEDS_RELEASE="yes" || NEEDS_RELEASE="no"
+          [[ -f "${LIBRARY}/build.sh" ]] && NEEDS_RELEASE="yes" || NEEDS_RELEASE="no"
           echo "::set-output name=needs_release::${NEEDS_RELEASE}"
         shell: bash
       - name: Add release to repository
