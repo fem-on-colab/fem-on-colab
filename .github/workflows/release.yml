@@ -56,6 +56,14 @@ jobs:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
         shell: bash
+      - name: Force loading libstdc++.so from newest gcc
+        run: |
+          ERROR_LIBRARIES=($(find /usr/local -name '*\.so' -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
+          for ERROR_LIBRARY in "${ERROR_LIBRARIES[@]}"; do
+            echo "Patching $ERROR_LIBRARY"
+            patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so $ERROR_LIBRARY
+          done
+        shell: bash
       - name: Check if a release is needed
         id: check_release
         run: |
