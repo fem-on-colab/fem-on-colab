@@ -50,7 +50,7 @@ jobs:
           ERROR_LIBRARIES=($(find $INSTALL_PREFIX -name '*\.so' -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
           for ERROR_LIBRARY in "${ERROR_LIBRARIES[@]}"; do
             echo "Patching $ERROR_LIBRARY"
-            patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so $ERROR_LIBRARY
+            patchelf --set-rpath "/usr/local/lib:/usr/lib/x86_64-linux-gnu/openmpi/lib:/usr/lib/gcc/x86_64-linux-gnu/11:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu" $ERROR_LIBRARY
           done
         env:
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}

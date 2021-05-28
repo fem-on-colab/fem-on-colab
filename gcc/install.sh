@@ -44,3 +44,6 @@ update-alternatives --set x86_64-linux-gnu-gcc /usr/bin/x86_64-linux-gnu-gcc-11
 update-alternatives --set x86_64-linux-gnu-gcc-ar /usr/bin/x86_64-linux-gnu-gcc-ar-11
 update-alternatives --set x86_64-linux-gnu-gcc-nm /usr/bin/x86_64-linux-gnu-gcc-nm-11
 update-alternatives --set x86_64-linux-gnu-gcc-ranlib /usr/bin/x86_64-linux-gnu-gcc-ranlib-11
+
+# Copy libstdc++ from the newest gcc due to possible rpath patching
+cp -f /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so.6
