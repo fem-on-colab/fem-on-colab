@@ -15,6 +15,7 @@ rm -rf $INSTALL_PREFIX/lib/python3.7/site-packages
 cd $INSTALL_PREFIX/lib/python3.7/dist-packages
 find . -type f -name '*.egg' -exec unzip -o {} -d {}.tmp \; -exec rm -f {} \; -exec mv {}.tmp {} \;
 find . -mindepth 1 -maxdepth 1 -type d -name '*.egg' -print0 | xargs -0 -I folder find folder -mindepth 1 -maxdepth 1 -type d ! -name "*EGG-INFO*" ! -name "*share*" -print0 | xargs -0 -I file ln -s file .
+find . -mindepth 1 -maxdepth 1 -type d -name '*.egg' -print0 | xargs -0 -I file find file -mindepth 1 -maxdepth 1 -type f -print0 | xargs -0 -I file ln -s file .
 rm -f easy-install.pth
 cd -
 find $INSTALL_PREFIX -type d -empty -delete
