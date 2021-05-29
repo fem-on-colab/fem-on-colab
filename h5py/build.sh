@@ -24,7 +24,6 @@ cd /tmp/hdf5-src
     --prefix=$INSTALL_PREFIX
 make -j $(nproc)
 make install
-cd -
 
 # Install h5py
 CC=mpicc HDF5_MPI="ON" HDF5_DIR=$INSTALL_PREFIX pip3 install --no-binary=h5py --prefix=$INSTALL_PREFIX git+https://github.com/h5py/h5py.git

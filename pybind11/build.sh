@@ -20,4 +20,3 @@ cmake \
 make -j $(nproc)
 make install
 python3 setup.py install --prefix=$INSTALL_PREFIX
-cd -
