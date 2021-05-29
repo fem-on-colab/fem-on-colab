@@ -84,7 +84,7 @@ jobs:
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
           declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
           bash ${LIBRARY}/install.sh
-          pytest ${LIBRARY}/test.ipynb
+          pytest ${LIBRARY}/
         env:
           PATH: ${{ steps.colab.outputs.path }}
           LD_LIBRARY_PATH: ${{ steps.colab.outputs.ld_library_path }}
