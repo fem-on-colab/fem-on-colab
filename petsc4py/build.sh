@@ -31,7 +31,6 @@ patch -p1 < 01-force-static-libgcc-listdc++
     --download-hypre \
     --download-spai \
     --download-ml \
-    --download-pastix \
     --download-hwloc \
     --download-ptscotch \
     --download-suitesparse \
