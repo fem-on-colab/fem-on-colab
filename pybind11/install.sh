@@ -7,10 +7,10 @@
 set -e
 set -x
 
-# Install gcc
-GCC_INSTALL_SCRIPT_PATH=${GCC_INSTALL_SCRIPT_PATH:-"https://fem-on-colab.github.io/releases/gcc-install.sh"}
-[[ $GCC_INSTALL_SCRIPT_PATH == http* ]] && wget ${GCC_INSTALL_SCRIPT_PATH} -O /tmp/gcc-install.sh && GCC_INSTALL_SCRIPT_PATH=/tmp/gcc-install.sh
-source $GCC_INSTALL_SCRIPT_PATH
+# Install mpi4py
+MPI4PY_INSTALL_SCRIPT_PATH=${MPI4PY_INSTALL_SCRIPT_PATH:-"https://fem-on-colab.github.io/releases/mpi4py-install.sh"}
+[[ $MPI4PY_INSTALL_SCRIPT_PATH == http* ]] && wget ${MPI4PY_INSTALL_SCRIPT_PATH} -O /tmp/mpi4py-install.sh && MPI4PY_INSTALL_SCRIPT_PATH=/tmp/mpi4py-install.sh
+source $MPI4PY_INSTALL_SCRIPT_PATH
 
 # Download and uncompress library archive
 PYBIND11_ARCHIVE_PATH=${PYBIND11_ARCHIVE_PATH:-"PYBIND11_ARCHIVE_PATH_IN"}

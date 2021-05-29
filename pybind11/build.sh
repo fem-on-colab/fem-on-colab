@@ -7,7 +7,8 @@
 set -e
 set -x
 
-# Install gcc
+# Install mpi4py. Note that the gcc package is enough to compile pybind11,
+# but we want to test it with MPI too.
 PYBIND11_ARCHIVE_PATH="skip" source pybind11/install.sh
 
 # Install pybind11
