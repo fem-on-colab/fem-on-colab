@@ -38,7 +38,9 @@ jobs:
       - name: Build library
         run: |
           LIBRARY=${{ github.event.inputs.library }}
-          [[ -f ${LIBRARY}/build.sh ]] && bash ${LIBRARY}/build.sh || true
+          if [[ -f ${LIBRARY}/build.sh ]]; then
+            bash ${LIBRARY}/build.sh
+          fi
         env:
           PATH: ${{ steps.colab.outputs.path }}
           LD_LIBRARY_PATH: ${{ steps.colab.outputs.ld_library_path }}
@@ -51,7 +53,7 @@ jobs:
         run: |
           ERROR_LIBRARIES=($(find $INSTALL_PREFIX -name '*\.so' -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
           if [ ${#ERROR_LIBRARIES[@]} -eq 0 ]; then
-              echo "No reference to libstdc++.so was found"
+            echo "No reference to libstdc++.so was found"
           else
             for ERROR_LIBRARY in "${ERROR_LIBRARIES[@]}"; do
               echo "Error: library $ERROR_LIBRARY depends on libstdc++.so"
