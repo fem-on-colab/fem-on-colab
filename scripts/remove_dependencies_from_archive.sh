@@ -21,8 +21,8 @@ for DEPENDENCY in "${DEPENDENCIES[@]}"; do
 done
 
 # Remove duplicate files
-for FILE_1 in $(diff -rs /tmp/diff-${OUTPUT_ARCHIVE_NAME}-1 /tmp/diff-${OUTPUT_ARCHIVE_NAME}-2 | grep "are identical$" |awk '{ print $2 }'); do
-    rm $FILE_1
+for FILE_1 in $(diff -rs /tmp/diff-${OUTPUT_ARCHIVE_NAME}-1 /tmp/diff-${OUTPUT_ARCHIVE_NAME}-2 | grep "are identical$" | awk '{ print $2 }'); do
+    rm -f $FILE_1
 done
 
 # Compress the remaining files
