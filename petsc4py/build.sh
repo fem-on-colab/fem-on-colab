@@ -38,9 +38,6 @@ patch -p1 < 01-force-static-libgcc-listdc++
     --download-chaco \
     --download-triangle \
     --download-ctetgen \
-    --download-exodusii \
-    --download-netcdf \
-    --download-pnetcdf \
     --download-eigen \
     --prefix=$INSTALL_PREFIX \
     CPPFLAGS="-fPIC $CPPFLAGS" \
