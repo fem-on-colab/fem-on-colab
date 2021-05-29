@@ -125,3 +125,9 @@ jobs:
           keep_files: true
           user_name: 'GitHub Actions'
           user_email: '41898282+github-actions[bot]@users.noreply.github.com'
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          path: |
+            ${{ steps.colab.outputs.install_prefix }}
+            ${{ github.event.inputs.library }}-install.tar.gz
