@@ -1,0 +1,54 @@
+diff --git a/config/BuildSystem/config/package.py b/config/BuildSystem/config/package.py
+index 0452e9feae..968c2443da 100644
+--- a/config/BuildSystem/config/package.py
++++ b/config/BuildSystem/config/package.py
+@@ -890,7 +890,17 @@ If its a remote branch, use: origin/'+self.gitcommit+' for commit.')
+     dpkgs = Package.sortPackageDependencies(self)
+     dpkgs.remove(self)
+     for package in dpkgs:
+-      if hasattr(package, 'lib'):     self.dlib += package.lib
++      if hasattr(package, 'lib'):
++        assert isinstance(package.lib, list)
++        import re
++        libc = re.compile("-l.*gcc.*")
++        libcpp = re.compile("-l.*stdc\+\+.*")
++        matches = list(filter(libc.match, package.lib)) + list(filter(libcpp.match, package.lib))
++        for m in matches:
++          package.lib.remove(m)
++        self.dlib += package.lib
++        assert len(list(filter(libc.match, self.dlib))) == 0
++        assert len(list(filter(libcpp.match, self.dlib))) == 0
+       if hasattr(package, 'include'): self.dinclude += package.include
+     return
+
+@@ -1631,6 +1641,16 @@ class GNUPackage(Package):
+         raise RuntimeError('autoreconf required for ' + self.PACKAGE+' not found (or broken)! Use your package manager to install autoconf')
+       if not self.programs.libtoolize:
+         raise RuntimeError('libtoolize required for ' + self.PACKAGE+' not found! Use your package manager to install libtool')
++      self.logPrintBox('Patching configure.ac in ' +self.PACKAGE)
++      configure_ac = os.path.join(self.packageDir, "configure.ac")
++      from pathlib import Path
++      if os.path.isfile(configure_ac):
++        path = Path(configure_ac)
++        text = path.read_text()
++        text = text.replace("AM_ENABLE_SHARED", "AM_ENABLE_SHARED\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`")
++        text = text.replace("AC_SUBST(enable_shared)", "AC_SUBST(enable_shared)\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`")
++        text = text.replace("AC_SUBST([enable_shared])", "AC_SUBST([enable_shared])\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`")
++        path.write_text(text)
+       try:
+         self.logPrintBox('Running libtoolize on ' +self.PACKAGE+'; this may take several minutes')
+         output,err,ret  = config.base.Configure.executeShellCommand(self.programs.libtoolize, cwd=self.packageDir, timeout=100, log=self.log)
+@@ -1689,6 +1709,13 @@ class GNUPackage(Package):
+       self.logPrintBox('Running make on '+self.PACKAGE+'; this may take several minutes')
+       if self.parallelMake: pmake = self.make.make_jnp+' '+self.makerulename+' '
+       else: pmake = self.make.make+' '+self.makerulename+' '
++      out_grep, err_grep, ret_grep = config.base.Configure.executeShellCommand("grep -i 'LT_INIT' * -rl 1> /dev/null && echo 'libtool found' || echo 'libtool not found'", cwd=self.packageDir, timeout=200, log=self.log)
++      print(out_grep, type(out_grep), err_grep, type(err_grep), ret_grep, type(ret_grep))
++      assert out_grep in ("libtool found", "libtool not found")
++      assert err_grep == ""
++      assert ret_grep == 0
++      if out_grep == "libtool found":
++        pmake = pmake + ' LDFLAGS="-Wc,-static-libgcc -Wc,-static-libstdc++"'
+
+       output2,err2,ret2  = config.base.Configure.executeShellCommand(self.make.make+' clean', cwd=self.packageDir, timeout=200, log = self.log)
+       output3,err3,ret3  = config.base.Configure.executeShellCommand(pmake, cwd=self.packageDir, timeout=6000, log = self.log)
