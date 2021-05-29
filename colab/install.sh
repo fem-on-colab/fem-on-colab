@@ -49,6 +49,7 @@ PYTHONUSERBASE=/usr pip3 install --user jupyter
 export INSTALL_PREFIX=/usr/local
 mkdir -p $INSTALL_PREFIX
 export PATH="$INSTALL_PREFIX/bin:$PATH"
+export LD_LIBRARY_PATH="$INSTALL_PREFIX/lib:$LD_LIBRARY_PATH"
 export PYTHONPATH=$INSTALL_PREFIX/lib/python3.7/dist-packages:$INSTALL_PREFIX/lib/python3.7/site-packages:$PYTHONPATH
 
 # Statically link to libgcc and libstdc++

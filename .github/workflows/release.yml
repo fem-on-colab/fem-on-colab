@@ -29,6 +29,7 @@ jobs:
         run: |
           source ./colab/install.sh
           echo "::set-output name=path::${PATH}"
+          echo "::set-output name=ld_library_path::${LD_LIBRARY_PATH}"
           echo "::set-output name=pythonpath::${PYTHONPATH}"
           echo "::set-output name=install_prefix::${INSTALL_PREFIX}"
           echo "::set-output name=cppflags::${CPPFLAGS}"
@@ -40,6 +41,7 @@ jobs:
           [[ -f ${LIBRARY}/build.sh ]] && bash ${LIBRARY}/build.sh || true
         env:
           PATH: ${{ steps.colab.outputs.path }}
+          LD_LIBRARY_PATH: ${{ steps.colab.outputs.ld_library_path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
           CPPFLAGS: ${{ steps.colab.outputs.cppflags }}
@@ -67,6 +69,7 @@ jobs:
           fi
         env:
           PATH: ${{ steps.colab.outputs.path }}
+          LD_LIBRARY_PATH: ${{ steps.colab.outputs.ld_library_path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
         shell: bash
@@ -79,6 +82,7 @@ jobs:
           pytest ${LIBRARY}/test.ipynb
         env:
           PATH: ${{ steps.colab.outputs.path }}
+          LD_LIBRARY_PATH: ${{ steps.colab.outputs.ld_library_path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
         shell: bash
       - name: Check if a release is needed
