@@ -12,14 +12,14 @@ PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
+cp petsc4py/patches/01-force-static-libgcc-listdc++ /tmp/petsc-src
 cd /tmp/petsc-src
+patch -p1 < 01-force-static-libgcc-listdc++
 ./configure \
     --with-debugging=0 \
     --with-hdf5-dir=$INSTALL_PREFIX \
     --with-zlib-include=/usr/include \
     --with-zlib-lib=/usr/lib/x86_64-linux-gnu/libz.so \
-    --with-hwloc-include=/usr/include \
-    --with-hwloc-lib=/usr/lib/x86_64-linux-gnu/libhwloc.so \
     --download-fblaslapack \
     --download-metis \
     --download-parmetis \
@@ -32,6 +32,7 @@ cd /tmp/petsc-src
     --download-spai \
     --download-ml \
     --download-pastix \
+    --download-hwloc \
     --download-ptscotch \
     --download-suitesparse \
     --download-chaco \
@@ -50,6 +51,7 @@ cd /tmp/petsc-src
 PETSC_ARCH=$(grep "^PETSC_ARCH" $PWD/lib/petsc/conf/petscvariables | sed "s/PETSC_ARCH=//")
 make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH all
 make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH install
+sed -i "s, -lstdc++ , ,g" $INSTALL_PREFIX/lib/petsc/conf/petscvariables
 
 # Install petsc4py
 cd /tmp/petsc-src/src/binding/petsc4py/
