@@ -1,0 +1,15 @@
+diff --git a/cppimport/build_module.py b/cppimport/build_module.py
+index 15f81b7..5673e2a 100644
+--- a/cppimport/build_module.py
++++ b/cppimport/build_module.py
+@@ -49,8 +49,8 @@ def build_module(module_data):
+             + [module_data["rendered_src_filepath"]]
+         ),
+         include_dirs=module_data["abs_include_dirs"],
+-        extra_compile_args=cfg.get("extra_compile_args", []),
+-        extra_link_args=cfg.get("extra_link_args", []),
++        extra_compile_args=cfg.get("extra_compile_args", []) + ["-static-libgcc", "-static-libstdc++"],
++        extra_link_args=cfg.get("extra_link_args", []) + ["-static-libgcc", "-static-libstdc++"],
+         library_dirs=module_data["abs_library_dirs"],
+         libraries=cfg.get("libraries", []),
+     )
