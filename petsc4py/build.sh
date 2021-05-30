@@ -20,7 +20,6 @@ patch -p1 < 01-force-static-libgcc-listdc++
     --with-hdf5-dir=$INSTALL_PREFIX \
     --with-zlib-include=/usr/include \
     --with-zlib-lib=/usr/lib/x86_64-linux-gnu/libz.so \
-    --download-fblaslapack \
     --download-metis \
     --download-parmetis \
     --download-superlu \
