@@ -1,0 +1,13 @@
+diff --git a/python/setup.py b/python/setup.py
+index 141ec0571..03c5f76e3 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -14,7 +14,7 @@ if sys.version_info < (3, 5):
+     sys.exit(1)
+ 
+ VERSION = "2019.2.0.dev0"
+-RESTRICT_REQUIREMENTS = ">=2019.2.0.dev0,<2019.3"
++RESTRICT_REQUIREMENTS = ">=2019.2.0.dev0,<2021.2"
+ 
+ REQUIREMENTS = ["numpy",
+                 "pkgconfig",

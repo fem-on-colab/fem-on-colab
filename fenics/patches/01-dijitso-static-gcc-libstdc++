@@ -1,0 +1,12 @@
+diff --git a/dijitso/build.py b/dijitso/build.py
+index 17bd3d4..e8bd73c 100644
+--- a/dijitso/build.py
++++ b/dijitso/build.py
+@@ -76,6 +76,7 @@ def make_compile_command(src_filename, lib_filename, dependencies,
+         cxxflags.extend(build_params["cxxflags_debug"])
+     else:
+         cxxflags.extend(build_params["cxxflags_opt"])
++    cxxflags.extend(["-static-libgcc", "-static-libstdc++"])
+ 
+     # Create library names for all dependencies and additional given
+     # libs
