@@ -18,3 +18,11 @@ MPI4PY_ARCHIVE_PATH=${MPI4PY_ARCHIVE_PATH:-"MPI4PY_ARCHIVE_PATH_IN"}
 if [[ $MPI4PY_ARCHIVE_PATH != skip ]]; then
     tar -xzf $MPI4PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
 fi
+
+# Add symbolic links to the MPI libraries in /usr/lib, because Colab does not export /usr/local/lib to LD_LIBRARY_PATH
+if [[ $MPI4PY_ARCHIVE_PATH != skip ]]; then
+    ln -fs /usr/local/lib/libmca*.so* /usr/lib
+    ln -fs /usr/local/lib/libmpi*.so* /usr/lib
+    ln -fs /usr/local/lib/libopen*.so* /usr/lib
+    ln -fs /usr/local/lib/ompi*.so* /usr/lib
+fi
