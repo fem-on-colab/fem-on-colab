@@ -89,7 +89,6 @@ jobs:
           pytest ${LIBRARY}/
         env:
           PATH: ${{ steps.colab.outputs.path }}
-          LD_LIBRARY_PATH: ${{ steps.colab.outputs.ld_library_path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
         shell: bash
       - name: Check if a release is needed
