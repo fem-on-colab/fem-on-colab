@@ -127,9 +127,16 @@ jobs:
           keep_files: true
           user_name: 'GitHub Actions'
           user_email: '41898282+github-actions[bot]@users.noreply.github.com'
-      - uses: actions/upload-artifact@v2
+      - name: Create an archive of build directory and install prefix in case of failure
         if: failure()
+        run: |
+          tar czf build.tar.gz /tmp/*-src
+          tar czf install-prefix.tar.gz ${{ steps.colab.outputs.install_prefix }}
+      - name: Upload archives as an artifact in case of failure
+        if: failure()
+        uses: actions/upload-artifact@v2
         with:
           path: |
-            ${{ steps.colab.outputs.install_prefix }}
+            build.tar.gz
+            install-prefix.tar.gz
             ${{ github.event.inputs.library }}-install.tar.gz
