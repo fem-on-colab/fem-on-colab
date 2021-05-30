@@ -33,6 +33,9 @@ rm -f ${PIP_RELEASE_FILE}
 # Numpy
 PYTHONUSERBASE=/usr pip3 install --user numpy==1.19.5
 
+# matplotlib
+PYTHONUSERBASE=/usr pip3 install --user matplotlib==3.2.2
+
 # Cython
 PYTHONUSERBASE=/usr pip3 install --user Cython==0.29.23
 
