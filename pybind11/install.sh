@@ -15,4 +15,6 @@ source $MPI4PY_INSTALL_SCRIPT_PATH
 # Download and uncompress library archive
 PYBIND11_ARCHIVE_PATH=${PYBIND11_ARCHIVE_PATH:-"PYBIND11_ARCHIVE_PATH_IN"}
 [[ $PYBIND11_ARCHIVE_PATH == http* ]] && wget ${PYBIND11_ARCHIVE_PATH} -O /tmp/pybind11-install.tar.gz && PYBIND11_ARCHIVE_PATH=/tmp/pybind11-install.tar.gz
-[[ $PYBIND11_ARCHIVE_PATH != skip ]] && tar -xzf $PYBIND11_ARCHIVE_PATH --strip-components=2 --directory=/usr/local || true
+if [[ $PYBIND11_ARCHIVE_PATH != skip ]]; then
+    tar -xzf $PYBIND11_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+fi

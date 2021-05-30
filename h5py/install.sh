@@ -18,4 +18,6 @@ apt install -y -qq zlib1g-dev
 # Download and uncompress library archive
 H5PY_ARCHIVE_PATH=${H5PY_ARCHIVE_PATH:-"H5PY_ARCHIVE_PATH_IN"}
 [[ $H5PY_ARCHIVE_PATH == http* ]] && wget ${H5PY_ARCHIVE_PATH} -O /tmp/h5py-install.tar.gz && H5PY_ARCHIVE_PATH=/tmp/h5py-install.tar.gz
-[[ $H5PY_ARCHIVE_PATH != skip ]] && tar -xzf $H5PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local || true
+if [[ $H5PY_ARCHIVE_PATH != skip ]]; then
+    tar -xzf $H5PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+fi

@@ -15,4 +15,6 @@ source $H5PY_INSTALL_SCRIPT_PATH
 # Download and uncompress library archive
 PETSC4PY_ARCHIVE_PATH=${PETSC4PY_ARCHIVE_PATH:-"PETSC4PY_ARCHIVE_PATH_IN"}
 [[ $PETSC4PY_ARCHIVE_PATH == http* ]] && wget ${PETSC4PY_ARCHIVE_PATH} -O /tmp/petsc4py-install.tar.gz && PETSC4PY_ARCHIVE_PATH=/tmp/petsc4py-install.tar.gz
-[[ $PETSC4PY_ARCHIVE_PATH != skip ]] && tar -xzf $PETSC4PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local || true
+if [[ $PETSC4PY_ARCHIVE_PATH != skip ]]; then
+    tar -xzf $PETSC4PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+fi
