@@ -15,4 +15,6 @@ source $GCC_INSTALL_SCRIPT_PATH
 # Download and uncompress library archive
 MPI4PY_ARCHIVE_PATH=${MPI4PY_ARCHIVE_PATH:-"MPI4PY_ARCHIVE_PATH_IN"}
 [[ $MPI4PY_ARCHIVE_PATH == http* ]] && wget ${MPI4PY_ARCHIVE_PATH} -O /tmp/mpi4py-install.tar.gz && MPI4PY_ARCHIVE_PATH=/tmp/mpi4py-install.tar.gz
-[[ $MPI4PY_ARCHIVE_PATH != skip ]] && tar -xzf $MPI4PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local || true
+if [[ $MPI4PY_ARCHIVE_PATH != skip ]]; then
+    tar -xzf $MPI4PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+fi
