@@ -19,5 +19,6 @@ apt install -y -qq zlib1g-dev
 H5PY_ARCHIVE_PATH=${H5PY_ARCHIVE_PATH:-"H5PY_ARCHIVE_PATH_IN"}
 [[ $H5PY_ARCHIVE_PATH == http* ]] && wget ${H5PY_ARCHIVE_PATH} -O /tmp/h5py-install.tar.gz && H5PY_ARCHIVE_PATH=/tmp/h5py-install.tar.gz
 if [[ $H5PY_ARCHIVE_PATH != skip ]]; then
+    rm -rf /usr/local/lib/python3.7/dist-packages/h5py*
     tar -xzf $H5PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
 fi
