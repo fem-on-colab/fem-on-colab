@@ -4,6 +4,11 @@
 #
 # SPDX-License-Identifier: MIT
 
+# This file mimicks Colab environment settings. Keep track of a Colab environment variable likely
+# related to software updates on Colab. Remember to update this variable for future reference
+# when changing versions in this file.
+LAST_FORCED_REBUILD=20210504
+
 # Common
 apt update
 apt install -y -qq autoconf bison build-essential curl flex git jq libtool pkg-config rsync software-properties-common unzip wget
