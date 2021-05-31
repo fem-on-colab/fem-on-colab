@@ -37,16 +37,14 @@ python3 setup.py install --prefix=$INSTALL_PREFIX
 
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
-cp $REPODIR/fenicsx/patches/01-ffcx-cffi-static-gcc-libstdc++ /tmp/ffcx-src
 cd /tmp/ffcx-src
-patch -p 1 < 01-ffcx-cffi-static-gcc-libstdc++
+patch -p 1 < $REPODIR/fenicsx/patches/01-ffcx-cffi-static-gcc-libstdc++
 python3 setup.py install --prefix=$INSTALL_PREFIX
 
 # cppimport
 git clone https://github.com/tbenthompson/cppimport /tmp/cppimport-src
-cp $REPODIR/fenicsx/patches/02-cppimport-static-gcc-libstdc++ /tmp/cppimport-src
 cd /tmp/cppimport-src/
-patch -p 1 < 02-cppimport-static-gcc-libstdc++
+patch -p 1 < $REPODIR/fenicsx/patches/02-cppimport-static-gcc-libstdc++
 python3 setup.py install --prefix=$INSTALL_PREFIX
 
 # dolfinx
