@@ -5,6 +5,8 @@ on:
     inputs:
       library:
         description: "Library to build"
+      task:
+        description: "Task to be done: package (default) or test. If empty, a package job is requested"
 
 jobs:
   build:
@@ -22,8 +24,8 @@ jobs:
       - name: Compute short SHA of the commit
         id: sha_short
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-      - name: Print release name, release date and git commit sha
-        run: echo "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }}"
+      - name: Print release name, release date, git commit sha and task
+        run: echo "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ github.event.inputs.task }}"
       - name: Setup Colab base image
         id: colab
         run: |
@@ -36,6 +38,7 @@ jobs:
           echo "::set-output name=ldflags::${LDFLAGS}"
         shell: bash
       - name: Build library
+        if: github.event.inputs.task != 'test'
         run: |
           LIBRARY=${{ github.event.inputs.library }}
           if [[ -f ${LIBRARY}/build.sh ]]; then
@@ -50,6 +53,7 @@ jobs:
           LDFLAGS: ${{ steps.colab.outputs.ldflags }}
         shell: bash
       - name: Look for libstdc++.so in ldd of generated libraries
+        if: github.event.inputs.task != 'test'
         run: |
           ERROR_LIBRARIES=($(find $INSTALL_PREFIX -name '*\.so' -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
           if [ ${#ERROR_LIBRARIES[@]} -eq 0 ]; then
@@ -65,6 +69,7 @@ jobs:
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
         shell: bash
       - name: Package library
+        if: github.event.inputs.task != 'test'
         run: |
           LIBRARY=${{ github.event.inputs.library }}
           DEPENDENCIES=($(find /tmp -name '*-install\.tar.gz'))
@@ -83,15 +88,24 @@ jobs:
       - name: Test library
         run: |
           LIBRARY=${{ github.event.inputs.library }}
-          LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
-          declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
-          bash ${LIBRARY}/install.sh
+          TASK=${{ github.event.inputs.task }}
+          if [[ "$TASK" != "test" ]]; then
+            LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
+            declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
+            bash ${LIBRARY}/install.sh
+          else
+            IFS=: read -r -a PYTHONPATH_ARRAY <<< "$PYTHONPATH"
+            mkdir -p ${PYTHONPATH_ARRAY[-1]}/google/colab
+            touch ${PYTHONPATH_ARRAY[-1]}/google/__init__.py
+            touch ${PYTHONPATH_ARRAY[-1]}/google/colab/__init__.py
+          fi
           pytest ${LIBRARY}/
         env:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
         shell: bash
       - name: Check if a release is needed
+        if: github.event.inputs.task != 'test'
         id: check_release
         run: |
           LIBRARY=${{ github.event.inputs.library }}
@@ -99,7 +113,7 @@ jobs:
           echo "::set-output name=needs_release::${NEEDS_RELEASE}"
         shell: bash
       - name: Add release to repository
-        if: steps.check_release.outputs.needs_release == 'yes'
+        if: github.event.inputs.task != 'test' && steps.check_release.outputs.needs_release == 'yes'
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -107,6 +121,7 @@ jobs:
           title: "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }}"
           files: ${{ github.event.inputs.library }}-install.tar.gz
       - name: Prepare release file for website
+        if: github.event.inputs.task != 'test'
         run: |
           LIBRARY=${{ github.event.inputs.library }}
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
@@ -117,7 +132,7 @@ jobs:
           sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" _build/html/releases/${LIBRARY}-install.sh
         shell: bash
       - name: Upload release file to website
-        if: github.repository == 'fem-on-colab/fem-on-colab'
+        if: github.event.inputs.task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -129,7 +144,9 @@ jobs:
       - name: Create an archive of build directory and install prefix in case of failure
         if: failure()
         run: |
-          tar czf build.tar.gz /tmp/*-src
+          if [ -e "/tmp/*-src" ]; then
+            tar czf build.tar.gz /tmp/*-src
+          fi
           tar czf install-prefix.tar.gz ${{ steps.colab.outputs.install_prefix }}
       - name: Upload archives as an artifact in case of failure
         if: failure()
