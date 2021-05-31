@@ -1,5 +1,5 @@
 diff --git a/config/BuildSystem/config/package.py b/config/BuildSystem/config/package.py
-index 0452e9feae..968c2443da 100644
+index df25ac031b..c88fe8651e 100644
 --- a/config/BuildSystem/config/package.py
 +++ b/config/BuildSystem/config/package.py
 @@ -890,7 +890,17 @@ If its a remote branch, use: origin/'+self.gitcommit+' for commit.')
@@ -20,25 +20,34 @@ index 0452e9feae..968c2443da 100644
 +        assert len(list(filter(libcpp.match, self.dlib))) == 0
        if hasattr(package, 'include'): self.dinclude += package.include
      return
-
-@@ -1631,6 +1641,16 @@ class GNUPackage(Package):
+ 
+@@ -1628,7 +1638,24 @@ class GNUPackage(Package):
+ 
+   def preInstall(self):
+     '''Run pre-install steps like generate configure script'''
+-    if not os.path.isfile(os.path.join(self.packageDir,'configure')):
++    configure_ac = os.path.join(self.packageDir, "configure.ac")
++    from pathlib import Path
++    if os.path.isfile(configure_ac):
++      path = Path(configure_ac)
++      original_text = path.read_text()
++      text = original_text[:]
++      text = text.replace("AM_ENABLE_SHARED", "AM_ENABLE_SHARED\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`\npostdeps_CC=`echo \" $postdeps_CC \" | sed 's, -lstdc++ , ,g'`")
++      text = text.replace("AC_SUBST(enable_shared)", "AC_SUBST(enable_shared)\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`\npostdeps_CC=`echo \" $postdeps_CC \" | sed 's, -lstdc++ , ,g'`")
++      text = text.replace("AC_SUBST([enable_shared])", "AC_SUBST([enable_shared])\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`\npostdeps_CC=`echo \" $postdeps_CC \" | sed 's, -lstdc++ , ,g'`")
++      if text != original_text:
++        self.logPrintBox('Patching configure.ac in ' +self.PACKAGE)
++        path.write_text(text)
++        force_autoreconf = True
++      else:
++        force_autoreconf = False
++    else:
++      force_autoreconf = False
++    if not os.path.isfile(os.path.join(self.packageDir,'configure')) or force_autoreconf:
+       if not self.programs.autoreconf:
          raise RuntimeError('autoreconf required for ' + self.PACKAGE+' not found (or broken)! Use your package manager to install autoconf')
        if not self.programs.libtoolize:
-         raise RuntimeError('libtoolize required for ' + self.PACKAGE+' not found! Use your package manager to install libtool')
-+      self.logPrintBox('Patching configure.ac in ' +self.PACKAGE)
-+      configure_ac = os.path.join(self.packageDir, "configure.ac")
-+      from pathlib import Path
-+      if os.path.isfile(configure_ac):
-+        path = Path(configure_ac)
-+        text = path.read_text()
-+        text = text.replace("AM_ENABLE_SHARED", "AM_ENABLE_SHARED\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`")
-+        text = text.replace("AC_SUBST(enable_shared)", "AC_SUBST(enable_shared)\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`")
-+        text = text.replace("AC_SUBST([enable_shared])", "AC_SUBST([enable_shared])\npostdeps_CXX=`echo \" $postdeps_CXX \" | sed 's, -lstdc++ , ,g'`")
-+        path.write_text(text)
-       try:
-         self.logPrintBox('Running libtoolize on ' +self.PACKAGE+'; this may take several minutes')
-         output,err,ret  = config.base.Configure.executeShellCommand(self.programs.libtoolize, cwd=self.packageDir, timeout=100, log=self.log)
-@@ -1689,6 +1709,13 @@ class GNUPackage(Package):
+@@ -1691,6 +1718,13 @@ class GNUPackage(Package):
        self.logPrintBox('Running make on '+self.PACKAGE+'; this may take several minutes')
        if self.parallelMake: pmake = self.make.make_jnp+' '+self.makerulename+' '
        else: pmake = self.make.make+' '+self.makerulename+' '
@@ -49,6 +58,66 @@ index 0452e9feae..968c2443da 100644
 +      assert ret_grep == 0
 +      if out_grep == "libtool found":
 +        pmake = pmake + ' LDFLAGS="-Wc,-static-libgcc -Wc,-static-libstdc++"'
-
+ 
        output2,err2,ret2  = config.base.Configure.executeShellCommand(self.make.make+' clean', cwd=self.packageDir, timeout=200, log = self.log)
        output3,err3,ret3  = config.base.Configure.executeShellCommand(pmake, cwd=self.packageDir, timeout=6000, log = self.log)
+diff --git a/config/BuildSystem/config/packages/netcdf.py b/config/BuildSystem/config/packages/netcdf.py
+index fdcc54fc6f..c70fe11096 100644
+--- a/config/BuildSystem/config/packages/netcdf.py
++++ b/config/BuildSystem/config/packages/netcdf.py
+@@ -31,7 +31,19 @@ class Configure(config.package.GNUPackage):
+     ''' disable DAP and HDF4, enable NetCDF4'''
+     args = config.package.GNUPackage.formGNUConfigureArgs(self)
+     args.append('CPPFLAGS="'+self.headers.toString(self.dinclude)+'"')
+-    self.addToArgs(args,'LIBS',self.libraries.toString(self.dlib)+' '+self.compilers.LIBS)
++    LIBS = self.libraries.toString(self.dlib)+' '+self.compilers.LIBS
++    assert isinstance(LIBS, str)
++    LIBS_list = LIBS.split(" ")
++    import re
++    libc = re.compile("-l.*gcc.*")
++    libcpp = re.compile("-l.*stdc\+\+.*")
++    matches = list(filter(libc.match, LIBS_list)) + list(filter(libcpp.match, LIBS_list))
++    for m in matches:
++      LIBS_list.remove(m)
++    assert len(list(filter(libc.match, LIBS_list))) == 0
++    assert len(list(filter(libcpp.match, LIBS_list))) == 0
++    LIBS = " ".join(LIBS_list)
++    self.addToArgs(args,'LIBS',LIBS)
+     args.append('--enable-netcdf-4')
+     if self.pnetcdf.found:
+       args.append('--enable-pnetcdf')
+diff --git a/config/BuildSystem/config/packages/pnetcdf.py b/config/BuildSystem/config/packages/pnetcdf.py
+index 50d3f32935..45733be311 100644
+--- a/config/BuildSystem/config/packages/pnetcdf.py
++++ b/config/BuildSystem/config/packages/pnetcdf.py
+@@ -24,6 +24,30 @@ class Configure(config.package.GNUPackage):
+     self.deps  = [self.mpi,self.flibs]
+     return
+ 
++  def preInstall(self):
++    from pathlib import Path
++
++    markFile = os.path.join(self.packageDir, '_patched')
++    if not os.path.isfile(markFile):
++      self.logPrintBox('Patching Makefile.am in ' + self.PACKAGE)
++      makefile_am = os.path.join(self.packageDir, "Makefile.am")
++      path = Path(makefile_am)
++      text = path.read_text()
++      text = text.replace("SUBDIRS = src man examples benchmarks test", "SUBDIRS = src")
++      text = text.replace("DIST_SUBDIRS = src man examples benchmarks test doc", "DIST_SUBDIRS = src")
++      path.write_text(text)
++      self.logPrintBox('Patching src/Makefile.am in ' + self.PACKAGE)
++      makefile_am = os.path.join(self.packageDir, "src", "Makefile.am")
++      path = Path(makefile_am)
++      text = path.read_text()
++      text = text.replace("SUBDIRS = include dispatchers drivers binding packaging . libs utils", "SUBDIRS = include dispatchers drivers binding packaging . libs")
++      text = text.replace("DIST_SUBDIRS = include dispatchers drivers binding packaging libs utils", "DIST_SUBDIRS = include dispatchers drivers binding packaging libs")
++      path.write_text(text)
++      f = open(markFile, 'w')
++      f.write('Patched')
++      f.close()
++    return super().preInstall()
++
+   def formGNUConfigureArgs(self):
+     # https://github.com/Parallel-NetCDF/PnetCDF/commit/38d210c006cabff70d78204d2db98a22ab87547c
+     if hasattr(self.mpi,'ompi_version') and self.mpi.ompi_version >= (4,0,0):
