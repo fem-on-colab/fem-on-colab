@@ -7,14 +7,15 @@
 set -e
 set -x
 
+REPODIR=$PWD
+
 # Install h5py (and its dependencies, most notably gcc and mpi4py)
 PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
-cp petsc4py/patches/01-force-static-libgcc-listdc++ /tmp/petsc-src
 cd /tmp/petsc-src
-patch -p1 < 01-force-static-libgcc-listdc++
+patch -p1 < $REPODIR/petsc4py/patches/01-force-static-libgcc-listdc++
 ./configure \
     --with-debugging=0 \
     --with-hdf5-dir=$INSTALL_PREFIX \
