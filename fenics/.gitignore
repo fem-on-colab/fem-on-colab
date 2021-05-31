@@ -1,2 +1,4 @@
 data
 ThermalBlock
+checkpoint.h5
+checkpoint.xdmf
