@@ -1,0 +1,191 @@
+diff --git a/linalg/la.hpp b/linalg/la.hpp
+index 3949920e5..866aec8b8 100644
+--- a/linalg/la.hpp
++++ b/linalg/la.hpp
+@@ -33,8 +33,8 @@ namespace ngla
+ #include "sparsematrix_dyn.hpp"
+ #include "order.hpp"
+ #include "sparsecholesky.hpp"
+-#include "pardisoinverse.hpp"
+ // include these only from c++-files
++// #include "pardisoinverse.hpp"
+ // #include "umfpackinverse.hpp"
+ // #include "superluinverse.hpp"
+ // #include "mumpsinverse.hpp"
+diff --git a/linalg/pardisoinverse.cpp b/linalg/pardisoinverse.cpp
+index 2b1293092..978c90ba6 100644
+--- a/linalg/pardisoinverse.cpp
++++ b/linalg/pardisoinverse.cpp
+@@ -48,20 +48,10 @@ extern  integer F77_FUNC(pardisoinit)
+ 
+ #endif
+ 
+-#else // USE_PARDISO
+-  // Neither MKL nor PARDISO linked at compile-time
+-  // check for MKL at run-time and set function pointers if available
+-#define MKL_PARDISO
+-
+-  void (*mkl_free_buffers) (void) = nullptr;
+-  void (*F77_FUNC(pardiso))
+-    (void * pt, integer * maxfct, integer * mnum, integer * mtype, integer * phase, integer * n,
+-     double * a, integer * ia, integer * ja, integer * perm, integer * nrhs, integer * iparam,
+-     integer * msglvl, double * b, double * x, integer * error) = nullptr;
+-
+ #endif // USE_PARDISO
+ }
+ 
++#ifdef USE_PARDISO
+ 
+ #ifdef USE_MKL
+ namespace ngstd
+@@ -74,31 +64,6 @@ namespace ngstd
+ 
+ namespace ngla
+ {
+-#ifdef USE_PARDISO
+-  bool is_pardiso_available = true;
+-#else
+-  static SharedLibrary libmkl;
+-  static bool LoadMKL()
+-  {
+-      try
+-      {
+-#ifdef WIN32
+-          libmkl.Load("mkl_rt.dll");
+-#else
+-          libmkl.Load("libmkl_rt.so");
+-#endif
+-          mkl_free_buffers = libmkl.GetFunction<decltype(mkl_free_buffers)>("mkl_free_buffers");
+-          F77_FUNC(pardiso) = libmkl.GetFunction<decltype(pardiso_)>("pardiso_");
+-          return mkl_free_buffers && F77_FUNC(pardiso);
+-      }
+-      catch(const std::runtime_error &)
+-      {
+-          return false;
+-      }
+-  };
+-  bool is_pardiso_available = LoadMKL();
+-#endif
+-
+   int pardiso_msg = 0;
+ 
+ 
+@@ -214,7 +179,7 @@ namespace ngla
+ 
+     for (int i = 0; i < 128; i++) pt[i] = 0;
+ 
+-#ifdef MKL_PARDISO
++#ifdef USE_MKL
+     //    no init in MKL PARDISO
+ #else
+ 
+@@ -646,9 +611,9 @@ namespace ngla
+     F77_FUNC(pardiso) ( pt, &maxfct, &mnum, &matrixtype, &phase, &compressed_height, NULL,
+ 			rowstart.Data(), indices.Data(), NULL, &nrhs, params, &msglevel,
+ 			NULL, NULL, &error );
+-#ifdef MKL_PARDISO
++#ifdef USE_MKL
+     mkl_free_buffers();
+-#endif // MKL_PARDISO
++#endif // USE_MKL
+     GetMemoryTracer().Free(memory_allocated_in_pardiso_lib);
+     memory_allocated_in_pardiso_lib = 0;
+     if (task_manager) task_manager -> StartWorkers();
+@@ -814,3 +779,6 @@ namespace ngla
+ 
+ }
+ 
++
++
++#endif
+diff --git a/linalg/pardisoinverse.hpp b/linalg/pardisoinverse.hpp
+index 734c3ae37..50c8e4f4d 100644
+--- a/linalg/pardisoinverse.hpp
++++ b/linalg/pardisoinverse.hpp
+@@ -19,7 +19,6 @@
+ namespace ngla
+ {
+   using ngbla::integer;
+-  extern bool is_pardiso_available;
+ 
+ 
+   /*
+diff --git a/linalg/sparsematrix.cpp b/linalg/sparsematrix.cpp
+index 44891a806..cc36cb137 100644
+--- a/linalg/sparsematrix.cpp
++++ b/linalg/sparsematrix.cpp
+@@ -1920,10 +1920,11 @@ namespace ngla
+       }
+     else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
+       {
+-        if(is_pardiso_available)
++#ifdef USE_PARDISO
+           return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (*this, subset, nullptr, 1);
+-        else
++#else
+           throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
++#endif
+       }
+     else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
+       {
+@@ -1961,10 +1962,11 @@ namespace ngla
+       }
+     else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
+       {
+-        if(is_pardiso_available)
++#ifdef USE_PARDISO
+           return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (*this, nullptr, clusters, 1);
+-        else
++#else
+           throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
++#endif
+       }
+     else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
+       {
+diff --git a/linalg/sparsematrix_impl.hpp b/linalg/sparsematrix_impl.hpp
+index d3156ee02..769ce22e7 100644
+--- a/linalg/sparsematrix_impl.hpp
++++ b/linalg/sparsematrix_impl.hpp
+@@ -326,10 +326,11 @@ namespace ngla
+ 	}
+       else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
+ 	{
+-	  if(is_pardiso_available)
++#ifdef USE_PARDISO
+ 	    return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (*this, subset);
+-	  else
++#else
+ 	    throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
++#endif
+ 	}
+       else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
+ 	{
+@@ -395,10 +396,11 @@ namespace ngla
+ 	}
+       else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
+ 	{
+-	  if(is_pardiso_available)
++#ifdef USE_PARDISO
+ 	    return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (*this, nullptr, clusters);
+-	  else
++#else
+ 	    throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
++#endif
+ 	}
+       else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
+ 	{
+diff --git a/solve/ngsolve.cpp b/solve/ngsolve.cpp
+index 05755322f..7d4d01937 100644
+--- a/solve/ngsolve.cpp
++++ b/solve/ngsolve.cpp
+@@ -1223,8 +1223,9 @@ int NGSolve_Init (Tcl_Interp * interp)
+ #endif
+ 
+ 
+-if(is_pardiso_available)
++#ifdef USE_PARDISO
+   cout << "Including sparse direct solver Pardiso" << endl;
++#endif
+ 
+ #ifdef USE_UMFPACK
+   cout << "Including sparse direct solver UMFPACK" << endl;
