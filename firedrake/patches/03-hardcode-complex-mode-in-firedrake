@@ -1,0 +1,13 @@
+diff --git a/setup.py b/setup.py
+index 026bcf25..34d9c14a 100644
+--- a/setup.py
++++ b/setup.py
+@@ -14,7 +14,7 @@ from firedrake_configuration import get_config
+ try:
+     from Cython.Distutils.extension import Extension
+     config = get_config()
+-    complex_mode = config['options'].get('complex', False)
++    complex_mode = False
+ except ImportError:
+     # No Cython Extension means no complex mode!
+     from distutils.extension import Extension

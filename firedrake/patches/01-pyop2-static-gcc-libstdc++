@@ -1,0 +1,16 @@
+diff --git a/pyop2/compilation.py b/pyop2/compilation.py
+index e5a9fefd..2c0edbb7 100644
+--- a/pyop2/compilation.py
++++ b/pyop2/compilation.py
+@@ -182,9 +182,11 @@ class Compiler(object):
+         self._cc = os.environ.get(ccenv, cc)
+         self._ld = os.environ.get('LDSHARED', ld)
+         self._cppargs = cppargs + configuration['cflags'].split()
++        self._cppargs.extend(["-static-libgcc", "-static-libstdc++"])
+         if configuration["use_safe_cflags"]:
+             self._cppargs += self.workaround_cflags
+         self._ldargs = ldargs + configuration['ldflags'].split()
++        self._ldargs.extend(["-static-libgcc", "-static-libstdc++"])
+ 
+     @property
+     def compiler_version(self):
