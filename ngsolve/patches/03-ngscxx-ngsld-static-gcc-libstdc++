@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e473413b..1613b3b31 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -470,7 +470,7 @@ if(WIN32)
+     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ngsld.bat DESTINATION ${NGSOLVE_INSTALL_DIR_BIN} COMPONENT ngsolve_devel )
+ else(WIN32)
+     set(NGSCXX_COMMAND ngscxx)
+-    set(ngscxx_compile_command "${CMAKE_CXX_COMPILER} ${ngscxx_flags} ${ngscxx_includes} $*")
++    set(ngscxx_compile_command "${CMAKE_CXX_COMPILER} ${ngscxx_flags} -static-libgcc -static-libstdc++ ${ngscxx_includes} $*")
+     if(CCACHE_FOUND)
+       set(ngscxx_compile_command "
+ if [ -f ${CCACHE_FOUND} ]
+@@ -482,7 +482,7 @@ fi")
+                   CONTENT "${ngscxx_header} ${ngscxx_compile_command}\n"
+                   CONDITION $<COMPILE_LANGUAGE:CXX>
+                   )
+-    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ngsld CONTENT "${ngsld_header} ${CMAKE_CXX_COMPILER} ${ngsld_flags} $*\n")
++    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ngsld CONTENT "${ngsld_header} ${CMAKE_CXX_COMPILER} ${ngsld_flags} -static-libgcc -static-libstdc++ $*\n")
+     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ngscxx DESTINATION ${NGSOLVE_INSTALL_DIR_BIN} COMPONENT ngsolve_devel )
+     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ngsld DESTINATION ${NGSOLVE_INSTALL_DIR_BIN} COMPONENT ngsolve_devel )
+ endif(WIN32)
