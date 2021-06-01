@@ -51,6 +51,8 @@ jobs:
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
           CPPFLAGS: ${{ steps.colab.outputs.cppflags }}
           LDFLAGS: ${{ steps.colab.outputs.ldflags }}
+          VERBOSE: 1
+          V: 1
         shell: bash
       - name: Look for libstdc++.so in ldd of generated libraries
         if: github.event.inputs.task != 'test'
