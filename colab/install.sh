@@ -63,6 +63,6 @@ export PATH="$INSTALL_PREFIX/bin:$PATH"
 export LD_LIBRARY_PATH="$INSTALL_PREFIX/lib:$LD_LIBRARY_PATH"
 export PYTHONPATH=$INSTALL_PREFIX/lib/python3.7/dist-packages:$INSTALL_PREFIX/lib/python3.7/site-packages:$PYTHONPATH
 
-# Statically link to libgcc and libstdc++
-export CPPFLAGS="-static-libgcc -static-libstdc++"
-export LDFLAGS="-static-libgcc -static-libstdc++"
+# Statically link to libstdc++
+export CPPFLAGS="-static-libstdc++"
+export LDFLAGS="-static-libstdc++"

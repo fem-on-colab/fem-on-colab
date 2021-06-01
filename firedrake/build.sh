@@ -57,7 +57,7 @@ python3 setup.py install --prefix=$INSTALL_PREFIX
 # PyOP2
 git clone https://github.com/OP2/PyOP2.git /tmp/pyop2-src
 cd /tmp/pyop2-src
-patch -p 1 < $REPODIR/firedrake/patches/01-pyop2-static-gcc-libstdc++
+patch -p 1 < $REPODIR/firedrake/patches/01-pyop2-static-libstdc++
 export PETSC_DIR=$INSTALL_PREFIX
 python3 setup.py install --prefix=$INSTALL_PREFIX
 

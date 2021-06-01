@@ -6,11 +6,11 @@ index e5a9fefd..2c0edbb7 100644
          self._cc = os.environ.get(ccenv, cc)
          self._ld = os.environ.get('LDSHARED', ld)
          self._cppargs = cppargs + configuration['cflags'].split()
-+        self._cppargs.extend(["-static-libgcc", "-static-libstdc++"])
++        self._cppargs.extend(["-static-libstdc++"])
          if configuration["use_safe_cflags"]:
              self._cppargs += self.workaround_cflags
          self._ldargs = ldargs + configuration['ldflags'].split()
-+        self._ldargs.extend(["-static-libgcc", "-static-libstdc++"])
- 
++        self._ldargs.extend(["-static-libstdc++"])
+
      @property
      def compiler_version(self):

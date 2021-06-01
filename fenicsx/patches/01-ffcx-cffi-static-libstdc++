@@ -7,10 +7,10 @@ index 88db8645..3ec3c549 100644
 
      ffibuilder = cffi.FFI()
 +    if cffi_extra_compile_args is None:
-+        cffi_extra_compile_args = ["-static-libgcc", "-static-libstdc++"]
++        cffi_extra_compile_args = ["-static-libstdc++"]
 +    else:
 +        assert isinstance(cffi_extra_compile_args, list)
-+        cffi_extra_compile_args.extend(["-static-libgcc", "-static-libstdc++"])
++        cffi_extra_compile_args.extend(["-static-libstdc++"])
      ffibuilder.set_source(module_name, code_body, include_dirs=[ffcx.codegeneration.get_include_path()],
                            extra_compile_args=cffi_extra_compile_args, libraries=cffi_libraries)
      ffibuilder.cdef(decl)

@@ -20,7 +20,7 @@ python3 setup.py install --prefix=$INSTALL_PREFIX
 # dijitso
 git clone https://bitbucket.org/fenics-project/dijitso.git /tmp/dijitso-src
 cd /tmp/dijitso-src
-patch -p 1 < $REPODIR/fenics/patches/01-dijitso-static-gcc-libstdc++
+patch -p 1 < $REPODIR/fenics/patches/01-dijitso-static-libstdc++
 python3 setup.py install --prefix=$INSTALL_PREFIX
 
 # UFL

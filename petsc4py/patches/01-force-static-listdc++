@@ -20,9 +20,9 @@ index df25ac031b..c88fe8651e 100644
 +        assert len(list(filter(libcpp.match, self.dlib))) == 0
        if hasattr(package, 'include'): self.dinclude += package.include
      return
- 
+
 @@ -1628,7 +1638,24 @@ class GNUPackage(Package):
- 
+
    def preInstall(self):
      '''Run pre-install steps like generate configure script'''
 -    if not os.path.isfile(os.path.join(self.packageDir,'configure')):
@@ -57,8 +57,8 @@ index df25ac031b..c88fe8651e 100644
 +      assert err_grep == ""
 +      assert ret_grep == 0
 +      if out_grep == "libtool found":
-+        pmake = pmake + ' LDFLAGS="-Wc,-static-libgcc -Wc,-static-libstdc++"'
- 
++        pmake = pmake + ' LDFLAGS="-Wc,-static-libstdc++"'
+
        output2,err2,ret2  = config.base.Configure.executeShellCommand(self.make.make+' clean', cwd=self.packageDir, timeout=200, log = self.log)
        output3,err3,ret3  = config.base.Configure.executeShellCommand(pmake, cwd=self.packageDir, timeout=6000, log = self.log)
 diff --git a/config/BuildSystem/config/packages/netcdf.py b/config/BuildSystem/config/packages/netcdf.py
@@ -93,7 +93,7 @@ index 50d3f32935..45733be311 100644
 @@ -24,6 +24,30 @@ class Configure(config.package.GNUPackage):
      self.deps  = [self.mpi,self.flibs]
      return
- 
+
 +  def preInstall(self):
 +    from pathlib import Path
 +

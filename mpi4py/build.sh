@@ -22,8 +22,8 @@ sed -i 's/AC_SUBST(CXXCPPFLAGS)/AC_SUBST(CXXCPPFLAGS)\npostdeps_CXX=`echo " $pos
     --prefix=$INSTALL_PREFIX \
     --disable-silent-rules --disable-maintainer-mode --disable-dependency-tracking --disable-wrapper-runpath \
     --enable-mpi-cxx
-make -j $(nproc) LDFLAGS="-Wc,-static-libgcc, -Wc,-static-libstdc++"
-make install LDFLAGS="-Wc,-static-libgcc, -Wc,-static-libstdc++"
+make -j $(nproc) LDFLAGS="-Wc,-static-libstdc++"
+make install LDFLAGS="-Wc,-static-libstdc++"
 
 # Install mpi4py
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user git+https://github.com/mpi4py/mpi4py.git
