@@ -15,6 +15,10 @@ FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 # Remove conflicting package installed by jupyter
 pip3 uninstall -y decorator
 
+# Firedrake may require newer packages than the one in the Colab base image. However, do not archive them
+# and install them to /usr
+PYTHONUSERBASE=/usr pip3 install --user matplotlib pandas scipy --upgrade
+
 # islpy
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user --no-binary=islpy islpy
 
