@@ -144,7 +144,7 @@ jobs:
       - name: Create an archive of build directory and install prefix in case of failure
         if: failure()
         run: |
-          if [ -e "/tmp/*-src" ]; then
+          if compgen -G "/tmp/*-src" > /dev/null; then
             tar czf build.tar.gz /tmp/*-src
           fi
           tar czf install-prefix.tar.gz ${{ steps.colab.outputs.install_prefix }}
