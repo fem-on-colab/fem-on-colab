@@ -26,5 +26,8 @@ source $SLEPC4PY_INSTALL_SCRIPT_PATH
 FIREDRAKE_ARCHIVE_PATH=${FIREDRAKE_ARCHIVE_PATH:-"FIREDRAKE_ARCHIVE_PATH_IN"}
 [[ $FIREDRAKE_ARCHIVE_PATH == http* ]] && wget ${FIREDRAKE_ARCHIVE_PATH} -O /tmp/firedrake-install.tar.gz && FIREDRAKE_ARCHIVE_PATH=/tmp/firedrake-install.tar.gz
 if [[ $FIREDRAKE_ARCHIVE_PATH != skip ]]; then
+    rm -rf /usr/local/lib/python3.7/dist-packages/cftime*
+    rm -rf /usr/local/lib/python3.7/dist-packages/networkx*
+    rm -rf /usr/local/lib/python3.7/dist-packages/netCDF4*
     tar -xzf $FIREDRAKE_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
 fi
