@@ -97,9 +97,7 @@ jobs:
             bash ${LIBRARY}/install.sh
           else
             IFS=: read -r -a PYTHONPATH_ARRAY <<< "$PYTHONPATH"
-            mkdir -p ${PYTHONPATH_ARRAY[-1]}/google/colab
-            touch ${PYTHONPATH_ARRAY[-1]}/google/__init__.py
-            touch ${PYTHONPATH_ARRAY[-1]}/google/colab/__init__.py
+            cp -rf colab/patches/google ${PYTHONPATH_ARRAY[-1]}/
           fi
           pytest ${LIBRARY}/
         env:
