@@ -24,3 +24,6 @@ if [[ $GMSH_ARCHIVE_PATH != skip ]]; then
     ln -fs /usr/local/lib/libgmsh*.so* /usr/lib
     ln -fs /usr/local/lib/libTK*.so* /usr/lib
 fi
+
+# Install X11 for gmsh
+apt install -y -qq libfontconfig1 libgl1
