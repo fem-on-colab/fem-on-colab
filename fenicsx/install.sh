@@ -28,3 +28,6 @@ FENICSX_ARCHIVE_PATH=${FENICSX_ARCHIVE_PATH:-"FENICSX_ARCHIVE_PATH_IN"}
 if [[ $FENICSX_ARCHIVE_PATH != skip ]]; then
     tar -xzf $FENICSX_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
 fi
+
+# Install X11 for pyvista
+apt install -y -qq libgl1-mesa-dev libxrender1
