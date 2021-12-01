@@ -14,7 +14,7 @@ GMSH_ARCHIVE_PATH="skip" source gmsh/install.sh
 apt install -y -qq libfontconfig1-dev libfreetype6-dev libx11-dev libxi-dev libxmu-dev libgl1-mesa-dev mesa-common-dev
 
 # Install OCC
-wget "http://git.dev.opencascade.org/gitweb/?p=occt.git;a=snapshot;h=refs/tags/V7_5_0;sf=tgz" -O /tmp/occt-src.tgz
+wget "http://git.dev.opencascade.org/gitweb/?p=occt.git;a=snapshot;h=refs/tags/V7_6_0;sf=tgz" -O /tmp/occt-src.tgz
 mkdir -p /tmp/occt-src
 tar -xzvf /tmp/occt-src.tgz --directory /tmp/occt-src --strip-components 1
 cd /tmp/occt-src
