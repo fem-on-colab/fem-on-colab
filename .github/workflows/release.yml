@@ -7,6 +7,8 @@ on:
         description: "Library to build"
       task:
         description: "Task to be done: package (default) or test. If empty, a package job is requested"
+      args:
+        description: "Additional space separated arguments to be passed to the build script. If empty, no arguments are passed"
 
 jobs:
   build:
@@ -53,19 +55,39 @@ jobs:
         id: releases_website
         run: |
           LIBRARY=${{ github.event.inputs.library }}
+          ARGS_ARRAY=(${{ github.event.inputs.args }})
+          ARGS_JOINED=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
           pushd _build/html
           WEBSITE_FETCH_URL=$(git remote get-url origin)
           WEBSITE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           WEBSITE_RAW_PREFIX="${WEBSITE_FETCH_URL}/raw"
-          RELEASED_LIBRARIES=($(git ls-tree -r ${WEBSITE_BRANCH} --name-only -- releases | sed "s|releases/||" | sed "s|-install.sh||"))
+          RELEASE_FILES_ALL=($(git ls-tree -r ${WEBSITE_BRANCH} --name-only -- releases | sed "s|releases/||"))
+          declare -a RELEASE_FILES
+          declare -a RELEASED_LIBRARIES
+          for RELEASE_FILE in "${RELEASE_FILES_ALL[@]}"; do
+            if [[ "${RELEASE_FILE}" == *-install.sh ]]; then
+              RELEASED_LIBRARY=$(echo ${RELEASE_FILE} | sed "s|-install.sh||")
+              if [[ -L "releases/${RELEASE_FILE}" ]]; then
+                RELEASE_FILE=$(readlink releases/${RELEASE_FILE})
+              fi
+              ANY_ARGS_RELEASE_FILES=($(find releases -name "${RELEASED_LIBRARY}-install-*.sh"))
+              if [[ -z "${ARGS_JOINED}" || (-n "${ARGS_JOINED}" && -z "${ANY_ARGS_RELEASE_FILES[*]}") ]]; then
+                RELEASED_LIBRARIES+=(${RELEASED_LIBRARY})
+                RELEASE_FILES+=(releases/${RELEASE_FILE})
+              fi
+            elif [[ "${RELEASE_FILE}" == *-install-${ARGS_JOINED}.sh ]]; then
+              RELEASED_LIBRARIES+=($(echo ${RELEASE_FILE} | sed "s|-install-${ARGS_JOINED}.sh||"))
+              RELEASE_FILES+=(releases/${RELEASE_FILE})
+            fi
+          done
           declare -a RELEASE_INSTALL_SCRIPT_ENVS
           declare -a RELEASE_INSTALL_SCRIPT_RAW_URLS
-          for RELEASED_LIBRARY in "${RELEASED_LIBRARIES[@]}"; do
-            if [[ "${RELEASED_LIBRARY}" != "${LIBRARY}" ]]; then
-              RELEASED_LIBRARY_CAPITAL=$(echo ${RELEASED_LIBRARY} | tr a-z A-Z)
-              RELEASE_COMMIT=$(git rev-parse --short $(git rev-list -1 ${WEBSITE_BRANCH} -- releases/${RELEASED_LIBRARY}-install.sh))
+          for I in "${!RELEASED_LIBRARIES[@]}"; do
+            if [[ "${RELEASED_LIBRARIES[I]}" != "${LIBRARY}" ]]; then
+              RELEASED_LIBRARY_CAPITAL=$(echo ${RELEASED_LIBRARIES[I]} | tr a-z A-Z)
+              RELEASE_COMMIT=$(git rev-parse --short $(git rev-list -1 ${WEBSITE_BRANCH} -- ${RELEASE_FILES[I]}))
               RELEASE_INSTALL_SCRIPT_ENVS+=(${RELEASED_LIBRARY_CAPITAL}_INSTALL_SCRIPT_PATH)
-              RELEASE_INSTALL_SCRIPT_RAW_URLS+=(${WEBSITE_RAW_PREFIX}/${RELEASE_COMMIT}/releases/${RELEASED_LIBRARY}-install.sh)
+              RELEASE_INSTALL_SCRIPT_RAW_URLS+=(${WEBSITE_RAW_PREFIX}/${RELEASE_COMMIT}/${RELEASE_FILES[I]})
             fi
           done
           echo "::set-output name=release_install_script_envs::${RELEASE_INSTALL_SCRIPT_ENVS[@]}"
@@ -87,13 +109,14 @@ jobs:
         if: github.event.inputs.task != 'test'
         run: |
           LIBRARY=${{ github.event.inputs.library }}
+          ARGS=${{ github.event.inputs.args }}
           if [[ -f ${LIBRARY}/build.sh ]]; then
             RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
             RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
             for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
               declare -x "${RELEASE_INSTALL_SCRIPT_ENVS[I]}"="${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}"
             done
-            bash ${LIBRARY}/build.sh
+            bash ${LIBRARY}/build.sh ${ARGS}
           fi
         env:
           PATH: ${{ steps.colab.outputs.path }}
@@ -155,7 +178,7 @@ jobs:
             IFS=: read -r -a PYTHONPATH_ARRAY <<< "$PYTHONPATH"
             cp -rf colab/patches/google ${PYTHONPATH_ARRAY[-1]}/
           fi
-          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 pytest --nbval ${LIBRARY}/
+          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ARGS="${ARGS}" pytest --nbval ${LIBRARY}/
         env:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
@@ -181,15 +204,22 @@ jobs:
         run: |
           LIBRARY=${{ github.event.inputs.library }}
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
+          ARGS_ARRAY=(${{ github.event.inputs.args }})
+          if [[ -n "${ARGS_ARRAY[*]}" ]]; then
+            ARGS_JOINED=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
+            LIBRARY_RELEASE_FILE=_build/html/releases/${LIBRARY}-install-${ARGS_JOINED}.sh
+          else
+            LIBRARY_RELEASE_FILE=_build/html/releases/${LIBRARY}-install.sh
+          fi
           DATETIME=${{ steps.date_time.outputs.date_time }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
           RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
           RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
-          cp ./${LIBRARY}/install.sh _build/html/releases/${LIBRARY}-install.sh
+          cp ./${LIBRARY}/install.sh ${LIBRARY_RELEASE_FILE}
           for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
-            sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" _build/html/releases/${LIBRARY}-install.sh
+            sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" ${LIBRARY_RELEASE_FILE}
           done
-          sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" _build/html/releases/${LIBRARY}-install.sh
+          sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" ${LIBRARY_RELEASE_FILE}
         shell: bash
       - name: Upload release file to website
         if: github.event.inputs.task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
@@ -199,7 +229,7 @@ jobs:
           pushd _build/html
           git config user.name "GitHub Actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add releases/${LIBRARY}-install.sh
+          git add releases/${LIBRARY}-install*.sh
           git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
           WEBSITE_BRANCH=$(git branch --show-current)
           git push origin ${WEBSITE_BRANCH}
