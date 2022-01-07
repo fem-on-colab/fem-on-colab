@@ -11,7 +11,7 @@ set -x
 GCC_INSTALL_SCRIPT_PATH="gcc/install.sh" BOOST_ARCHIVE_PATH="skip" source boost/install.sh
 
 # Install boost
-wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz -O /tmp/boost-src.tar.gz
+wget https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz -O /tmp/boost-src.tar.gz
 mkdir -p /tmp/boost-src
 tar -xvf /tmp/boost-src.tar.gz --directory /tmp/boost-src --strip-components 1
 cd /tmp/boost-src
