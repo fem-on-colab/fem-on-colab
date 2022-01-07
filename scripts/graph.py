@@ -14,6 +14,7 @@ dependencies = {
     "fenicsx": ["boost", "pybind11", "slepc4py"],
     "firedrake": ["boost", "pybind11", "slepc4py"],
     "gcc": ["colab"],
+    "gmsh": ["h5py"],
     "h5py": ["mpi4py"],
     "mock": ["colab"],
     "mpi4py": ["gcc"],
