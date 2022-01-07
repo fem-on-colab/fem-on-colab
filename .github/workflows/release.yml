@@ -162,20 +162,26 @@ jobs:
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
           DATETIME=${{ steps.date_time.outputs.date_time }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
-          mkdir -p _build/html/releases
           cp ./${LIBRARY}/install.sh _build/html/releases/${LIBRARY}-install.sh
           sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" _build/html/releases/${LIBRARY}-install.sh
         shell: bash
       - name: Upload release file to website
         if: github.event.inputs.task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          external_repository: fem-on-colab/fem-on-colab.github.io
-          publish_dir: _build/html
-          keep_files: true
-          user_name: 'GitHub Actions'
-          user_email: '41898282+github-actions[bot]@users.noreply.github.com'
+        run: |
+          LIBRARY=${{ github.event.inputs.library }}
+          SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+          pushd _build/html
+          git config user.name "GitHub Actions"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add releases/${LIBRARY}-install.sh
+          git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
+          WEBSITE_PUSH_URL=$(git remote get-url --push origin)
+          WEBSITE_PUSH_URL=$(echo ${WEBSITE_PUSH_URL} | sed "s|https://github.com/|https://${{ secrets.REPO_ACCESS_TOKEN }}@github.com/|")
+          git remote set-url --push origin ${WEBSITE_PUSH_URL}
+          WEBSITE_BRANCH=$(git branch --show-current)
+          git push origin ${WEBSITE_BRANCH}
+          popd
+        shell: bash
       - name: Create an archive of build directory and install prefix in case of failure
         if: failure()
         run: |
