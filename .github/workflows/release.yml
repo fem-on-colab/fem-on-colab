@@ -29,11 +29,22 @@ jobs:
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Print release name, release date, git commit sha and task
         run: echo "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ github.event.inputs.task }}"
+      - name: Determine which token to use when cloning website repository
+        if: github.event.inputs.task != 'test'
+        id: token_website
+        run: |
+          if [[ "${GITHUB_REPOSITORY}" == "fem-on-colab/fem-on-colab" ]]; then
+            echo "::set-output name=token::${{ secrets.REPO_ACCESS_TOKEN }}"
+          else
+            echo "::set-output name=token::${{ github.token }}"
+          fi
+        shell: bash
       - name: Clone website repository
         if: github.event.inputs.task != 'test'
         uses: actions/checkout@v2
         with:
           repository: fem-on-colab/fem-on-colab.github.io
+          token: ${{ steps.token_website.outputs.token }}
           ref: gh-pages
           fetch-depth: 0
           path: _build/html
@@ -131,7 +142,7 @@ jobs:
         run: |
           LIBRARY=${{ github.event.inputs.library }}
           TASK=${{ github.event.inputs.task }}
-          if [[ "$TASK" != "test" ]]; then
+          if [[ "${TASK}" != "test" ]]; then
             RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
             RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
             for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
@@ -190,9 +201,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add releases/${LIBRARY}-install.sh
           git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
-          WEBSITE_PUSH_URL=$(git remote get-url --push origin)
-          WEBSITE_PUSH_URL=$(echo ${WEBSITE_PUSH_URL} | sed "s|https://github.com/|https://${{ secrets.REPO_ACCESS_TOKEN }}@github.com/|")
-          git remote set-url --push origin ${WEBSITE_PUSH_URL}
           WEBSITE_BRANCH=$(git branch --show-current)
           git push origin ${WEBSITE_BRANCH}
           popd
