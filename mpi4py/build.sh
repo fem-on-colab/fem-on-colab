@@ -11,7 +11,7 @@ set -x
 GCC_INSTALL_SCRIPT_PATH="gcc/install.sh" MPI4PY_ARCHIVE_PATH="skip" source mpi4py/install.sh
 
 # Install MPI
-wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.1.tar.gz -O /tmp/openmpi-src.tar.gz
+wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.2.tar.gz -O /tmp/openmpi-src.tar.gz
 mkdir -p /tmp/openmpi-src
 tar -xvf /tmp/openmpi-src.tar.gz --directory /tmp/openmpi-src --strip-components 1
 cd /tmp/openmpi-src
