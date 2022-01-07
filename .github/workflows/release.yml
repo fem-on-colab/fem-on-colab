@@ -29,8 +29,8 @@ jobs:
       - name: Compute short SHA of the commit
         id: sha_short
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-      - name: Print release name, release date, git commit sha and task
-        run: echo "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ github.event.inputs.task }}"
+      - name: Print release name, release date, git commit sha, task and args
+        run: echo "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ github.event.inputs.task }} ${{ github.event.inputs.args }}"
       - name: Determine which token to use when cloning website repository
         if: github.event.inputs.task != 'test'
         id: token_website
