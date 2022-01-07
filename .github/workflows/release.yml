@@ -77,6 +77,11 @@ jobs:
         run: |
           LIBRARY=${{ github.event.inputs.library }}
           if [[ -f ${LIBRARY}/build.sh ]]; then
+            RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
+            RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
+            for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
+              declare -x "${RELEASE_INSTALL_SCRIPT_ENVS[I]}"="${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}"
+            done
             bash ${LIBRARY}/build.sh
           fi
         env:
@@ -127,6 +132,11 @@ jobs:
           LIBRARY=${{ github.event.inputs.library }}
           TASK=${{ github.event.inputs.task }}
           if [[ "$TASK" != "test" ]]; then
+            RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
+            RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
+            for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
+              declare -x "${RELEASE_INSTALL_SCRIPT_ENVS[I]}"="${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}"
+            done
             LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
             declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
             bash ${LIBRARY}/install.sh
@@ -162,7 +172,12 @@ jobs:
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
           DATETIME=${{ steps.date_time.outputs.date_time }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+          RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
+          RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
           cp ./${LIBRARY}/install.sh _build/html/releases/${LIBRARY}-install.sh
+          for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
+            sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" _build/html/releases/${LIBRARY}-install.sh
+          done
           sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" _build/html/releases/${LIBRARY}-install.sh
         shell: bash
       - name: Upload release file to website
