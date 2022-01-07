@@ -8,7 +8,7 @@ set -e
 set -x
 
 # Install petsc4py (and its dependencies)
-PETSC4PY_INSTALL_SCRIPT_PATH=${PETSC4PY_INSTALL_SCRIPT_PATH:-"https://fem-on-colab.github.io/releases/petsc4py-install.sh"}
+PETSC4PY_INSTALL_SCRIPT_PATH=${PETSC4PY_INSTALL_SCRIPT_PATH:-"PETSC4PY_INSTALL_SCRIPT_PATH_IN"}
 [[ $PETSC4PY_INSTALL_SCRIPT_PATH == http* ]] && wget ${PETSC4PY_INSTALL_SCRIPT_PATH} -O /tmp/petsc4py-install.sh && PETSC4PY_INSTALL_SCRIPT_PATH=/tmp/petsc4py-install.sh
 source $PETSC4PY_INSTALL_SCRIPT_PATH
 

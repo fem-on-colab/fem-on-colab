@@ -8,7 +8,7 @@ set -e
 set -x
 
 # Install h5py (and its dependencies, most notably gcc and mpi4py)
-H5PY_INSTALL_SCRIPT_PATH=${H5PY_INSTALL_SCRIPT_PATH:-"https://fem-on-colab.github.io/releases/h5py-install.sh"}
+H5PY_INSTALL_SCRIPT_PATH=${H5PY_INSTALL_SCRIPT_PATH:-"H5PY_INSTALL_SCRIPT_PATH_IN"}
 [[ $H5PY_INSTALL_SCRIPT_PATH == http* ]] && wget ${H5PY_INSTALL_SCRIPT_PATH} -O /tmp/h5py-install.sh && H5PY_INSTALL_SCRIPT_PATH=/tmp/h5py-install.sh
 source $H5PY_INSTALL_SCRIPT_PATH
 
