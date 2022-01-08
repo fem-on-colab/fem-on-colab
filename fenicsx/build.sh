@@ -9,6 +9,13 @@ set -x
 
 REPODIR=$PWD
 
+# Expect one argument to set the scalar type
+: ${1?"Usage: $0 scalar_type"}
+SCALAR_TYPE="$1"
+if [[ "$SCALAR_TYPE" != "complex" ]]; then
+    SCALAR_TYPE="real"
+fi
+
 # Install boost, pybind11, slepc4py (and their dependencies)
 FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 
@@ -28,24 +35,24 @@ cd /tmp/basix-src/python
 export xtl_DIR=$INSTALL_PREFIX
 export xtensor_DIR=$INSTALL_PREFIX
 export Basix_DIR=$INSTALL_PREFIX
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
 patch -p 1 < $REPODIR/fenicsx/patches/01-ffcx-cffi-static-libstdc++
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # cppimport
 git clone https://github.com/tbenthompson/cppimport /tmp/cppimport-src
 cd /tmp/cppimport-src/
 patch -p 1 < $REPODIR/fenicsx/patches/02-cppimport-static-libstdc++
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # dolfinx
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
@@ -64,4 +71,4 @@ cmake \
 make -j $(nproc) install
 cd /tmp/dolfinx-src/python
 export DOLFINX_DIR=$INSTALL_PREFIX
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
