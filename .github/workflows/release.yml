@@ -198,7 +198,7 @@ jobs:
         with:
           repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
           automatic_release_tag: ${{ github.event.inputs.library }}-${{ steps.date_time.outputs.date_time }}-${{ steps.sha_short.outputs.sha_short }}
-          title: "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }}"
+          title: "${{ github.event.inputs.library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ github.event.inputs.args }}"
           files: ${{ github.event.inputs.library }}-install.tar.gz
       - name: Prepare release file for website
         if: github.event.inputs.task != 'test'
