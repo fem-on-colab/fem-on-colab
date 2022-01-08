@@ -214,6 +214,13 @@ jobs:
           automatic_release_tag: ${{ (github.event.inputs || inputs).library }}-${{ steps.date_time.outputs.date_time }}-${{ steps.sha_short.outputs.sha_short }}
           title: "${{ (github.event.inputs || inputs).library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ (github.event.inputs || inputs).args }}"
           files: ${{ (github.event.inputs || inputs).library }}-install.tar.gz
+      - name: Check that no suffix has automatically been appended to release assets
+        if: (github.event.inputs || inputs).task != 'test' && steps.check_release.outputs.needs_release == 'yes'
+        run: |
+          LIBRARY=${{ (github.event.inputs || inputs).library }}
+          DATETIME=${{ steps.date_time.outputs.date_time }}
+          SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+          wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz -O /dev/null
       - name: Prepare release file for website
         if: (github.event.inputs || inputs).task != 'test'
         run: |
