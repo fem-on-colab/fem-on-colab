@@ -53,6 +53,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 git clone https://github.com/tbenthompson/cppimport /tmp/cppimport-src
 cd /tmp/cppimport-src/
 patch -p 1 < $REPODIR/fenicsx/patches/02-cppimport-static-libstdc++
+patch -p 1 < $REPODIR/fenicsx/patches/03-cppimport-distutils-imports
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # dolfinx

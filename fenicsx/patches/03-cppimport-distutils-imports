@@ -1,0 +1,12 @@
+diff --git a/cppimport/build_module.py b/cppimport/build_module.py
+index 15f81b7..5107b49 100644
+--- a/cppimport/build_module.py
++++ b/cppimport/build_module.py
+@@ -1,5 +1,7 @@
+ import contextlib
+ import distutils
++import distutils.ccompiler
++import distutils.file_util
+ import distutils.sysconfig
+ import io
+ import logging
