@@ -1,5 +1,5 @@
 diff --git a/firedrake/__init__.py b/firedrake/__init__.py
-index dccdbbc4..674e744a 100644
+index 7ea6832a..7c221c11 100644
 --- a/firedrake/__init__.py
 +++ b/firedrake/__init__.py
 @@ -2,6 +2,8 @@ import firedrake_configuration
@@ -11,13 +11,3 @@ index dccdbbc4..674e744a 100644
  if "PETSC_DIR" in os.environ and not config["options"]["honour_petsc_dir"]:
      if os.environ["PETSC_DIR"] != os.path.join(sys.prefix, "src", "petsc")\
         or os.environ["PETSC_ARCH"] != "default":
-@@ -116,8 +118,7 @@ try:
-     _openblas_dll = cdll.LoadLibrary(_openblas_lib)
-     _openblas_dll.openblas_set_num_threads(1)
- except (OSError, AttributeError):
--    warning('Cannot set OpenBLAS threads, if you are using another BLAS'
--            'implementation, be sure to limit the number of threads to 1')
-+    pass
- 
- # OMP_NUM_THREADS can be set to a comma-separated list of positive integers
- try:
