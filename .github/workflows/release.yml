@@ -179,7 +179,7 @@ jobs:
             IFS=: read -r -a PYTHONPATH_ARRAY <<< "$PYTHONPATH"
             cp -rf colab/patches/google ${PYTHONPATH_ARRAY[-1]}/
           fi
-          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ARGS="${ARGS}" pytest --nbval ${LIBRARY}/
+          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ARGS="${ARGS}" pytest --nbval --nbval-cell-timeout=120 ${LIBRARY}/
         env:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
