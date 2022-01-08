@@ -24,6 +24,7 @@ git clone https://github.com/FEniCS/basix.git /tmp/basix-src
 mkdir -p /tmp/basix-src/build
 cd /tmp/basix-src/build
 cmake \
+    -DDOWNLOAD_XTENSOR_LIBS:BOOL=ON \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
