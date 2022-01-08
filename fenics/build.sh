@@ -9,6 +9,12 @@ set -x
 
 REPODIR=$PWD
 
+# Do not expect any argument to set the scalar type: only real is supported
+if [ $# -ne 0 ]; then
+    echo "Usage: $0"
+    exit 1
+fi
+
 # Install boost, pybind11, slepc4py (and their dependencies)
 FENICS_ARCHIVE_PATH="skip" source fenics/install.sh
 
