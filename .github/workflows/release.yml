@@ -71,6 +71,7 @@ jobs:
           LIBRARY=${{ (github.event.inputs || inputs).library }}
           ARGS_ARRAY=(${{ (github.event.inputs || inputs).args }})
           ARGS_JOINED=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
+          REPODIR=${PWD}
           pushd _build/html
           WEBSITE_FETCH_URL=$(git remote get-url origin)
           WEBSITE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -100,8 +101,11 @@ jobs:
             if [[ "${RELEASED_LIBRARIES[I]}" != "${LIBRARY}" ]]; then
               RELEASED_LIBRARY_CAPITAL=$(echo ${RELEASED_LIBRARIES[I]} | tr a-z A-Z)
               RELEASE_COMMIT=$(git rev-parse --short $(git rev-list -1 ${WEBSITE_BRANCH} -- ${RELEASE_FILES[I]}))
-              RELEASE_INSTALL_SCRIPT_ENVS+=(${RELEASED_LIBRARY_CAPITAL}_INSTALL_SCRIPT_PATH)
-              RELEASE_INSTALL_SCRIPT_RAW_URLS+=(${WEBSITE_RAW_PREFIX}/${RELEASE_COMMIT}/${RELEASE_FILES[I]})
+              RELEASE_INSTALL_SCRIPT_ENV=${RELEASED_LIBRARY_CAPITAL}_INSTALL_SCRIPT_PATH
+              if grep -q "${RELEASE_INSTALL_SCRIPT_ENV}_IN" "${REPODIR}/${LIBRARY}/install.sh"; then
+                RELEASE_INSTALL_SCRIPT_ENVS+=(${RELEASE_INSTALL_SCRIPT_ENV})
+                RELEASE_INSTALL_SCRIPT_RAW_URLS+=(${WEBSITE_RAW_PREFIX}/${RELEASE_COMMIT}/${RELEASE_FILES[I]})
+              fi
             fi
           done
           echo "::set-output name=release_install_script_envs::${RELEASE_INSTALL_SCRIPT_ENVS[@]}"
@@ -111,7 +115,7 @@ jobs:
       - name: Setup Colab base image
         id: colab
         run: |
-          source ./colab/install.sh
+          source colab/install.sh
           echo "::set-output name=path::${PATH}"
           echo "::set-output name=ld_library_path::${LD_LIBRARY_PATH}"
           echo "::set-output name=pythonpath::${PYTHONPATH}"
@@ -165,7 +169,7 @@ jobs:
           DEPENDENCIES=($(find /tmp -name '*-install\.tar.gz'))
           if [ "${#DEPENDENCIES[@]}" -gt "0" ]; then
             source scripts/prepare_for_installation.sh ${LIBRARY}-full
-            source scripts/remove_dependencies_from_archive.sh ${LIBRARY} $PWD/${LIBRARY}-full-install.tar.gz ${DEPENDENCIES[@]}
+            source scripts/remove_dependencies_from_archive.sh ${LIBRARY} ${PWD}/${LIBRARY}-full-install.tar.gz ${DEPENDENCIES[@]}
           else
             source scripts/prepare_for_installation.sh ${LIBRARY}
           fi
@@ -187,7 +191,7 @@ jobs:
               declare -x "${RELEASE_INSTALL_SCRIPT_ENVS[I]}"="${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}"
             done
             LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
-            declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="$PWD/${LIBRARY}-install.tar.gz"
+            declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="${PWD}/${LIBRARY}-install.tar.gz"
             bash ${LIBRARY}/install.sh
           else
             IFS=: read -r -a PYTHONPATH_ARRAY <<< "$PYTHONPATH"
@@ -237,7 +241,7 @@ jobs:
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
           RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
           RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
-          cp ./${LIBRARY}/install.sh ${LIBRARY_RELEASE_FILE}
+          cp ${LIBRARY}/install.sh ${LIBRARY_RELEASE_FILE}
           for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
             sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" ${LIBRARY_RELEASE_FILE}
           done
