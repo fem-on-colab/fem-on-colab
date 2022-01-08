@@ -9,6 +9,13 @@ set -x
 
 REPODIR=$PWD
 
+# Expect one argument to set the scalar type
+: ${1?"Usage: $0 scalar_type"}
+SCALAR_TYPE="$1"
+if [[ "$SCALAR_TYPE" != "complex" ]]; then
+    SCALAR_TYPE="real"
+fi
+
 # Install boost, pybind11, slepc4py (and their dependencies)
 FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 
@@ -25,50 +32,50 @@ PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user --no-binary=islpy islpy
 # COFFEE
 git clone https://github.com/coneoproject/COFFEE.git /tmp/coffee-src
 cd /tmp/coffee-src
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # loopy
 git clone https://github.com/firedrakeproject/loopy.git /tmp/loopy-src
 cd /tmp/loopy-src
 git submodule update --init --recursive
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # netCDF4-python
 git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # FIAT
 git clone https://github.com/firedrakeproject/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # FInAT
 git clone https://github.com/FInAT/FInAT.git /tmp/finat-src
 cd /tmp/finat-src
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # UFL
 git clone https://github.com/firedrakeproject/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # TSFC
 git clone https://github.com/firedrakeproject/tsfc.git /tmp/tsfc-src
 cd /tmp/tsfc-src
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # PyOP2
 git clone https://github.com/OP2/PyOP2.git /tmp/pyop2-src
 cd /tmp/pyop2-src
 patch -p 1 < $REPODIR/firedrake/patches/01-pyop2-static-libstdc++
 export PETSC_DIR=$INSTALL_PREFIX
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # pyadjoint
 git clone https://github.com/dolfin-adjoint/pyadjoint /tmp/pyadjoint-src
 cd /tmp/pyadjoint-src
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # libsupermesh
 git clone https://bitbucket.org/libsupermesh/libsupermesh.git /tmp/libsupermesh-src
@@ -88,7 +95,7 @@ git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
 cd /tmp/tinyasm-src
 patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # libspatialindex
 git clone https://github.com/firedrakeproject/libspatialindex.git /tmp/libspatialindex-src
@@ -105,20 +112,29 @@ make -j $(nproc) install
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
-patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-complex-mode-in-firedrake
+if [[ "$SCALAR_TYPE" == "complex" ]]; then
+    patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-complex-mode-in-firedrake
+else
+    patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-real-mode-in-firedrake
+fi
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
 patch -p 1 < $REPODIR/firedrake/patches/05-do-not-require-vtk
-python3 setup.py install --prefix=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # Write out configuration file
 mkdir -p tmp_for_global_import && cd tmp_for_global_import
 CONFIGURATION_FILE=$(python3 -c 'import firedrake_configuration, os; print(os.path.join(os.path.dirname(firedrake_configuration.__file__), "configuration.json"))')
 cd .. && rm -rf tmp_for_global_import
+if [[ "$SCALAR_TYPE" == "complex" ]]; then
+    IS_COMPLEX="true"
+else
+    IS_COMPLEX="false"
+fi
 cat <<EOT > $CONFIGURATION_FILE
 {
   "options": {
     "cache_dir": "/root/.cache/firedrake",
-    "complex": false,
+    "complex": $IS_COMPLEX,
     "honour_petsc_dir": true,
     "petsc_int_type": "int32"
   }

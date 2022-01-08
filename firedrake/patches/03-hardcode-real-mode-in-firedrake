@@ -7,7 +7,7 @@ index 026bcf25..34d9c14a 100644
      from Cython.Distutils.extension import Extension
      config = get_config()
 -    complex_mode = config['options'].get('complex', False)
-+    complex_mode = True
++    complex_mode = False
  except ImportError:
      # No Cython Extension means no complex mode!
      from distutils.extension import Extension
