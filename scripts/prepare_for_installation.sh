@@ -18,6 +18,7 @@ find . -mindepth 1 -maxdepth 1 -type d -name '*.egg' -print0 | xargs -0 -I folde
 find . -mindepth 1 -maxdepth 1 -type d -name '*.egg' -print0 | xargs -0 -I file find file -mindepth 1 -maxdepth 1 -type f -print0 | xargs -0 -I file ln -fs file .
 rm -f easy-install.pth
 cd -
+find $INSTALL_PREFIX -type f -name '*.pc' -exec sed -i "s|$INSTALL_PREFIX/lib/python3.7/site-packages|$INSTALL_PREFIX/lib/python3.7/dist-packages|g" {} \;
 find $INSTALL_PREFIX -type d -empty -delete
 tar czf ${1}-install.tar.gz $INSTALL_PREFIX
 rm -rf $INSTALL_PREFIX
