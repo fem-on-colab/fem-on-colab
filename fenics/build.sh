@@ -45,6 +45,7 @@ cd /tmp/dolfin-src/
 patch -p 1 < $REPODIR/fenics/patches/03-pkgconfig-slepc-lowercase
 patch -p 1 < $REPODIR/fenics/patches/04-vtk-boost-little-endian
 patch -p 1 < $REPODIR/fenics/patches/05-missing-algorithm
+patch -p 1 < $REPODIR/fenics/patches/06-drop-pybind11-from-requirements
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX

@@ -1,0 +1,12 @@
+diff --git a/python/setup.py b/python/setup.py
+index 5105d14a0..01bc4a00e 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -19,7 +19,6 @@ UFL_RESTRICT_REQUIREMENTS = ">=2021.1.0" # UFL 2019.2.0.dev0 does not exist
+ 
+ REQUIREMENTS = ["numpy",
+                 "pkgconfig",
+-                "pybind11==2.4.3",
+                 "fenics-ffc{}".format(RESTRICT_REQUIREMENTS),
+                 "fenics-ufl{}".format(UFL_RESTRICT_REQUIREMENTS),
+                 "fenics-dijitso{}".format(RESTRICT_REQUIREMENTS)]
