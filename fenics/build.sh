@@ -31,7 +31,6 @@ python3 setup.py install --prefix=$INSTALL_PREFIX
 # FFC
 git clone https://bitbucket.org/fenics-project/ffc.git /tmp/ffc-src
 cd /tmp/ffc-src
-patch -p 1 < $REPODIR/fenics/patches/02-ufl-2021-in-ffc
 python3 setup.py install --prefix=$INSTALL_PREFIX
 
 # dolfin
@@ -40,7 +39,6 @@ cd /tmp/dolfin-src/
 patch -p 1 < $REPODIR/fenics/patches/03-pkgconfig-slepc-lowercase
 patch -p 1 < $REPODIR/fenics/patches/04-vtk-boost-little-endian
 patch -p 1 < $REPODIR/fenics/patches/05-missing-algorithm
-patch -p 1 < $REPODIR/fenics/patches/06-ufl-2021-in-dolfin
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX
