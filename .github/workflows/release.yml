@@ -100,8 +100,11 @@ jobs:
             if [[ "${RELEASED_LIBRARIES[I]}" != "${LIBRARY}" ]]; then
               RELEASED_LIBRARY_CAPITAL=$(echo ${RELEASED_LIBRARIES[I]} | tr a-z A-Z)
               RELEASE_COMMIT=$(git rev-parse --short $(git rev-list -1 ${WEBSITE_BRANCH} -- ${RELEASE_FILES[I]}))
-              RELEASE_INSTALL_SCRIPT_ENVS+=(${RELEASED_LIBRARY_CAPITAL}_INSTALL_SCRIPT_PATH)
-              RELEASE_INSTALL_SCRIPT_RAW_URLS+=(${WEBSITE_RAW_PREFIX}/${RELEASE_COMMIT}/${RELEASE_FILES[I]})
+              RELEASE_INSTALL_SCRIPT_ENV=${RELEASED_LIBRARY_CAPITAL}_INSTALL_SCRIPT_PATH
+              if grep -q "${RELEASE_INSTALL_SCRIPT_ENV}_IN" "${LIBRARY}/install.sh"; then
+                RELEASE_INSTALL_SCRIPT_ENVS+=(${RELEASE_INSTALL_SCRIPT_ENV})
+                RELEASE_INSTALL_SCRIPT_RAW_URLS+=(${WEBSITE_RAW_PREFIX}/${RELEASE_COMMIT}/${RELEASE_FILES[I]})
+              fi
             fi
           done
           echo "::set-output name=release_install_script_envs::${RELEASE_INSTALL_SCRIPT_ENVS[@]}"
@@ -111,7 +114,7 @@ jobs:
       - name: Setup Colab base image
         id: colab
         run: |
-          source ./colab/install.sh
+          source colab/install.sh
           echo "::set-output name=path::${PATH}"
           echo "::set-output name=ld_library_path::${LD_LIBRARY_PATH}"
           echo "::set-output name=pythonpath::${PYTHONPATH}"
@@ -237,7 +240,7 @@ jobs:
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
           RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
           RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
-          cp ./${LIBRARY}/install.sh ${LIBRARY_RELEASE_FILE}
+          cp ${LIBRARY}/install.sh ${LIBRARY_RELEASE_FILE}
           for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
             sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" ${LIBRARY_RELEASE_FILE}
           done
