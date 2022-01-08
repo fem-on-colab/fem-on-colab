@@ -7,6 +7,13 @@
 set -e
 set -x
 
+# Expect one argument to set the scalar type
+: ${1?"Usage: $0 scalar_type"}
+SCALAR_TYPE="$1"
+if [[ "$SCALAR_TYPE" != "complex" ]]; then
+    SCALAR_TYPE="real"
+fi
+
 # Install petsc4py (and its dependencies)
 SLEPC4PY_ARCHIVE_PATH="skip" source slepc4py/install.sh
 
