@@ -1,22 +1,36 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6e473413b..1613b3b31 100644
+index dec296f8a..afc08141a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -470,7 +470,7 @@ if(WIN32)
+@@ -438,7 +438,7 @@ if(APPLE)
+         set( ngsld_flags "-isysroot ${CMAKE_OSX_SYSROOT} ${ngsld_flags}" )
+     endif()
+     #   set(ngscxx_flags "${ngscxx_flags} -Qunused-arguments")
+-    set(ngscxx_includes "${ngscxx_includes} -I$Netgen_BUNDLE/Contents/Resources/include" )  
++    set(ngscxx_includes "${ngscxx_includes} -I$Netgen_BUNDLE/Contents/Resources/include" )
+     set(ngsld_flags "${ngsld_flags} -L$Netgen_BUNDLE/Contents/MacOS  -undefined dynamic_lookup" )
+     set(ngscxx_header "\
+ #!${BASH}
+@@ -488,7 +488,7 @@ if(WIN32)
      install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ngsld.bat DESTINATION ${NGSOLVE_INSTALL_DIR_BIN} COMPONENT ngsolve_devel )
  else(WIN32)
      set(NGSCXX_COMMAND ngscxx)
--    set(ngscxx_compile_command "${CMAKE_CXX_COMPILER} ${ngscxx_flags} ${ngscxx_includes} $*")
-+    set(ngscxx_compile_command "${CMAKE_CXX_COMPILER} ${ngscxx_flags} -static-libstdc++ ${ngscxx_includes} $*")
+-    set(ngscxx_compile_command "$NGSCXX ${ngscxx_flags} ${ngscxx_includes} $*")
++    set(ngscxx_compile_command "$NGSCXX ${ngscxx_flags} -static-libstdc++ ${ngscxx_includes} $*")
      if(CCACHE_FOUND)
        set(ngscxx_compile_command "
  if [ -f ${CCACHE_FOUND} ]
-@@ -482,7 +482,7 @@ fi")
-                   CONTENT "${ngscxx_header} ${ngscxx_compile_command}\n"
+@@ -500,7 +500,7 @@ fi")
+                   CONTENT "${ngscxx_header}\n${ngscxx_compile_command}\n"
                    CONDITION $<COMPILE_LANGUAGE:CXX>
                    )
--    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ngsld CONTENT "${ngsld_header} ${CMAKE_CXX_COMPILER} ${ngsld_flags} $*\n")
-+    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ngsld CONTENT "${ngsld_header} ${CMAKE_CXX_COMPILER} ${ngsld_flags} -static-libstdc++ $*\n")
+-    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ngsld CONTENT "${ngsld_header}\n$NGSCXX ${ngsld_flags} $*\n")
++    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ngsld CONTENT "${ngsld_header}\n$NGSCXX ${ngsld_flags} -static-libstdc++ $*\n")
      install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ngscxx DESTINATION ${NGSOLVE_INSTALL_DIR_BIN} COMPONENT ngsolve_devel )
      install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ngsld DESTINATION ${NGSOLVE_INSTALL_DIR_BIN} COMPONENT ngsolve_devel )
  endif(WIN32)
+@@ -619,4 +619,3 @@ if (ADDITIONAL_PATHS)
+   message(WARNING "The use of ADDITIONAL_PATHS is deprecated, use CMAKE_PREFIX_PATH instead.")
+ endif (ADDITIONAL_PATHS)
+ 
+-

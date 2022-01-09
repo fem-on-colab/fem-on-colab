@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7a4ccec39..5b1ffe7a1 100644
+index dec296f8a..86f80e953 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -315,10 +315,12 @@ if(USE_UMFPACK)
+@@ -321,10 +321,12 @@ if(USE_UMFPACK)
      # UMFPACK was not built with Superbuild, look for it manually
      find_library(UMFPACK_LIB REQUIRED NAMES umfpack HINTS ${UMFPACK_DIR}/lib ${UMFPACK_DIR}/lib64)
      find_library(CHOLMOD_LIB REQUIRED NAMES cholmod HINTS ${UMFPACK_DIR}/lib ${UMFPACK_DIR}/lib64)
@@ -18,10 +18,10 @@ index 7a4ccec39..5b1ffe7a1 100644
    endif()
    list(APPEND NGSOLVE_COMPILE_DEFINITIONS USE_UMFPACK)
 diff --git a/cmake/cmake_modules/FindMUMPS.cmake b/cmake/cmake_modules/FindMUMPS.cmake
-index 5b33fa5d8..447d5e0fc 100644
+index b3f880b46..a007069da 100644
 --- a/cmake/cmake_modules/FindMUMPS.cmake
 +++ b/cmake/cmake_modules/FindMUMPS.cmake
-@@ -4,12 +4,22 @@ if(EXISTS ${MUMPS_DIR}/include/zmumps_c.h)
+@@ -4,18 +4,27 @@ if(EXISTS ${MUMPS_DIR}/include/zmumps_c.h)
      set(MUMPS_INCLUDES ${MUMPS_DIR})
      find_path (MUMPS_INCLUDE_DIR mumps_compat.h HINTS "${MUMPS_DIR}" PATH_SUFFIXES include NO_DEFAULT_PATH)
      list(APPEND MUMPS_INCLUDES ${MUMPS_INCLUDE_DIR})
@@ -29,20 +29,25 @@ index 5b33fa5d8..447d5e0fc 100644
 +    find_library(LIB_MUMPS_C cmumps PATHS ${MUMPS_DIR}/lib)
      find_library(LIB_MUMPS_D dmumps PATHS ${MUMPS_DIR}/lib)
 +    find_library(LIB_MUMPS_S smumps PATHS ${MUMPS_DIR}/lib)
-     find_library(LIB_MUMPS_Z zmumps PATHS ${MUMPS_DIR}/lib)
 +    find_library(LIB_MUMPS_COMMON mumps_common PATHS ${MUMPS_DIR}/lib)
-+    find_library(LIB_PORD pord PATHS ${MUMPS_DIR}/lib)
+     find_library(LIB_MUMPS_Z zmumps PATHS ${MUMPS_DIR}/lib)
+     find_library(LIB_PORD pord PATHS ${MUMPS_DIR}/lib)
 +    find_library(LIB_SCALAPACK scalapack PATHS ${MUMPS_DIR}/lib)
-     find_library(LIB_PARMETIS parmetis HINTS ${PARMETIS_DIR}/lib)
-     find_library(LIB_METIS metis HINTS ${PARMETIS_DIR}/lib)
--    set(MUMPS_LIBRARIES "${LIB_MUMPS_D};${LIB_MUMPS_Z};${LIB_MUMPS_COMMON};${LIB_PARMETIS};${LIB_METIS}")
+     find_library(LIB_PARMETIS parmetis HINTS ${PARMETIS_DIR}/lib REQUIRED)
+     find_library(LIB_METIS metis HINTS ${PARMETIS_DIR}/lib REQUIRED)
 +    find_library(LIB_MUMPS_PTES ptesmumps PATHS ${MUMPS_DIR}/lib)
 +    find_library(LIB_SCOTCH_PT ptscotch PATHS ${MUMPS_DIR}/lib)
 +    find_library(LIB_SCOTCHERR_PT ptscotcherr PATHS ${MUMPS_DIR}/lib)
 +    find_library(LIB_MUMPS_ES esmumps PATHS ${MUMPS_DIR}/lib)
 +    find_library(LIB_SCOTCH scotch PATHS ${MUMPS_DIR}/lib)
 +    find_library(LIB_SCOTCHERR scotcherr PATHS ${MUMPS_DIR}/lib)
+ 
+     if (NOT USE_MKL)
+         find_library(LIB_SCALAPACK scalapack HINTS ${SCALAPACK_DIR}/lib REQUIRED)
+     endif()
+ 
+-    set(MUMPS_LIBRARIES ${LIB_MUMPS_D} ${LIB_MUMPS_Z} ${LIB_MUMPS_COMMON} ${LIB_PARMETIS} ${LIB_METIS} ${LIB_SCALAPACK})
 +    set(MUMPS_LIBRARIES "${LIB_MUMPS_C};${LIB_MUMPS_D};${LIB_MUMPS_S};${LIB_MUMPS_Z};${LIB_MUMPS_COMMON};${LIB_PORD};${LIB_SCALAPACK};${LIB_PARMETIS};${LIB_METIS};${LIB_MUMPS_PTES};${LIB_SCOTCH_PT};${LIB_SCOTCHERR_PT};${LIB_MUMPS_ES};${LIB_SCOTCH};${LIB_SCOTCHERR}")
- endif(EXISTS ${MUMPS_DIR}/include/zmumps_c.h)
- include(FindPackageHandleStandardArgs)
- find_package_handle_standard_args(MUMPS DEFAULT_MSG MUMPS_LIBRARIES MUMPS_INCLUDES)
+ 
+     if (LIB_PORD)
+        list(APPEND MUMPS_LIBRARIES ${LIB_PORD})
