@@ -1,0 +1,13 @@
+diff --git a/dolfin/io/HDF5Interface.cpp b/dolfin/io/HDF5Interface.cpp
+index 02bfd5875..9efac7a98 100644
+--- a/dolfin/io/HDF5Interface.cpp
++++ b/dolfin/io/HDF5Interface.cpp
+@@ -124,7 +124,7 @@ std::string HDF5Interface::get_filename(hid_t hdf5_file_handle)
+   length = H5Fget_name(hdf5_file_handle, name.data(), length + 1);
+   dolfin_assert(length > 0);
+ 
+-  return std::string(name.begin(), name.end());
++  return std::string(name.begin(), name.end()).c_str(); // remove spurious trailing \0 termination
+ }
+ //-----------------------------------------------------------------------------
+ const std::string HDF5Interface::get_attribute_type(

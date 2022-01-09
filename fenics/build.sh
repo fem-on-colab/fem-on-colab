@@ -42,6 +42,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 # dolfin
 git clone https://bitbucket.org/fenics-project/dolfin.git /tmp/dolfin-src
 cd /tmp/dolfin-src/
+patch -p 1 < $REPODIR/fenics/patches/02-xdmf-checkpoint-fix
 patch -p 1 < $REPODIR/fenics/patches/03-pkgconfig-slepc-lowercase
 patch -p 1 < $REPODIR/fenics/patches/04-vtk-boost-little-endian
 patch -p 1 < $REPODIR/fenics/patches/05-missing-algorithm
