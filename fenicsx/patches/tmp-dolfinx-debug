@@ -1,0 +1,26 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index b88ffd6f45..8488105444 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -93,7 +93,7 @@ find_package(MPI 3 REQUIRED)
+ 
+ # Default build type (can be overridden by user)
+ if (NOT CMAKE_BUILD_TYPE)
+-  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
++  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
+     "Choose the type of build, options are: Debug Developer MinSizeRel Release RelWithDebInfo." FORCE)
+ endif()
+ 
+diff --git a/python/setup.py b/python/setup.py
+index e9ef50d879..6dc2eb977c 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -47,7 +47,7 @@ class CMakeBuild(build_ext):
+                       f'-DPython3_LIBRARIES={sysconfig.get_config_var("LIBDEST")}',
+                       f'-DPython3_INCLUDE_DIRS={sysconfig.get_config_var("INCLUDEPY")}']
+ 
+-        cfg = 'Debug' if self.debug else 'Release'
++        cfg = 'Debug'
+         build_args = ['--config', cfg]
+         cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
+         build_args += ['--', '-j3']

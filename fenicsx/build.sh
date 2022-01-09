@@ -21,6 +21,8 @@ FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 
 # Basix
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
+cd /tmp/basix-src
+patch -p 1 < $REPODIR/fenicsx/patches/tmp-basix-debug
 mkdir -p /tmp/basix-src/build
 cd /tmp/basix-src/build
 cmake \
@@ -58,6 +60,8 @@ PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # dolfinx
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
+cd /tmp/dolfinx-src
+patch -p 1 < $REPODIR/fenicsx/patches/tmp-dolfinx-debug
 mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src/build
 export UFC_DIR=$INSTALL_PREFIX

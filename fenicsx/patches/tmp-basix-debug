@@ -1,0 +1,26 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 0657f6b..8b39cbe 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -21,7 +21,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ # Options
+ option(BUILD_SHARED_LIBS "Build Basix with shared libraries." ON)
+ add_feature_info(BUILD_SHARED_LIBS BUILD_SHARED_LIBS "Build Basix with shared libraries.")
+-
++set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "" FORCE)
+ # Download xtl and xtensor
+ option(DOWNLOAD_XTENSOR_LIBS "Download xtl and xtensor. Requires git." OFF)
+ add_feature_info(DOWNLOAD_XTENSOR_LIBS DOWNLOAD_XTENSOR_LIBS "Download xtl and xtensor. Requires git.")
+diff --git a/python/setup.py b/python/setup.py
+index 26cd74d..47bd393 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -52,7 +52,7 @@ class CMakeBuild(build_ext):
+                       '-DPython3_LIBRARIES=' + sysconfig.get_config_var("LIBDEST"),
+                       '-DPython3_INCLUDE_DIRS=' + sysconfig.get_config_var("INCLUDEPY")]
+ 
+-        cfg = 'Debug' if self.debug else 'Release'
++        cfg = 'Debug'
+         build_args = ['--config', cfg]
+ 
+         cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
