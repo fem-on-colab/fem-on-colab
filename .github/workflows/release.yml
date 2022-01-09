@@ -256,8 +256,9 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add releases/${LIBRARY}-install*.sh
-          git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
           WEBSITE_BRANCH=$(git branch --show-current)
+          git pull origin ${WEBSITE_BRANCH}
+          git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
           git push origin ${WEBSITE_BRANCH}
           popd
         shell: bash
