@@ -15,7 +15,10 @@ if [ $# -ne 0 ]; then
     exit 1
 fi
 
-# Install petsc4py and pybind11 (and their dependencies)
+# Install OCC dependencies (already available on Colab)
+apt install -y -qq libfontconfig1-dev libfreetype6-dev libx11-dev libxi-dev libxmu-dev libgl1-mesa-dev mesa-common-dev
+
+# Install OCC, petsc4py and pybind11 (and their dependencies)
 NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 
 # The next scripts may install files to $INSTALL_PREFIX/lib/python3 rather than $INSTALL_PREFIX/lib/python3.7.
@@ -35,6 +38,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -DUSE_MPI:BOOL=OFF \
     -DUSE_GUI:BOOL=OFF \
+    -DUSE_OCC:BOOL=ON \
     -DUSE_PYTHON:BOOL=ON \
     -DUSE_SUPERBUILD:BOOL=OFF \
     -DUSE_NATIVE_ARCH:BOOL=OFF \
