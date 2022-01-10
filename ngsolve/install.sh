@@ -7,6 +7,11 @@
 set -e
 set -x
 
+# Install OCC
+OCC_INSTALL_SCRIPT_PATH=${OCC_INSTALL_SCRIPT_PATH:-"OCC_INSTALL_SCRIPT_PATH_IN"}
+[[ $OCC_INSTALL_SCRIPT_PATH == http* ]] && wget ${OCC_INSTALL_SCRIPT_PATH} -O /tmp/occ-install.sh && OCC_INSTALL_SCRIPT_PATH=/tmp/occ-install.sh
+source $OCC_INSTALL_SCRIPT_PATH
+
 # Install pybind11
 PYBIND11_INSTALL_SCRIPT_PATH=${PYBIND11_INSTALL_SCRIPT_PATH:-"PYBIND11_INSTALL_SCRIPT_PATH_IN"}
 [[ $PYBIND11_INSTALL_SCRIPT_PATH == http* ]] && wget ${PYBIND11_INSTALL_SCRIPT_PATH} -O /tmp/pybind11-install.sh && PYBIND11_INSTALL_SCRIPT_PATH=/tmp/pybind11-install.sh
@@ -23,3 +28,6 @@ NGSOLVE_ARCHIVE_PATH=${NGSOLVE_ARCHIVE_PATH:-"NGSOLVE_ARCHIVE_PATH_IN"}
 if [[ $NGSOLVE_ARCHIVE_PATH != skip ]]; then
     tar -xzf $NGSOLVE_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
 fi
+
+# Install X11 for ngsolve
+apt install -y -qq libfontconfig1 libgl1
