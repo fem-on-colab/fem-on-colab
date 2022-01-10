@@ -295,6 +295,7 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@v2
         with:
+          name: "artifact ${{ (github.event.inputs || inputs).library }} ${{ (github.event.inputs || inputs).task }} ${{ (github.event.inputs || inputs).args }}"
           path: |
             build.tar.gz
             install-prefix.tar.gz
