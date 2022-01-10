@@ -25,7 +25,7 @@ on:
         description: "Token that enables writing to the website repository"
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     container: ubuntu:18.04
     steps:
