@@ -207,45 +207,65 @@ jobs:
         id: check_release
         run: |
           LIBRARY=${{ (github.event.inputs || inputs).library }}
-          [[ -f "${LIBRARY}/build.sh" ]] && NEEDS_RELEASE="yes" || NEEDS_RELEASE="no"
-          echo "::set-output name=needs_release::${NEEDS_RELEASE}"
+          ARGS_ARRAY=(${{ (github.event.inputs || inputs).args }})
+          [[ -f "${LIBRARY}/build.sh" ]] && NEEDS_RELEASE_ARCHIVE="yes" || NEEDS_RELEASE_ARCHIVE="no"
+          echo "::set-output name=needs_release_archive::${NEEDS_RELEASE_ARCHIVE}"
+          if [[ -n "${ARGS_ARRAY[*]}" ]]; then
+            ARGS_JOINED_SPACE=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
+            ARGS_JOINED_HYPHEN=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
+            RELEASE_FILE=_build/html/releases/${LIBRARY}-install-${ARGS_JOINED_HYPHEN}.sh
+          else
+            RELEASE_FILE=_build/html/releases/${LIBRARY}-install.sh
+          fi
+          echo "::set-output name=release_file::${RELEASE_FILE}"
+          if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
+            DATETIME=${{ steps.date_time.outputs.date_time }}
+            SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+            if [[ -n "${ARGS_ARRAY[*]}" ]]; then
+              RELEASE_TITLE="${LIBRARY} ${DATETIME} ${SHA_SHORT} ${ARGS_JOINED_SPACE}"
+              RELEASE_TAG="${LIBRARY}-${DATETIME}-${SHA_SHORT}-${ARGS_JOINED_HYPHEN}"
+            else
+              RELEASE_TITLE="${LIBRARY} ${DATETIME} ${SHA_SHORT}"
+              RELEASE_TAG="${LIBRARY}-${DATETIME}-${SHA_SHORT}"
+            fi
+            RELEASE_ARCHIVE="${LIBRARY}-install.tar.gz"
+            echo "::set-output name=release_title::${RELEASE_TITLE}"
+            echo "::set-output name=release_tag::${RELEASE_TAG}"
+            echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
+          fi
         shell: bash
       - name: Add release to repository
-        if: (github.event.inputs || inputs).task != 'test' && steps.check_release.outputs.needs_release == 'yes'
+        if: (github.event.inputs || inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          automatic_release_tag: ${{ (github.event.inputs || inputs).library }}-${{ steps.date_time.outputs.date_time }}-${{ steps.sha_short.outputs.sha_short }}
-          title: "${{ (github.event.inputs || inputs).library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ (github.event.inputs || inputs).args }}"
-          files: ${{ (github.event.inputs || inputs).library }}-install.tar.gz
+          automatic_release_tag: ${{ steps.check_release.outputs.release_tag }}
+          title: "${{ steps.check_release.outputs.release_title }}"
+          files: ${{ steps.check_release.outputs.release_archive }}
       - name: Check that no suffix has automatically been appended to release assets
-        if: (github.event.inputs || inputs).task != 'test' && steps.check_release.outputs.needs_release == 'yes'
+        if: (github.event.inputs || inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
-          DATETIME=${{ steps.date_time.outputs.date_time }}
-          SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
-          wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz -O /dev/null
+          wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${{ steps.check_release.outputs.release_archive }} -O /dev/null
       - name: Prepare release file for website
         if: (github.event.inputs || inputs).task != 'test'
         run: |
           LIBRARY=${{ (github.event.inputs || inputs).library }}
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
-          ARGS_ARRAY=(${{ (github.event.inputs || inputs).args }})
-          if [[ -n "${ARGS_ARRAY[*]}" ]]; then
-            ARGS_JOINED=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
-            LIBRARY_RELEASE_FILE=_build/html/releases/${LIBRARY}-install-${ARGS_JOINED}.sh
-          else
-            LIBRARY_RELEASE_FILE=_build/html/releases/${LIBRARY}-install.sh
-          fi
           DATETIME=${{ steps.date_time.outputs.date_time }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+          NEEDS_RELEASE_ARCHIVE=${{ steps.check_release.outputs.needs_release_archive }}
+          RELEASE_FILE=${{ steps.check_release.outputs.release_file }}
           RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
           RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
-          cp ${LIBRARY}/install.sh ${LIBRARY_RELEASE_FILE}
+          cp ${LIBRARY}/install.sh ${RELEASE_FILE}
           for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
-            sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" ${LIBRARY_RELEASE_FILE}
+            sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" ${RELEASE_FILE}
           done
-          sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${LIBRARY}-${DATETIME}-${SHA_SHORT}/${LIBRARY}-install.tar.gz|g" ${LIBRARY_RELEASE_FILE}
+          if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
+            RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
+            RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
+            sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
+          fi
         shell: bash
       - name: Upload release file to website
         if: (github.event.inputs || inputs).task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
