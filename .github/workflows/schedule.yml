@@ -1,0 +1,12 @@
+name: Scheduled releases of new FEM on Colab end user packages
+
+on:
+  schedule:
+    - cron: "0 0 * * SAT"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
