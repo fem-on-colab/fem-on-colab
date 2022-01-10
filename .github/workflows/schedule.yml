@@ -6,7 +6,147 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  # Mock build & test
+  build_mock:
+    if: github.repository == 'fem-on-colab/fem-on-colab'
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "mock"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_mock:
+    needs: [build_mock]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "mock"
+      task: "test"
+      args: ""
+
+  # FEniCSx/real build & test
+  build_fenicsx_real:
+    if: github.repository == 'fem-on-colab/fem-on-colab'
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "fenicsx"
+      task: "build"
+      args: "real"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_fenicsx_real:
+    needs: [build_fenicsx_real]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "fenicsx"
+      task: "test"
+      args: "real"
+
+  # FEniCSx/complex build & test
+  build_fenicsx_complex:
+    if: github.repository == 'fem-on-colab/fem-on-colab'
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "fenicsx"
+      task: "build"
+      args: "complex"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_fenicsx_complex:
+    needs: [build_fenicsx_complex]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "fenicsx"
+      task: "test"
+      args: "complex"
+
+  # Firedrake/real build & test
+  build_firedrake_real:
+    if: github.repository == 'fem-on-colab/fem-on-colab'
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "firedrake"
+      task: "build"
+      args: "real"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_firedrake_real:
+    needs: [build_firedrake_real]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "firedrake"
+      task: "test"
+      args: "real"
+
+  # Firedrake/complex build & test
+  build_firedrake_complex:
+    if: github.repository == 'fem-on-colab/fem-on-colab'
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "firedrake"
+      task: "build"
+      args: "complex"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_firedrake_complex:
+    needs: [build_firedrake_complex]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "firedrake"
+      task: "test"
+      args: "complex"
+
+  # Gmsh build & test
+  build_gmsh:
+    if: github.repository == 'fem-on-colab/fem-on-colab'
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "gmsh"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_gmsh:
+    needs: [build_gmsh]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "gmsh"
+      task: "test"
+      args: ""
+
+  # NGSolve build & test
+  build_ngsolve:
+    if: github.repository == 'fem-on-colab/fem-on-colab'
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "ngsolve"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_ngsolve:
+    needs: [build_ngsolve]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "ngsolve"
+      task: "test"
+      args: ""
+
+  # Warn if scheduled workflow is about to be disabled
+  warn:
     runs-on: ubuntu-latest
+    if: github.repository == 'fem-on-colab/fem-on-colab' && github.ref == 'refs/heads/main' && github.event_name == 'schedule'
     steps:
       - uses: actions/checkout@v2
+      - name: Warn if scheduled workflow is about to be disabled
+        uses: fem-on-colab/warn-workflow-about-to-be-disabled-action@main
+        with:
+          workflow-filename: schedule.yml
+          days-elapsed: 50
