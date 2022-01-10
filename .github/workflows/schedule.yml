@@ -6,7 +6,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+  # Mock build & test
+  build_mock:
+    if: github.repository == 'fem-on-colab/fem-on-colab'
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "mock"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_mock:
+    needs: [build_mock]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "mock"
+      task: "test"
+      args: ""
