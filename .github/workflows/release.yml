@@ -242,12 +242,20 @@ jobs:
           automatic_release_tag: ${{ steps.check_release.outputs.release_tag }}
           title: "${{ steps.check_release.outputs.release_title }}"
           files: ${{ steps.check_release.outputs.release_archive }}
-      - name: Check that no suffix has automatically been appended to release assets
+      - name: Update release archive name, as sometimes the md5sum gets appended to release assets name
         if: (github.event.inputs || inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
+        id: update_release_archive
         run: |
           RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
           RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
-          wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
+          if wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null; then
+            echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
+          else
+            MD5_RELEASE_ARCHIVE=$(echo "${RELEASE_ARCHIVE}" | md5sum | cut -d" " -f 1)
+            RELEASE_ARCHIVE=${RELEASE_ARCHIVE/.gz/-${MD5_RELEASE_ARCHIVE}.gz}
+            wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
+            echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
+          fi
       - name: Prepare release file for website
         if: (github.event.inputs || inputs).task != 'test'
         run: |
@@ -265,7 +273,7 @@ jobs:
           done
           if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
             RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
-            RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
+            RELEASE_ARCHIVE=${{ steps.update_release_archive.outputs.release_archive }}
             sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
           fi
         shell: bash
