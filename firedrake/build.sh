@@ -22,6 +22,9 @@ FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 # Remove conflicting package installed by jupyter
 pip3 uninstall -y decorator
 
+# Install patchelf (required by ROL)
+apt install -y -qq patchelf
+
 # Firedrake may require newer packages than the one in the Colab base image. However, do not archive them
 # and install them to /usr
 PYTHONUSERBASE=/usr pip3 install --user matplotlib pandas scipy --upgrade
@@ -143,3 +146,30 @@ EOT
 
 # firedrake run dependencies
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user cachetools
+
+# fireshape dependencies (real mode only)
+# We package them for simplicity with firedrake so that fireshape may be pip installed.
+if [[ "$SCALAR_TYPE" != "complex" ]]; then
+    # roltrilinos
+    git clone https://bitbucket.org/pyrol/trilinos/src/pyrol/ /tmp/roltrilinos-src
+    cd /tmp/roltrilinos-src
+    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
+
+    # Move roltrilinos already to dist-packages (which normally would be done at a later CI step),
+    # so that patchelf will set the correct path
+    mv $INSTALL_PREFIX/lib/python3.7/site-packages/roltrilinos* $INSTALL_PREFIX/lib/python3.7/dist-packages/
+
+    # PETSc had downloaded ML from Trilinos: remove its CMake configuration so that it does not
+    # get in the way of the detection of roltrilinos
+    rm -rf $INSTALL_PREFIX/lib/cmake/Trilinos
+
+    # ROL
+    git clone https://bitbucket.org/pyrol/pyrol/src/master/ /tmp/rol-src
+    cd /tmp/rol-src
+    patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
+    export PYBIND11_DIR=$INSTALL_PREFIX
+    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
+
+    # wurlitzer (only used in notebooks to redirect the C++ output to the notebook cell ouput)
+    PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user wurlitzer
+fi
