@@ -179,6 +179,11 @@ jobs:
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
         shell: bash
+      - name: Prepare pytest configuration file
+        run: |
+          LIBRARY=${{ (github.event.inputs || inputs).library }}
+          wget https://github.com/multiphenics/multiphenicsx/raw/main/multiphenicsx/test/notebooks.py -O ${LIBRARY}/conftest.py
+          sed -i "s|def |def pytest_|g" ${LIBRARY}/conftest.py
       - name: Test library
         run: |
           LIBRARY=${{ (github.event.inputs || inputs).library }}
@@ -197,7 +202,7 @@ jobs:
             IFS=: read -r -a PYTHONPATH_ARRAY <<< "$PYTHONPATH"
             cp -rf colab/patches/google ${PYTHONPATH_ARRAY[-1]}/
           fi
-          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ARGS="${ARGS}" pytest --nbval --nbval-cell-timeout=300 ${LIBRARY}/
+          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
         env:
           PATH: ${{ steps.colab.outputs.path }}
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
