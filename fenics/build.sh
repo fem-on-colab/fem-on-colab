@@ -59,7 +59,7 @@ cmake \
 make -j $(nproc) install
 cd /tmp/dolfin-src/python
 export DOLFIN_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
 
 # mshr
 apt install -y -qq libgmp3-dev libmpfr-dev

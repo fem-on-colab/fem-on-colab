@@ -98,7 +98,7 @@ git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
 cd /tmp/tinyasm-src
 patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
 
 # libspatialindex
 git clone https://github.com/firedrakeproject/libspatialindex.git /tmp/libspatialindex-src

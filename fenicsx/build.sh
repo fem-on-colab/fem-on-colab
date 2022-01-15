@@ -36,7 +36,7 @@ cd /tmp/basix-src/python
 export xtl_DIR=$INSTALL_PREFIX
 export xtensor_DIR=$INSTALL_PREFIX
 export Basix_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
 
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
@@ -73,4 +73,4 @@ cmake \
 make -j $(nproc) install
 cd /tmp/dolfinx-src/python
 export DOLFINX_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
