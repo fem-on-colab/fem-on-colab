@@ -182,8 +182,8 @@ jobs:
       - name: Prepare pytest configuration file
         run: |
           LIBRARY=${{ (github.event.inputs || inputs).library }}
-          wget https://github.com/multiphenics/multiphenicsx/raw/main/multiphenicsx/test/notebooks.py -O ${LIBRARY}/conftest.py
-          sed -i "s|def |def pytest_|g" ${LIBRARY}/conftest.py
+          PYTHONUSERBASE=/usr pip3 install --no-dependencies git+https://github.com/multiphenics/nbvalx.git
+          wget https://github.com/multiphenics/nbvalx/raw/main/tests/notebooks/conftest.py -O ${LIBRARY}/conftest.py
       - name: Test library
         run: |
           LIBRARY=${{ (github.event.inputs || inputs).library }}
