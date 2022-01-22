@@ -261,6 +261,7 @@ jobs:
             wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
             echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
           fi
+        shell: bash
       - name: Prepare release file for website
         if: (github.event.inputs || inputs).task != 'test'
         run: |
