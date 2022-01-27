@@ -44,9 +44,9 @@ jobs:
         id: sha_short
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Print release name, release date, git commit sha, task and args
-        run: echo "${{ (github.event.inputs || inputs).library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ (github.event.inputs || inputs).task }} ${{ (github.event.inputs || inputs).args }}"
+        run: echo "${{ (inputs || github.event.inputs).library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ (inputs || github.event.inputs).task }} ${{ (inputs || github.event.inputs).args }}"
       - name: Determine which token to use when cloning website repository
-        if: (github.event.inputs || inputs).task != 'test'
+        if: (inputs || github.event.inputs).task != 'test'
         id: token_website
         run: |
           if [[ "${GITHUB_REPOSITORY}" == "fem-on-colab/fem-on-colab" ]]; then
@@ -56,7 +56,7 @@ jobs:
           fi
         shell: bash
       - name: Clone website repository
-        if: (github.event.inputs || inputs).task != 'test'
+        if: (inputs || github.event.inputs).task != 'test'
         uses: actions/checkout@v2
         with:
           repository: fem-on-colab/fem-on-colab.github.io
@@ -65,11 +65,11 @@ jobs:
           fetch-depth: 0
           path: _build/html
       - name: Determine latest releases from website repository
-        if: (github.event.inputs || inputs).task != 'test'
+        if: (inputs || github.event.inputs).task != 'test'
         id: releases_website
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
-          ARGS_ARRAY=(${{ (github.event.inputs || inputs).args }})
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          ARGS_ARRAY=(${{ (inputs || github.event.inputs).args }})
           ARGS_JOINED=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
           REPODIR=${PWD}
           pushd _build/html
@@ -124,10 +124,10 @@ jobs:
           echo "::set-output name=ldflags::${LDFLAGS}"
         shell: bash
       - name: Build library
-        if: (github.event.inputs || inputs).task != 'test'
+        if: (inputs || github.event.inputs).task != 'test'
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
-          ARGS="${{ (github.event.inputs || inputs).args }}"
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          ARGS="${{ (inputs || github.event.inputs).args }}"
           if [[ -f ${LIBRARY}/build.sh ]]; then
             RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
             RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
@@ -147,7 +147,7 @@ jobs:
           V: 1
         shell: bash
       - name: Look for libstdc++.so in ldd of generated libraries
-        if: (github.event.inputs || inputs).task != 'test'
+        if: (inputs || github.event.inputs).task != 'test'
         run: |
           ERROR_LIBRARIES=($(find $INSTALL_PREFIX -name '*\.so' -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
           if [ ${#ERROR_LIBRARIES[@]} -eq 0 ]; then
@@ -163,9 +163,9 @@ jobs:
           INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
         shell: bash
       - name: Package library
-        if: (github.event.inputs || inputs).task != 'test'
+        if: (inputs || github.event.inputs).task != 'test'
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
           DEPENDENCIES=($(find /tmp -name '*-install\.tar.gz'))
           if [ "${#DEPENDENCIES[@]}" -gt "0" ]; then
             source scripts/prepare_for_installation.sh ${LIBRARY}-full
@@ -181,14 +181,14 @@ jobs:
         shell: bash
       - name: Prepare pytest configuration file
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
           PYTHONUSERBASE=/usr pip3 install --no-dependencies git+https://github.com/multiphenics/nbvalx.git
           wget https://github.com/multiphenics/nbvalx/raw/main/tests/notebooks/conftest.py -O ${LIBRARY}/conftest.py
       - name: Test library
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
-          TASK=${{ (github.event.inputs || inputs).task }}
-          ARGS="${{ (github.event.inputs || inputs).args }}"
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          TASK=${{ (inputs || github.event.inputs).task }}
+          ARGS="${{ (inputs || github.event.inputs).args }}"
           if [[ "${TASK}" != "test" ]]; then
             RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
             RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
@@ -208,11 +208,11 @@ jobs:
           PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
         shell: bash
       - name: Check if a release is needed
-        if: (github.event.inputs || inputs).task != 'test'
+        if: (inputs || github.event.inputs).task != 'test'
         id: check_release
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
-          ARGS_ARRAY=(${{ (github.event.inputs || inputs).args }})
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          ARGS_ARRAY=(${{ (inputs || github.event.inputs).args }})
           [[ -f "${LIBRARY}/build.sh" ]] && NEEDS_RELEASE_ARCHIVE="yes" || NEEDS_RELEASE_ARCHIVE="no"
           echo "::set-output name=needs_release_archive::${NEEDS_RELEASE_ARCHIVE}"
           if [[ -n "${ARGS_ARRAY[*]}" ]]; then
@@ -240,7 +240,7 @@ jobs:
           fi
         shell: bash
       - name: Add release to repository
-        if: (github.event.inputs || inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
+        if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -248,7 +248,7 @@ jobs:
           title: "${{ steps.check_release.outputs.release_title }}"
           files: ${{ steps.check_release.outputs.release_archive }}
       - name: Update release archive name, as sometimes the md5sum gets appended to release assets name
-        if: (github.event.inputs || inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
+        if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
         id: update_release_archive
         run: |
           RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
@@ -263,9 +263,9 @@ jobs:
           fi
         shell: bash
       - name: Prepare release file for website
-        if: (github.event.inputs || inputs).task != 'test'
+        if: (inputs || github.event.inputs).task != 'test'
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
           DATETIME=${{ steps.date_time.outputs.date_time }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
@@ -284,9 +284,9 @@ jobs:
           fi
         shell: bash
       - name: Upload release file to website
-        if: (github.event.inputs || inputs).task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
+        if: (inputs || github.event.inputs).task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
         run: |
-          LIBRARY=${{ (github.event.inputs || inputs).library }}
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
           pushd _build/html
           git config user.name "GitHub Actions"
@@ -309,8 +309,8 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@v2
         with:
-          name: "artifact ${{ (github.event.inputs || inputs).library }} ${{ (github.event.inputs || inputs).task }} ${{ (github.event.inputs || inputs).args }}"
+          name: "artifact ${{ (inputs || github.event.inputs).library }} ${{ (inputs || github.event.inputs).task }} ${{ (inputs || github.event.inputs).args }}"
           path: |
             build.tar.gz
             install-prefix.tar.gz
-            ${{ (github.event.inputs || inputs).library }}-install.tar.gz
+            ${{ (inputs || github.event.inputs).library }}-install.tar.gz
