@@ -256,7 +256,7 @@ jobs:
           if wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null; then
             echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
           else
-            MD5_RELEASE_ARCHIVE=$(echo "${RELEASE_ARCHIVE}" | md5sum | cut -d" " -f 1)
+            MD5_RELEASE_ARCHIVE=$(md5sum "${RELEASE_ARCHIVE}" | cut -d" " -f 1)
             RELEASE_ARCHIVE=${RELEASE_ARCHIVE/.gz/-${MD5_RELEASE_ARCHIVE}.gz}
             wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
             echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
