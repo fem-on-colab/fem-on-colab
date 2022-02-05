@@ -37,6 +37,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 # FFC
 git clone https://bitbucket.org/fenics-project/ffc.git /tmp/ffc-src
 cd /tmp/ffc-src
+patch -p 1 < $REPODIR/fenics/patches/08-add-cellname2facetname-to-ffc
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # dolfin
