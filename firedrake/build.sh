@@ -115,6 +115,7 @@ make -j $(nproc) install
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
+git checkout fix-python3.6-compat
 if [[ "$SCALAR_TYPE" == "complex" ]]; then
     patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-complex-mode-in-firedrake
 else
