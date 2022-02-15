@@ -1,4 +1,4 @@
-name: Scheduled releases of new FEM on Colab end user packages
+name: Scheduled releases of end user packages
 
 on:
   schedule:

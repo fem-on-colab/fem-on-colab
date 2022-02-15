@@ -1,4 +1,4 @@
-name: Release new FEM on Colab package
+name: Release new package
 
 on:
   workflow_dispatch:

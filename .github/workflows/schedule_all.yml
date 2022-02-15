@@ -1,4 +1,4 @@
-name: Scheduled release of all FEM on Colab packages
+name: Scheduled release of all packages
 
 on:
   schedule:
