@@ -298,13 +298,14 @@ jobs:
           git push origin ${WEBSITE_BRANCH}
           popd
         shell: bash
-      - name: Create an archive of build directory and install prefix in case of failure
+      - name: Create an archive of build directory, install prefix and test directory in case of failure
         if: failure() || cancelled()
         run: |
           if compgen -G "/tmp/*-src" > /dev/null; then
             tar czf build.tar.gz /tmp/*-src
           fi
           tar czf install-prefix.tar.gz ${{ steps.colab.outputs.install_prefix }}
+          tar czf test.tar.gz ${{ (inputs || github.event.inputs).library }}
       - name: Upload archive as an artifact in case of failure
         if: failure() || cancelled()
         uses: actions/upload-artifact@v2
@@ -314,3 +315,4 @@ jobs:
             build.tar.gz
             install-prefix.tar.gz
             ${{ (inputs || github.event.inputs).library }}-install.tar.gz
+            test.tar.gz
