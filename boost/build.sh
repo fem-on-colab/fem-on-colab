@@ -11,10 +11,11 @@ set -x
 GCC_INSTALL_SCRIPT_PATH="gcc/install.sh" BOOST_ARCHIVE_PATH="skip" source boost/install.sh
 
 # Install boost
-wget https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz -O /tmp/boost-src.tar.gz
-mkdir -p /tmp/boost-src
-tar -xvf /tmp/boost-src.tar.gz --directory /tmp/boost-src --strip-components 1
+git clone --recursive https://github.com/boostorg/boost.git /tmp/boost-src
 cd /tmp/boost-src
+TAGS=($(git tag -l --sort=-version:refname "boost-1.[0-9][0-9].[0-9]"))
+echo "Latest tag in the v1 series is ${TAGS[0]}"
+git checkout ${TAGS[0]}
 BOOST_TOOLSET="gcc"
 BOOST_CXXFLAGS="-std=c++17 $CPPFLAGS"
 BOOST_CXXFLAGS="cxxflags=${BOOST_CXXFLAGS// / cxxflags=}"
