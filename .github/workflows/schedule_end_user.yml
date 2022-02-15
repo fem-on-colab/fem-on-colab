@@ -7,11 +7,19 @@ on:
     inputs:
       library:
         description: "Library to build and test."
+  workflow_call:
+    inputs:
+      library:
+        description: "Library to build and test"
+        type: string
+    secrets:
+      REPO_ACCESS_TOKEN:
+        description: "Token that enables writing to the website repository"
 
 jobs:
   # Mock build & test
   build_mock:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || github.event.inputs.library == 'mock')
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == 'mock')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "mock"
@@ -30,7 +38,7 @@ jobs:
 
   # FEniCSx/real build & test
   build_fenicsx_real:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || github.event.inputs.library == 'fenicsx')
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == 'fenicsx')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "fenicsx"
@@ -49,7 +57,7 @@ jobs:
 
   # FEniCSx/complex build & test
   build_fenicsx_complex:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || github.event.inputs.library == 'fenicsx')
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == 'fenicsx')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "fenicsx"
@@ -68,7 +76,7 @@ jobs:
 
   # Firedrake/real build & test
   build_firedrake_real:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || github.event.inputs.library == 'firedrake')
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == 'firedrake')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "firedrake"
@@ -87,7 +95,7 @@ jobs:
 
   # Firedrake/complex build & test
   build_firedrake_complex:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || github.event.inputs.library == 'firedrake')
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == 'firedrake')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "firedrake"
@@ -106,7 +114,7 @@ jobs:
 
   # Gmsh build & test
   build_gmsh:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || github.event.inputs.library == 'gmsh')
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == 'gmsh')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "gmsh"
@@ -125,7 +133,7 @@ jobs:
 
   # NGSolve build & test
   build_ngsolve:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || github.event.inputs.library == 'ngsolve')
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == 'ngsolve')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "ngsolve"
@@ -151,5 +159,5 @@ jobs:
       - name: Warn if scheduled workflow is about to be disabled
         uses: fem-on-colab/warn-workflow-about-to-be-disabled-action@main
         with:
-          workflow-filename: schedule.yml
+          workflow-filename: schedule_end_user.yml
           days-elapsed: 50
