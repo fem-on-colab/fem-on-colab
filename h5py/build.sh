@@ -11,10 +11,14 @@ set -x
 H5PY_ARCHIVE_PATH="skip" source h5py/install.sh
 
 # Install HDF5
-wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.8/src/hdf5-1.10.8.tar.gz -O /tmp/hdf5-src.tar.gz
-mkdir -p /tmp/hdf5-src
-tar -xvf /tmp/hdf5-src.tar.gz --directory /tmp/hdf5-src --strip-components 1
+git clone https://github.com/HDFGroup/hdf5.git /tmp/hdf5-src
 cd /tmp/hdf5-src
+TAGS=($(git tag -l --sort=-version:refname "hdf5-1_10_[0-9][0-9]"))
+if [ ${#TAGS[@]} -eq 0 ]; then
+    TAGS=($(git tag -l --sort=-version:refname "hdf5-1_10_[0-9]"))
+fi
+echo "Latest tag in the v1.10 series is ${TAGS[0]}"
+git checkout ${TAGS[0]}
 ./configure \
     --enable-parallel \
     --enable-hl \
