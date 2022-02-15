@@ -11,10 +11,11 @@ set -x
 GCC_INSTALL_SCRIPT_PATH="gcc/install.sh" MPI4PY_ARCHIVE_PATH="skip" source mpi4py/install.sh
 
 # Install MPI
-wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.2.tar.gz -O /tmp/openmpi-src.tar.gz
-mkdir -p /tmp/openmpi-src
-tar -xvf /tmp/openmpi-src.tar.gz --directory /tmp/openmpi-src --strip-components 1
+git clone https://github.com/open-mpi/ompi /tmp/openmpi-src
 cd /tmp/openmpi-src
+TAGS=($(git tag -l --sort=-version:refname "v4.[0-9].[0-9]"))
+echo "Latest tag in the v4 series is ${TAGS[0]}"
+git checkout ${TAGS[0]}
 sed -i 's/AC_SUBST(CXXCPPFLAGS)/AC_SUBST(CXXCPPFLAGS)\npostdeps_CXX=`echo " $postdeps_CXX " | sed "s, -lstdc++ ,,g"`/g' configure.ac
 ./autogen.pl --force
 ./configure \
