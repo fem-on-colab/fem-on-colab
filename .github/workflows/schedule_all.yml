@@ -9,49 +9,16 @@ on:
         description: "Library to build and test."
 
 jobs:
-  # Mock build & test
-  build_mock:
-    if: >-
-      github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || github.event.inputs.library == 'mock'
-      )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
-    with:
-      library: "mock"
-      task: "build"
-      args: ""
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-  test_mock:
-    needs: [build_mock]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
-    with:
-      library: "mock"
-      task: "test"
-      args: ""
-
-  # gcc build & test
-  build_gcc:
+  # Fake gcc test
+  test_gcc:
+    runs-on: ubuntu-latest
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         github.event_name == 'schedule' || github.event.inputs.library == 'gcc'
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
-    with:
-      library: "gcc"
-      task: "build"
-      args: ""
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-  test_gcc:
-    needs: [build_gcc]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
-    with:
-      library: "gcc"
-      task: "test"
-      args: ""
+    steps:
+      - name: Do nothing
+        run: echo ""
 
   # Boost build & test
   build_boost:
@@ -331,46 +298,6 @@ jobs:
       library: "slepc4py"
       task: "test"
       args: "complex"
-
-  # FEniCSx build & test
-  build_and_test_fenicsx:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && github.event_name == 'schedule'
-    needs: [test_boost, test_pybind11, test_slepc4py]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/schedule_end_user.yml@main
-    with:
-      library: "fenicsx"
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-  # firedrake build & test
-  build_and_test_firedrake:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && github.event_name == 'schedule'
-    needs: [test_boost, test_pybind11, test_slepc4py]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/schedule_end_user.yml@main
-    with:
-      library: "firedrake"
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-  # gmsh build & test
-  build_and_test_gmsh:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && github.event_name == 'schedule'
-    needs: [test_h5py, test_occ]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/schedule_end_user.yml@main
-    with:
-      library: "gmsh"
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-  # NGSolve build & test
-  build_and_test_ngsolve:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && github.event_name == 'schedule'
-    needs: [test_occ, test_petsc4py, test_pybind11]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/schedule_end_user.yml@main
-    with:
-      library: "ngsolve"
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
   # Warn if scheduled workflow is about to be disabled
   warn:
