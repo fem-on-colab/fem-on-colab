@@ -11,7 +11,10 @@ on:
 jobs:
   # Mock build & test
   build_mock:
-    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || github.event.inputs.library == 'mock')
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || github.event.inputs.library == 'mock'
+      )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "mock"
@@ -27,6 +30,285 @@ jobs:
       library: "mock"
       task: "test"
       args: ""
+
+  # gcc build & test
+  build_gcc:
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || github.event.inputs.library == 'gcc'
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "gcc"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_gcc:
+    needs: [build_gcc]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "gcc"
+      task: "test"
+      args: ""
+
+  # Boost build & test
+  build_boost:
+    needs: [test_gcc]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || needs.test_gcc.result == 'success' || (
+          github.event.inputs.library == 'boost' && needs.test_gcc.result == 'skipped' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "boost"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_boost:
+    needs: [build_boost]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || (
+          github.event.inputs.library == 'boost' && needs.build_boost.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "boost"
+      task: "test"
+      args: ""
+
+  # mpi4py build & test
+  build_mpi4py:
+    needs: [test_gcc]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || needs.test_gcc.result == 'success' || (
+          github.event.inputs.library == 'mpi4py' && needs.test_gcc.result == 'skipped' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "mpi4py"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_mpi4py:
+    needs: [build_mpi4py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || (
+          github.event.inputs.library == 'mpi4py' && needs.build_mpi4py.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "mpi4py"
+      task: "test"
+      args: ""
+
+  # OCC build & test
+  build_occ:
+    needs: [test_gcc]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || needs.test_gcc.result == 'success' || (
+          github.event.inputs.library == 'occ' && needs.test_gcc.result == 'skipped' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "occ"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_occ:
+    needs: [build_occ]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || (
+          github.event.inputs.library == 'occ' && needs.build_occ.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "occ"
+      task: "test"
+      args: ""
+
+  # h5py build & test
+  build_h5py:
+    needs: [test_mpi4py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || needs.test_mpi4py.result == 'success' || (
+          github.event.inputs.library == 'h5py' && needs.test_mpi4py.result == 'skipped' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "h5py"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_h5py:
+    needs: [build_h5py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || (
+          github.event.inputs.library == 'h5py' && needs.build_h5py.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "h5py"
+      task: "test"
+      args: ""
+
+  # pybind11 build & test
+  build_pybind11:
+    needs: [test_mpi4py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || needs.test_mpi4py.result == 'success' || (
+          github.event.inputs.library == 'pybind11' && needs.test_mpi4py.result == 'skipped' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "pybind11"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_pybind11:
+    needs: [build_pybind11]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || (
+          github.event.inputs.library == 'pybind11' && needs.build_pybind11.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "pybind11"
+      task: "test"
+      args: ""
+
+  # petsc4py build & test
+  build_petsc4py:
+    needs: [test_h5py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || needs.test_h5py.result == 'success' || (
+          github.event.inputs.library == 'petsc4py' && needs.test_h5py.result == 'skipped' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "petsc4py"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_petsc4py:
+    needs: [build_petsc4py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || (
+          github.event.inputs.library == 'petsc4py' && needs.build_petsc4py.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "petsc4py"
+      task: "test"
+      args: ""
+
+  # slepc4py build & test
+  build_slepc4py:
+    needs: [test_petsc4py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || needs.test_petsc4py.result == 'success' || (
+          github.event.inputs.library == 'slepc4py' && needs.test_petsc4py.result == 'skipped' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "slepc4py"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_slepc4py:
+    needs: [build_slepc4py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        github.event_name == 'schedule' || (
+          github.event.inputs.library == 'slepc4py' && needs.build_slepc4py.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "slepc4py"
+      task: "test"
+      args: ""
+
+  # FEniCSx build & test
+  build_and_test_fenicsx:
+    if: github.repository == 'fem-on-colab/fem-on-colab' && github.event_name == 'schedule'
+    needs: [test_boost, test_pybind11, test_slepc4py]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/schedule_end_user.yml@main
+    with:
+      library: "fenicsx"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  # firedrake build & test
+  build_and_test_firedrake:
+    if: github.repository == 'fem-on-colab/fem-on-colab' && github.event_name == 'schedule'
+    needs: [test_boost, test_pybind11, test_slepc4py]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/schedule_end_user.yml@main
+    with:
+      library: "firedrake"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  # gmsh build & test
+  build_and_test_gmsh:
+    if: github.repository == 'fem-on-colab/fem-on-colab' && github.event_name == 'schedule'
+    needs: [test_h5py, test_occ]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/schedule_end_user.yml@main
+    with:
+      library: "gmsh"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  # NGSolve build & test
+  build_and_test_ngsolve:
+    if: github.repository == 'fem-on-colab/fem-on-colab' && github.event_name == 'schedule'
+    needs: [test_occ, test_petsc4py, test_pybind11]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/schedule_end_user.yml@main
+    with:
+      library: "ngsolve"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
   # Warn if scheduled workflow is about to be disabled
   warn:
