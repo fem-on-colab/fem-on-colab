@@ -16,7 +16,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     SCALAR_TYPE="real"
 fi
 
-# Install boost, pybind11, slepc4py (and their dependencies)
+# Install boost, pybind11, slepc4py (and their dependencies), as well as itk for pyvista
 FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 
 # Basix
