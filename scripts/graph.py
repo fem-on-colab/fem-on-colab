@@ -16,6 +16,7 @@ dependencies = {
     "gcc": ["colab"],
     "gmsh": ["h5py", "occ"],
     "h5py": ["mpi4py"],
+    "itk": ["vtk"],
     "mock": ["colab"],
     "mpi4py": ["gcc"],
     "ngsolve": ["occ", "pybind11", "petsc4py"],
@@ -23,6 +24,7 @@ dependencies = {
     "petsc4py": ["h5py"],
     "pybind11": ["mpi4py"],
     "slepc4py": ["petsc4py"],
+    "vtk": ["gcc"]
 }
 
 g = igraph.Graph(directed=True)
