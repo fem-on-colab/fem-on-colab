@@ -149,7 +149,11 @@ jobs:
       - name: Look for libstdc++.so in ldd of generated libraries
         if: (inputs || github.event.inputs).task != 'test'
         run: |
-          ERROR_LIBRARIES=($(find $INSTALL_PREFIX -name '*\.so' -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
+          EXTENSIONS=('*\.so' '*\.so\.*')
+          declare -a ERROR_LIBRARIES
+          for EXTENSION in "${EXTENSIONS[@]}"; do
+            ERROR_LIBRARIES=("${ERROR_LIBRARIES[@]}" $(find $INSTALL_PREFIX -name $EXTENSION -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
+          done
           if [ ${#ERROR_LIBRARIES[@]} -eq 0 ]; then
             echo "No reference to libstdc++.so was found"
           else
