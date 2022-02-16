@@ -16,7 +16,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     SCALAR_TYPE="real"
 fi
 
-# Install boost, pybind11, slepc4py (and their dependencies)
+# Install boost, pybind11, slepc4py and vtk (and their dependencies)
 FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 
 # Remove conflicting package installed by jupyter
@@ -121,7 +121,6 @@ else
     patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-real-mode-in-firedrake
 fi
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
-patch -p 1 < $REPODIR/firedrake/patches/05-do-not-require-vtk
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # Write out configuration file
