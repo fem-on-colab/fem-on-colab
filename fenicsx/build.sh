@@ -81,7 +81,8 @@ while [[ $IMPORT_SUCCESS -ne 0 ]]; do
     export DOLFINX_DIR=$INSTALL_PREFIX
     PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install -v . --user
     IMPORT_SUCCESS=$(cd; python3 -c "import dolfinx"; echo $?)
-    [[ $IMPORT_SUCCESS -ne 0 && $COUNTER -eq 3 ]] && echo "Giving up on dolfinx pybind11 wrappers" && exit 1
-    [[ $IMPORT_SUCCESS -ne 0 ]] && echo "Import failed: trying again"
+    [[ $IMPORT_SUCCESS -ne 0 && $COUNTER -eq 10 ]] && echo "Giving up on dolfinx pybind11 wrappers" && exit 1
+    [[ $IMPORT_SUCCESS -ne 0 && $IMPORT_SUCCESS -eq 139 ]] && echo "Import failed due to segfault: trying again"
+    [[ $IMPORT_SUCCESS -ne 0 && $IMPORT_SUCCESS -ne 139 ]] && echo "Import failed due to another error: giving up" && exit 1
     COUNTER=$((COUNTER+1))
 done
