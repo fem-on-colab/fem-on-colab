@@ -41,8 +41,9 @@ git submodule update --init --recursive
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # netCDF4-python
-git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
+git clone https://github.com/francesco-ballarin/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
+git checkout mpicompat
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # FIAT
