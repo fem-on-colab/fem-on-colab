@@ -17,7 +17,7 @@ apt install -y -qq autoconf bison build-essential curl flex git jq libtool pkg-c
 wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
 apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ bionic main'
 apt update
-apt install -y -qq cmake
+apt install -y -qq cmake=3.22.2-0kitware1ubuntu18.04.1 cmake-data=3.22.2-0kitware1ubuntu18.04.1
 
 # Python 3.7
 add-apt-repository -y ppa:deadsnakes/ppa
