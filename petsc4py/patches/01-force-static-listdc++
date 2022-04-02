@@ -1,8 +1,20 @@
+diff --git a/config/BuildSystem/config/compilers.py b/config/BuildSystem/config/compilers.py
+index 57f8acdbd7..fa3378ec52 100644
+--- a/config/BuildSystem/config/compilers.py
++++ b/config/BuildSystem/config/compilers.py
+@@ -549,6 +549,7 @@ class Configure(config.base.Configure):
+         self.logPrint('C++ code cannot directly be linked with FC linker, therefore will determine needed C++ libraries')
+         skipcxxlibraries = 0
+ 
++    self.setCompilers.LIBS = self.setCompilers.LIBS.replace("-lstdc++ ", "")
+     if skipcxxlibraries: return
+ 
+     oldFlags = self.setCompilers.LDFLAGS
 diff --git a/config/BuildSystem/config/package.py b/config/BuildSystem/config/package.py
-index df25ac031b..c88fe8651e 100644
+index 4a7d8b046e..c9d034aca4 100644
 --- a/config/BuildSystem/config/package.py
 +++ b/config/BuildSystem/config/package.py
-@@ -890,7 +890,17 @@ If its a remote branch, use: origin/'+self.gitcommit+' for commit.')
+@@ -930,7 +930,17 @@ If its a remote branch, use: origin/'+self.gitcommit+' for commit.')
      dpkgs = Package.sortPackageDependencies(self)
      dpkgs.remove(self)
      for package in dpkgs:
@@ -20,9 +32,9 @@ index df25ac031b..c88fe8651e 100644
 +        assert len(list(filter(libcpp.match, self.dlib))) == 0
        if hasattr(package, 'include'): self.dinclude += package.include
      return
-
-@@ -1628,7 +1638,24 @@ class GNUPackage(Package):
-
+ 
+@@ -1722,7 +1732,24 @@ class GNUPackage(Package):
+ 
    def preInstall(self):
      '''Run pre-install steps like generate configure script'''
 -    if not os.path.isfile(os.path.join(self.packageDir,'configure')):
@@ -47,7 +59,7 @@ index df25ac031b..c88fe8651e 100644
        if not self.programs.autoreconf:
          raise RuntimeError('autoreconf required for ' + self.PACKAGE+' not found (or broken)! Use your package manager to install autoconf')
        if not self.programs.libtoolize:
-@@ -1691,6 +1718,13 @@ class GNUPackage(Package):
+@@ -1788,6 +1815,13 @@ class GNUPackage(Package):
        self.logPrintBox('Running make on '+self.PACKAGE+'; this may take several minutes')
        if self.parallelMake: pmake = self.make.make_jnp+' '+self.makerulename+' '
        else: pmake = self.make.make+' '+self.makerulename+' '
@@ -58,14 +70,14 @@ index df25ac031b..c88fe8651e 100644
 +      assert ret_grep == 0
 +      if out_grep == "libtool found":
 +        pmake = pmake + ' LDFLAGS="-Wc,-static-libstdc++"'
-
+ 
        output2,err2,ret2  = config.base.Configure.executeShellCommand(self.make.make+' clean', cwd=self.packageDir, timeout=200, log = self.log)
        output3,err3,ret3  = config.base.Configure.executeShellCommand(pmake, cwd=self.packageDir, timeout=6000, log = self.log)
 diff --git a/config/BuildSystem/config/packages/netcdf.py b/config/BuildSystem/config/packages/netcdf.py
-index fdcc54fc6f..c70fe11096 100644
+index 3126d3413f..8afd2110c9 100644
 --- a/config/BuildSystem/config/packages/netcdf.py
 +++ b/config/BuildSystem/config/packages/netcdf.py
-@@ -31,7 +31,19 @@ class Configure(config.package.GNUPackage):
+@@ -30,7 +30,19 @@ class Configure(config.package.GNUPackage):
      ''' disable DAP and HDF4, enable NetCDF4'''
      args = config.package.GNUPackage.formGNUConfigureArgs(self)
      args.append('CPPFLAGS="'+self.headers.toString(self.dinclude)+'"')
@@ -93,7 +105,7 @@ index 50d3f32935..45733be311 100644
 @@ -24,6 +24,30 @@ class Configure(config.package.GNUPackage):
      self.deps  = [self.mpi,self.flibs]
      return
-
+ 
 +  def preInstall(self):
 +    from pathlib import Path
 +

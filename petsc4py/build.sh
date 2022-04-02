@@ -50,6 +50,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     "
 fi
 ./configure \
+    --with-clanguage=cxx \
     --with-scalar-type=$SCALAR_TYPE \
     --with-debugging=0 \
     --with-hdf5-dir=$INSTALL_PREFIX \
