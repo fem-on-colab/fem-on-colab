@@ -25,8 +25,12 @@ jobs:
     needs: [test_gcc]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_gcc.result == 'success' || (
-          github.event.inputs.library == 'boost' && needs.test_gcc.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_gcc.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'boost' && needs.test_gcc.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'boost' && needs.test_gcc.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -41,8 +45,10 @@ jobs:
     needs: [build_boost]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_boost.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_boost.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_boost.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -56,8 +62,12 @@ jobs:
     needs: [test_gcc]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_gcc.result == 'success' || (
-          github.event.inputs.library == 'mpi4py' && needs.test_gcc.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_gcc.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'mpi4py' && needs.test_gcc.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'mpi4py' && needs.test_gcc.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -72,8 +82,10 @@ jobs:
     needs: [build_mpi4py]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_mpi4py.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_mpi4py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_mpi4py.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -87,8 +99,12 @@ jobs:
     needs: [test_gcc]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_gcc.result == 'success' || (
-          github.event.inputs.library == 'occ' && needs.test_gcc.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_gcc.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'occ' && needs.test_gcc.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'occ' && needs.test_gcc.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -103,8 +119,10 @@ jobs:
     needs: [build_occ]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_occ.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_occ.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_occ.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -118,8 +136,12 @@ jobs:
     needs: [test_mpi4py]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_mpi4py.result == 'success' || (
-          github.event.inputs.library == 'h5py' && needs.test_mpi4py.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_mpi4py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'h5py' && needs.test_mpi4py.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'h5py' && needs.test_mpi4py.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -134,8 +156,10 @@ jobs:
     needs: [build_h5py]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_h5py.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_h5py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_h5py.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -149,8 +173,12 @@ jobs:
     needs: [test_mpi4py]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_mpi4py.result == 'success' || (
-          github.event.inputs.library == 'pybind11' && needs.test_mpi4py.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_mpi4py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'pybind11' && needs.test_mpi4py.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'pybind11' && needs.test_mpi4py.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -165,8 +193,10 @@ jobs:
     needs: [build_pybind11]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_pybind11.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_pybind11.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_pybind11.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -180,8 +210,12 @@ jobs:
     needs: [test_h5py]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_h5py.result == 'success' || (
-          github.event.inputs.library == 'petsc4py' && needs.test_h5py.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_h5py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'petsc4py' && needs.test_h5py.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'petsc4py' && needs.test_h5py.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -196,8 +230,10 @@ jobs:
     needs: [build_petsc4py_real]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_petsc4py_real.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_petsc4py_real.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_petsc4py_real.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -211,8 +247,12 @@ jobs:
     needs: [test_h5py]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_h5py.result == 'success' || (
-          github.event.inputs.library == 'petsc4py' && needs.test_h5py.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_h5py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'petsc4py' && needs.test_h5py.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'petsc4py' && needs.test_h5py.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -227,8 +267,10 @@ jobs:
     needs: [build_petsc4py_complex]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_petsc4py_complex.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_petsc4py_complex.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_petsc4py_complex.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -242,8 +284,12 @@ jobs:
     needs: [test_petsc4py_real]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_petsc4py_real.result == 'success' || (
-          github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_real.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_petsc4py_real.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_real.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_real.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -258,8 +304,10 @@ jobs:
     needs: [build_slepc4py_real]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_slepc4py_real.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_slepc4py_real.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_slepc4py_real.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -273,8 +321,12 @@ jobs:
     needs: [test_petsc4py_complex]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || needs.test_petsc4py_complex.result == 'success' || (
-          github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_complex.result == 'skipped' && always()
+        (
+          github.event_name == 'schedule' && needs.test_petsc4py_complex.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_complex.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_complex.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
@@ -289,8 +341,10 @@ jobs:
     needs: [build_slepc4py_complex]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || (
-          github.event.inputs.library != '' && needs.build_slepc4py_complex.result == 'success' && always()
+        (
+          github.event_name == 'schedule' && needs.build_slepc4py_complex.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_slepc4py_complex.result == 'success' && always()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
