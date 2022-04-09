@@ -26,6 +26,9 @@ pip3 uninstall -y decorator
 # and install them to /usr
 PYTHONUSERBASE=/usr pip3 install --user matplotlib pandas scipy --upgrade
 
+# Remove conflicting package installed by matplotlib
+pip3 uninstall -y typing-extensions
+
 # islpy
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user --no-binary=islpy islpy
 
