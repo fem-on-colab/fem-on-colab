@@ -39,7 +39,12 @@ jobs:
           add-apt-repository ppa:git-core/ppa
           apt update -qq
           apt install -y -qq git
-      - uses: actions/checkout@v2
+      - name: Mark workspace as safe
+        run: |
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+      - uses: actions/checkout@v3
+        with:
+          set-safe-directory: false
       - name: Compute short SHA of the commit
         id: sha_short
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
@@ -55,15 +60,19 @@ jobs:
             echo "::set-output name=token::${{ github.token }}"
           fi
         shell: bash
+      - name: Mark website directory as safe
+        run: |
+          git config --global --add safe.directory _build/html
       - name: Clone website repository
         if: (inputs || github.event.inputs).task != 'test'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: fem-on-colab/fem-on-colab.github.io
           token: ${{ steps.token_website.outputs.token }}
           ref: gh-pages
           fetch-depth: 0
           path: _build/html
+          set-safe-directory: false
       - name: Determine latest releases from website repository
         if: (inputs || github.event.inputs).task != 'test'
         id: releases_website

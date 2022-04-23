@@ -155,7 +155,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'fem-on-colab/fem-on-colab' && github.ref == 'refs/heads/main' && github.event_name == 'schedule'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Warn if scheduled workflow is about to be disabled
         uses: fem-on-colab/warn-workflow-about-to-be-disabled-action@main
         with:
