@@ -22,7 +22,7 @@ apt install -y -qq cmake
 # Python 3.7
 add-apt-repository -y ppa:deadsnakes/ppa
 apt update
-apt install -y -qq libpython3.7-dev python3.7
+apt install -y -qq libpython3.7-dev python3.7 python3.7-distutils
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
 update-alternatives --set python3 /usr/bin/python3.7
