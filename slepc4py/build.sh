@@ -20,6 +20,7 @@ SLEPC4PY_ARCHIVE_PATH="skip" source slepc4py/install.sh
 # Install SLEPc
 git clone https://gitlab.com/slepc/slepc.git /tmp/slepc-src
 cd /tmp/slepc-src
+git checkout jose/slepc4py-guard
 ./configure --prefix=$INSTALL_PREFIX
 make SLEPC_DIR=$PWD PETSC_DIR=$INSTALL_PREFIX
 make SLEPC_DIR=$PWD PETSC_DIR=$INSTALL_PREFIX install
