@@ -56,6 +56,16 @@ patch -p 1 < $REPODIR/fenicsx/patches/02-cppimport-static-libstdc++
 patch -p 1 < $REPODIR/fenicsx/patches/03-cppimport-distutils-imports
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
+# pugixml
+git clone https://github.com/zeux/pugixml.git /tmp/pugixml-src
+mkdir -p /tmp/pugixml-src/build
+cd /tmp/pugixml-src/build
+cmake \
+    -DCMAKE_C_COMPILER=$(which mpicc) \
+    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    ..
+make -j $(nproc) install
+
 # dolfinx
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 mkdir -p /tmp/dolfinx-src/build
