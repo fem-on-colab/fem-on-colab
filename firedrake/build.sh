@@ -144,7 +144,7 @@ cat <<EOT > $CONFIGURATION_FILE
 EOT
 
 # firedrake run dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user cachetools
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user cachetools progress
 
 # fireshape dependencies (real mode only)
 # We package them for simplicity with firedrake so that fireshape may be pip installed.
