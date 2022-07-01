@@ -319,6 +319,7 @@ jobs:
           fi
           tar czf install-prefix.tar.gz ${{ steps.colab.outputs.install_prefix }}
           tar czf test.tar.gz ${{ (inputs || github.event.inputs).library }}
+        shell: bash
       - name: Upload archive as an artifact in case of failure
         if: failure() || cancelled()
         uses: actions/upload-artifact@v2
