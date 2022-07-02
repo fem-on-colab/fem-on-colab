@@ -19,6 +19,14 @@ fi
 # Install h5py (and its dependencies, most notably gcc and mpi4py)
 PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 
+# Install slibtool
+# https://lists.gnu.org/archive/html/bug-libtool/2019-01/msg00003.html
+git clone https://github.com/midipix-project/slibtool.git /tmp/slibtool-src
+cd /tmp/slibtool-src
+./configure
+make all
+make install
+
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
 cd /tmp/petsc-src

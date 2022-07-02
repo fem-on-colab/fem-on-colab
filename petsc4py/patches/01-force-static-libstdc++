@@ -1,5 +1,5 @@
 diff --git a/config/BuildSystem/config/compilers.py b/config/BuildSystem/config/compilers.py
-index 57f8acdbd7..fa3378ec52 100644
+index 4bc31fca11..a51eb45d92 100644
 --- a/config/BuildSystem/config/compilers.py
 +++ b/config/BuildSystem/config/compilers.py
 @@ -549,6 +549,7 @@ class Configure(config.base.Configure):
@@ -11,10 +11,10 @@ index 57f8acdbd7..fa3378ec52 100644
  
      oldFlags = self.setCompilers.LDFLAGS
 diff --git a/config/BuildSystem/config/package.py b/config/BuildSystem/config/package.py
-index 4a7d8b046e..c9d034aca4 100644
+index a63ca635e0..e39e0a47e4 100644
 --- a/config/BuildSystem/config/package.py
 +++ b/config/BuildSystem/config/package.py
-@@ -930,7 +930,17 @@ If its a remote branch, use: origin/'+self.gitcommit+' for commit.')
+@@ -915,7 +915,17 @@ To use currently downloaded (local) git snapshot - use: --download-'+self.packag
      dpkgs = Package.sortPackageDependencies(self)
      dpkgs.remove(self)
      for package in dpkgs:
@@ -33,7 +33,7 @@ index 4a7d8b046e..c9d034aca4 100644
        if hasattr(package, 'include'): self.dinclude += package.include
      return
  
-@@ -1722,7 +1732,24 @@ class GNUPackage(Package):
+@@ -1711,7 +1721,24 @@ class GNUPackage(Package):
  
    def preInstall(self):
      '''Run pre-install steps like generate configure script'''
@@ -59,7 +59,7 @@ index 4a7d8b046e..c9d034aca4 100644
        if not self.programs.autoreconf:
          raise RuntimeError('autoreconf required for ' + self.PACKAGE+' not found (or broken)! Use your package manager to install autoconf')
        if not self.programs.libtoolize:
-@@ -1788,6 +1815,13 @@ class GNUPackage(Package):
+@@ -1777,11 +1804,21 @@ class GNUPackage(Package):
        self.logPrintBox('Running make on '+self.PACKAGE+'; this may take several minutes')
        if self.parallelMake: pmake = self.make.make_jnp+' '+self.makerulename+' '
        else: pmake = self.make.make+' '+self.makerulename+' '
@@ -69,12 +69,21 @@ index 4a7d8b046e..c9d034aca4 100644
 +      assert err_grep == ""
 +      assert ret_grep == 0
 +      if out_grep == "libtool found":
-+        pmake = pmake + ' LDFLAGS="-Wc,-static-libstdc++"'
++        pmake = pmake + ' LDFLAGS="-Wc,-static-libstdc++" LIBTOOL=slibtool'
  
        output2,err2,ret2  = config.base.Configure.executeShellCommand(self.make.make+' clean', cwd=self.packageDir, timeout=200, log = self.log)
        output3,err3,ret3  = config.base.Configure.executeShellCommand(pmake, cwd=self.packageDir, timeout=6000, log = self.log)
+       self.logPrintBox('Running make install on '+self.PACKAGE+'; this may take several minutes')
+-      output4,err4,ret4  = config.base.Configure.executeShellCommand(self.make.make+' install', cwd=self.packageDir, timeout=1000, log = self.log)
++      if out_grep == "libtool found":
++        output4,err4,ret4  = config.base.Configure.executeShellCommand(self.make.make+' install LIBTOOL=slibtool', cwd=self.packageDir, timeout=1000, log = self.log)
++      else:
++        output4,err4,ret4  = config.base.Configure.executeShellCommand(self.make.make+' install', cwd=self.packageDir, timeout=1000, log = self.log)
+     except RuntimeError as e:
+       self.logPrint('Error running make; make install on '+self.PACKAGE+': '+str(e))
+       raise RuntimeError('Error running make; make install on '+self.PACKAGE)
 diff --git a/config/BuildSystem/config/packages/netcdf.py b/config/BuildSystem/config/packages/netcdf.py
-index 3126d3413f..8afd2110c9 100644
+index d7fe9840cd..d73304e764 100644
 --- a/config/BuildSystem/config/packages/netcdf.py
 +++ b/config/BuildSystem/config/packages/netcdf.py
 @@ -30,7 +30,19 @@ class Configure(config.package.GNUPackage):
