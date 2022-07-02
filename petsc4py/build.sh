@@ -22,7 +22,7 @@ PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
 cd /tmp/petsc-src
-patch -p1 < $REPODIR/petsc4py/patches/01-force-static-listdc++
+patch -p1 < $REPODIR/petsc4py/patches/01-force-static-libstdc++
 DOWNLOADS="\
     --download-metis \
     --download-parmetis \
