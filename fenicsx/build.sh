@@ -120,3 +120,8 @@ while [[ $IMPORT_SUCCESS -ne 0 ]]; do
     [[ $IMPORT_SUCCESS -ne 0 && $IMPORT_SUCCESS -ne 139 ]] && echo "Import failed due to another error: giving up" && exit 1
     COUNTER=$((COUNTER+1))
 done
+
+# zstandard
+git clone https://github.com/indygreg/python-zstandard.git /tmp/zstandard-src
+cd /tmp/zstandard-src/
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
