@@ -19,22 +19,44 @@ fi
 # Install boost, pybind11, slepc4py (and their dependencies), as well as itk for pyvista
 FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 
-# Basix
-git clone https://github.com/FEniCS/basix.git /tmp/basix-src
-mkdir -p /tmp/basix-src/build
-cd /tmp/basix-src/build
+# xtl
+git clone https://github.com/xtensor-stack/xtl.git /tmp/xtl-src
+mkdir -p /tmp/xtl-src/build
+cd /tmp/xtl-src/build
 cmake \
-    -DDOWNLOAD_XTENSOR_LIBS:BOOL=ON \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
-ln -sf ${INSTALL_PREFIX}/lib/cmake/* ${INSTALL_PREFIX}/share/cmake/
-cd /tmp/basix-src/python
 export xtl_DIR=$INSTALL_PREFIX
+
+# xtensor
+git clone https://github.com/xtensor-stack/xtensor.git /tmp/xtensor-src
+mkdir -p /tmp/xtensor-src/build
+cd /tmp/xtensor-src/build
+cmake \
+    -DCMAKE_C_COMPILER=$(which mpicc) \
+    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    ..
+make -j $(nproc) install
 export xtensor_DIR=$INSTALL_PREFIX
+
+# Basix
+git clone https://github.com/FEniCS/basix.git /tmp/basix-src
+mkdir -p /tmp/basix-src/build
+cd /tmp/basix-src/build
+cmake \
+    -DCMAKE_C_COMPILER=$(which mpicc) \
+    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    ..
+make -j $(nproc) install
+cd /tmp/basix-src/python
 export Basix_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
 
