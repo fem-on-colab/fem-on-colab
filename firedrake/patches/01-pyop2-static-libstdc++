@@ -1,11 +1,11 @@
 diff --git a/pyop2/compilation.py b/pyop2/compilation.py
-index 8e0ade26..d4e36830 100644
+index ecca4318..36d1d05c 100644
 --- a/pyop2/compilation.py
 +++ b/pyop2/compilation.py
-@@ -225,6 +225,8 @@ class Compiler(ABC):
-     def __init__(self, extra_compiler_flags=None, extra_linker_flags=None, cpp=False, comm=None):
-         self._extra_compiler_flags = tuple(extra_compiler_flags) or ()
-         self._extra_linker_flags = tuple(extra_linker_flags) or ()
+@@ -228,6 +228,8 @@ class Compiler(ABC):
+     def __init__(self, extra_compiler_flags=(), extra_linker_flags=(), cpp=False, comm=None):
+         self._extra_compiler_flags = tuple(extra_compiler_flags)
+         self._extra_linker_flags = tuple(extra_linker_flags)
 +        self._extra_compiler_flags += ("-static-libstdc++", )
 +        self._extra_linker_flags += ("-static-libstdc++", )
  
