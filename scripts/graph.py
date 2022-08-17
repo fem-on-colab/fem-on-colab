@@ -11,8 +11,8 @@ dependencies = {
     "boost": ["gcc"],
     "colab": [],
     "fenics": ["boost", "pybind11", "slepc4py"],
-    "fenicsx": ["boost", "pybind11", "slepc4py"],
-    "firedrake": ["boost", "pybind11", "slepc4py"],
+    "fenicsx": ["boost", "pybind11", "slepc4py", "itk"],
+    "firedrake": ["boost", "pybind11", "slepc4py", "vtk"],
     "gcc": ["colab"],
     "gmsh": ["h5py", "occ"],
     "h5py": ["mpi4py"],
@@ -57,7 +57,7 @@ for package in dependencies.keys():
         depth = max([len(path) for path in paths])
         depths[package] = depth
 
-layout = g.layout_reingold_tilford(root=[package_to_vertex["colab"], len(dependencies)])
+layout = g.layout_reingold_tilford(root=[package_to_vertex["colab"], len(dependencies)], mode="all")
 for (i, package) in enumerate(dependencies.keys()):
     if package != "colab":
         layout[i][1] = depths[package]
