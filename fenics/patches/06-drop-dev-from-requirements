@@ -1,0 +1,16 @@
+diff --git a/python/setup.py b/python/setup.py
+index 42b4c7537..78819d076 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -21,10 +21,7 @@ REQUIREMENTS = ["numpy",
+                 "pkgconfig",
+                 "pybind11",
+                 "mpi4py",
+-                "petsc4py" ,
+-                "dev-fenics-ffc",
+-                "dev-fenics-ufl",
+-                "dev-fenics-dijitso"]
++                "petsc4py"]
+ 
+ class CMakeExtension(Extension):
+     def __init__(self, name, sourcedir=''):

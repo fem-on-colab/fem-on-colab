@@ -32,6 +32,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
+git checkout 2022.1.0
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
 
 # FFC
@@ -47,7 +48,7 @@ patch -p 1 < $REPODIR/fenics/patches/02-xdmf-checkpoint-fix
 patch -p 1 < $REPODIR/fenics/patches/03-pkgconfig-slepc-lowercase
 patch -p 1 < $REPODIR/fenics/patches/04-vtk-boost-little-endian
 patch -p 1 < $REPODIR/fenics/patches/05-missing-algorithm
-patch -p 1 < $REPODIR/fenics/patches/06-drop-pybind11-from-requirements
+patch -p 1 < $REPODIR/fenics/patches/06-drop-dev-from-requirements
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX
