@@ -9,16 +9,35 @@ on:
         description: "Library to build and test."
 
 jobs:
-  # Fake gcc test
-  test_gcc:
-    runs-on: ubuntu-latest
+  # gcc build & test
+  build_gcc:
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         github.event_name == 'schedule' || github.event.inputs.library == 'gcc'
       )
-    steps:
-      - name: Do nothing
-        run: echo ""
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "gcc"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_gcc:
+    needs: [build_gcc]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_gcc.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_gcc.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "gcc"
+      task: "test"
+      args: ""
 
   # Boost build & test
   build_boost:
@@ -131,6 +150,43 @@ jobs:
       task: "test"
       args: ""
 
+  # vtk build & test
+  build_vtk:
+    needs: [test_gcc]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.test_gcc.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'vtk' && needs.test_gcc.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'vtk' && needs.test_gcc.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "vtk"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_vtk:
+    needs: [build_vtk]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_vtk.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_vtk.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "vtk"
+      task: "test"
+      args: ""
+
   # h5py build & test
   build_h5py:
     needs: [test_mpi4py]
@@ -202,6 +258,43 @@ jobs:
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "pybind11"
+      task: "test"
+      args: ""
+
+  # itk build & test
+  build_itk:
+    needs: [test_vtk]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.test_vtk.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'itk' && needs.test_vtk.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'itk' && needs.test_vtk.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "itk"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_itk:
+    needs: [build_itk]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_itk.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_itk.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "itk"
       task: "test"
       args: ""
 
