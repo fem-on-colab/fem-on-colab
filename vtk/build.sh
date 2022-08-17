@@ -22,7 +22,7 @@ make
 make install
 
 # Install vtk from wheels and patch it
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user vtk
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user --pre vtk
 find $INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so {} \;
 find $INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so {} \;
 

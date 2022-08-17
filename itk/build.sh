@@ -11,6 +11,6 @@ set -x
 ITK_ARCHIVE_PATH="skip" source itk/install.sh
 
 # Install itk from wheels and patch it
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user itk
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user --pre itk
 find $INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so {} \;
 find $INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so {} \;
