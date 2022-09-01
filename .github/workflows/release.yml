@@ -307,7 +307,7 @@ jobs:
           git add releases/${LIBRARY}-install*.sh
           WEBSITE_BRANCH=$(git branch --show-current)
           git pull origin ${WEBSITE_BRANCH}
-          git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
+          [ -n "$(git status --porcelain=v1 2>/dev/null)" ] && git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
           git push origin ${WEBSITE_BRANCH}
           popd
         shell: bash
