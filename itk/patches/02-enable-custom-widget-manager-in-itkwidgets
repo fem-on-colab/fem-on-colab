@@ -1,0 +1,11 @@
+diff --git a/itkwidgets/__init__.py b/itkwidgets/__init__.py
+index 4493d56..4565e4e 100644
+--- a/itkwidgets/__init__.py
++++ b/itkwidgets/__init__.py
+@@ -25,3 +25,6 @@ def _jupyter_nbextension_paths():
+         'dest': 'itkwidgets',
+         'require': 'itkwidgets/extension'
+     }]
++
++import google.colab
++google.colab.output.enable_custom_widget_manager()
