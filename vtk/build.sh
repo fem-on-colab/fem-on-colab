@@ -28,3 +28,6 @@ find $INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.s
 
 # Install xvfbwrapper too
 PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user xvfbwrapper
+
+# Install pyvista
+PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user pyvista
