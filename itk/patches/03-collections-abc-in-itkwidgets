@@ -1,0 +1,30 @@
+diff --git a/itkwidgets/trait_types.py b/itkwidgets/trait_types.py
+index 3f0fdaf..29879e8 100644
+--- a/itkwidgets/trait_types.py
++++ b/itkwidgets/trait_types.py
+@@ -1,6 +1,6 @@
+ import os
+ import six
+-import collections
++import collections.abc
+ from datetime import datetime
+ 
+ import traitlets
+@@ -350,7 +350,7 @@ class PolyDataList(traitlets.TraitType):
+         # list
+         geometries = value
+         if not isinstance(geometries, dict) and not isinstance(
+-                geometries, collections.Sequence) and geometries is not None:
++                geometries, collections.abc.Sequence) and geometries is not None:
+             geometries = [geometries]
+ 
+         try:
+@@ -578,7 +578,7 @@ class PointSetList(PolyDataList):
+         # list
+         point_sets = value
+         if not isinstance(point_sets, dict) and not isinstance(
+-                point_sets, collections.Sequence) and point_sets is not None:
++                point_sets, collections.abc.Sequence) and point_sets is not None:
+             point_sets = [point_sets]
+ 
+         try:
