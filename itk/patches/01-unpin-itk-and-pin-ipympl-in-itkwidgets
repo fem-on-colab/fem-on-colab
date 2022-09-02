@@ -1,0 +1,21 @@
+diff --git a/requirements.txt b/requirements.txt
+index a7f5ed0..c1e6f3c 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,11 +1,11 @@
+ colorcet
+-itk-core>=5.2.0.post2,<5.3
+-itk-filtering>=5.2.0.post2,<5.3
+-itk-numerics>=5.2.0.post2,<5.3
+-itk-meshtopolydata==0.8.1
++itk-core
++itk-filtering
++itk-numerics
++itk-meshtopolydata
+ ipydatawidgets>=4.0.1
+ ipywidgets>=7.5.1
+-ipympl>=0.4.1
++ipympl==0.8.8
+ matplotlib
+ numpy
+ six
