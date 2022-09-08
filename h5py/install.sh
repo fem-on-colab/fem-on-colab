@@ -17,9 +17,6 @@ if [[ ! -f $H5PY_INSTALLED ]]; then
     [[ $MPI4PY_INSTALL_SCRIPT_PATH == http* ]] && MPI4PY_INSTALL_SCRIPT_DOWNLOAD=${MPI4PY_INSTALL_SCRIPT_PATH} && MPI4PY_INSTALL_SCRIPT_PATH=/tmp/mpi4py-install.sh && [[ ! -f ${MPI4PY_INSTALL_SCRIPT_PATH} ]] && wget ${MPI4PY_INSTALL_SCRIPT_DOWNLOAD} -O ${MPI4PY_INSTALL_SCRIPT_PATH}
     source $MPI4PY_INSTALL_SCRIPT_PATH
 
-    # Install zlib
-    apt install -y -qq zlib1g-dev
-
     # Download and uncompress library archive
     H5PY_ARCHIVE_PATH=${H5PY_ARCHIVE_PATH:-"H5PY_ARCHIVE_PATH_IN"}
     [[ $H5PY_ARCHIVE_PATH == http* ]] && H5PY_ARCHIVE_DOWNLOAD=${H5PY_ARCHIVE_PATH} && H5PY_ARCHIVE_PATH=/tmp/h5py-install.tar.gz && wget ${H5PY_ARCHIVE_DOWNLOAD} -O ${H5PY_ARCHIVE_PATH}
