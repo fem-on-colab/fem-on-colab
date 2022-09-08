@@ -13,9 +13,12 @@ REPODIR=$PWD
 ITK_ARCHIVE_PATH="skip" source itk/install.sh
 
 # Install itk from wheels and patch it
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user --pre itk itk-meshtopolydata
-find $INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so {} \;
-find $INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 /usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so {} \;
+TEMPORARY_INSTALL_PREFIX="/tmp/itk-install"
+PYTHONUSERBASE=$TEMPORARY_INSTALL_PREFIX pip3 install --user --pre itk itk-meshtopolydata
+find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
+find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
+rsync -avh --remove-source-files $TEMPORARY_INSTALL_PREFIX/ $INSTALL_PREFIX/
+rm -rf $TEMPORARY_INSTALL_PREFIX
 
 # Install zstandard
 git clone https://github.com/indygreg/python-zstandard.git /tmp/zstandard-src
