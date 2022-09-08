@@ -64,7 +64,6 @@ export DOLFIN_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
 
 # mshr
-apt install -y -qq libgmp3-dev libmpfr-dev
 git clone https://bitbucket.org/fenics-project/mshr.git /tmp/mshr-src
 cd /tmp/mshr-src/
 patch -p 1 < $REPODIR/fenics/patches/07-hardcode-install-path-in-mshr
