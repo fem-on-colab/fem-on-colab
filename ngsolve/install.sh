@@ -34,9 +34,6 @@ if [[ ! -f $NGSOLVE_INSTALLED ]]; then
         tar -xzf $NGSOLVE_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
     fi
 
-    # Install X11 for ngsolve
-    apt install -y -qq libfontconfig1 libgl1
-
     # Mark package as installed
     mkdir -p $SHARE_PREFIX
     touch $NGSOLVE_INSTALLED

@@ -34,9 +34,6 @@ if [[ ! -f $GMSH_INSTALLED ]]; then
         ln -fs /usr/local/lib/libgmsh*.so* /usr/lib
     fi
 
-    # Install X11 for gmsh
-    apt install -y -qq libfontconfig1 libgl1
-
     # Mark package as installed
     mkdir -p $SHARE_PREFIX
     touch $GMSH_INSTALLED
