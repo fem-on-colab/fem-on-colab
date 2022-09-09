@@ -19,32 +19,6 @@ fi
 # Install boost, pybind11, slepc4py (and their dependencies), as well as itk
 FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 
-# xtl
-git clone https://github.com/xtensor-stack/xtl.git /tmp/xtl-src
-mkdir -p /tmp/xtl-src/build
-cd /tmp/xtl-src/build
-cmake \
-    -DCMAKE_C_COMPILER=$(which mpicc) \
-    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_SKIP_RPATH:BOOL=ON \
-    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
-    ..
-make -j $(nproc) install
-export xtl_DIR=$INSTALL_PREFIX
-
-# xtensor
-git clone https://github.com/xtensor-stack/xtensor.git /tmp/xtensor-src
-mkdir -p /tmp/xtensor-src/build
-cd /tmp/xtensor-src/build
-cmake \
-    -DCMAKE_C_COMPILER=$(which mpicc) \
-    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_SKIP_RPATH:BOOL=ON \
-    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
-    ..
-make -j $(nproc) install
-export xtensor_DIR=$INSTALL_PREFIX
-
 # Basix
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
 mkdir -p /tmp/basix-src/build
