@@ -32,4 +32,4 @@ make install
 # Install h5py
 git clone https://github.com/h5py/h5py.git /tmp/h5py-src
 cd /tmp/h5py-src
-CC=mpicc HDF5_MPI="ON" HDF5_DIR=$INSTALL_PREFIX H5PY_SETUP_REQUIRES="0" PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --no-binary=h5py .
+CC=mpicc HDF5_MPI="ON" HDF5_DIR=$INSTALL_PREFIX H5PY_SETUP_REQUIRES="0" PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --no-binary=h5py .

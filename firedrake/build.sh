@@ -20,65 +20,65 @@ fi
 FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 
 # Remove conflicting package installed by jupyter
-pip3 uninstall -y decorator
+python3 -m pip uninstall -y decorator
 
 # Firedrake may require newer packages than the one in the Colab base image. However, do not archive them
 # and install them to /usr
-PYTHONUSERBASE=/usr pip3 install --user matplotlib pandas scipy --upgrade
+PYTHONUSERBASE=/usr python3 -m pip install --user matplotlib pandas scipy --upgrade
 
 # Remove conflicting package installed by matplotlib
-pip3 uninstall -y typing-extensions
+python3 -m pip uninstall -y typing-extensions
 
 # islpy
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user --no-binary=islpy islpy
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --no-binary=islpy islpy
 
 # COFFEE
 git clone https://github.com/coneoproject/COFFEE.git /tmp/coffee-src
 cd /tmp/coffee-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # loopy
 git clone https://github.com/firedrakeproject/loopy.git /tmp/loopy-src
 cd /tmp/loopy-src
 git submodule update --init --recursive
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # netCDF4-python
 git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # FIAT
 git clone https://github.com/firedrakeproject/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # FInAT
 git clone https://github.com/FInAT/FInAT.git /tmp/finat-src
 cd /tmp/finat-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # UFL
 git clone https://github.com/firedrakeproject/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # TSFC
 git clone https://github.com/firedrakeproject/tsfc.git /tmp/tsfc-src
 cd /tmp/tsfc-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # PyOP2
 git clone https://github.com/OP2/PyOP2.git /tmp/pyop2-src
 cd /tmp/pyop2-src
 patch -p 1 < $REPODIR/firedrake/patches/01-pyop2-static-libstdc++
 export PETSC_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # pyadjoint
 git clone https://github.com/dolfin-adjoint/pyadjoint /tmp/pyadjoint-src
 cd /tmp/pyadjoint-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # libsupermesh
 git clone https://bitbucket.org/libsupermesh/libsupermesh.git /tmp/libsupermesh-src
@@ -98,7 +98,7 @@ git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
 cd /tmp/tinyasm-src
 patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
 # libspatialindex
 git clone https://github.com/firedrakeproject/libspatialindex.git /tmp/libspatialindex-src
@@ -121,7 +121,7 @@ else
     patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-real-mode-in-firedrake
 fi
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # Write out configuration file
 mkdir -p tmp_for_global_import && cd tmp_for_global_import
@@ -144,7 +144,7 @@ cat <<EOT > $CONFIGURATION_FILE
 EOT
 
 # firedrake run dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user cachetools progress
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user cachetools progress
 
 # fireshape dependencies (real mode only)
 # We package them for simplicity with firedrake so that fireshape may be pip installed.
@@ -152,7 +152,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     # roltrilinos
     git clone https://bitbucket.org/pyrol/trilinos/src/pyrol/ /tmp/roltrilinos-src
     cd /tmp/roltrilinos-src
-    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
+    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
     # Move roltrilinos already to dist-packages (which normally would be done at a later CI step),
     # so that patchelf will set the correct path
@@ -167,8 +167,8 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     cd /tmp/rol-src
     patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
     export PYBIND11_DIR=$INSTALL_PREFIX
-    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
+    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
     # wurlitzer (only used in notebooks to redirect the C++ output to the notebook cell ouput)
-    PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user wurlitzer
+    PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user wurlitzer
 fi
