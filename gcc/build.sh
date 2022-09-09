@@ -23,8 +23,11 @@ sed -i 's|AC_DEFUN(\[_GCC_AUTOCONF_VERSION_CHECK\]|AC_DEFUN([_GCC_AUTOCONF_VERSI
 sed -i 's|_GCC_AUTOCONF_VERSION_CHECK||g' config/override.m4
 sed -i 's|gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++|gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++ -static-libstdc++|g' configure.ac
 sed -i 's|gcc/xgcc -shared-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++|gcc/xg++ -static-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++ -static-libstdc++|g' configure.ac
-find ./ -type f -name 'configure.ac' -exec sed -i 's@AC_OUTPUT@postdeps_CXX=`echo " \$postdeps_CXX " | sed "s, \-lstdc++ ,,g"`\nAC_OUTPUT@g' {} \;
-find ./ -name configure | while read f; do d=$( dirname "$f" ) && echo "$d": && l=$d/regenerate.log && ( cd "$d"/ && if test -f Makefile.am; then autoreconf; else autoconf; fi ) > "$l" 2>&1; if test -s "$l"; then echo "Review '$l'"; else rm "$l"; fi; done
+for configure_ac in $(find ./ -type f -name 'configure.ac'); do
+    tac $configure_ac | sed '0,/AC_OUTPUT/I s/.*AC_OUTPUT.*/&\npostdeps_CXX=`echo " \$postdeps_CXX " | sed "s, \-lstdc++ ,,g"`/I' | tac > reversed_file
+    mv reversed_file $configure_ac
+done
+find ./ -name configure | while read f; do d=$( dirname "$f" ) && echo -n "$d:" && l=$d/regenerate.log && ( cd "$d"/ && if test -f Makefile.am; then autoreconf; else autoconf; fi ) > "$l" 2>&1; echo $?; if test -s "$l"; then echo "Review '$l'"; else rm "$l"; fi; done
 ./configure \
     --prefix=$INSTALL_PREFIX \
     \
