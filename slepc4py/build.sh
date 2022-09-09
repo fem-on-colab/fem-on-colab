@@ -28,4 +28,4 @@ ln -s $INSTALL_PREFIX/lib/slepc/conf $INSTALL_PREFIX/conf
 
 # Install slepc4py
 cd /tmp/slepc-src/src/binding/slepc4py/
-PETSC_DIR=$INSTALL_PREFIX SLEPC_DIR=$INSTALL_PREFIX python3 setup.py install --prefix=$INSTALL_PREFIX
+PETSC_DIR=$INSTALL_PREFIX SLEPC_DIR=$INSTALL_PREFIX PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
