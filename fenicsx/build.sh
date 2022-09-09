@@ -58,25 +58,25 @@ cmake \
 make -j $(nproc) install
 cd /tmp/basix-src/python
 export Basix_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
 patch -p 1 < $REPODIR/fenicsx/patches/01-ffcx-cffi-static-libstdc++
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # cppimport
 git clone https://github.com/tbenthompson/cppimport /tmp/cppimport-src
 cd /tmp/cppimport-src/
 patch -p 1 < $REPODIR/fenicsx/patches/02-cppimport-static-libstdc++
 patch -p 1 < $REPODIR/fenicsx/patches/03-cppimport-distutils-imports
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # pugixml
 git clone https://github.com/zeux/pugixml.git /tmp/pugixml-src
@@ -113,7 +113,7 @@ while [[ $IMPORT_SUCCESS -ne 0 ]]; do
     cd /tmp/dolfinx-src/python
     rm -rf build
     export DOLFINX_DIR=$INSTALL_PREFIX
-    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install -v . --user
+    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install -v . --user
     IMPORT_SUCCESS=$(cd; python3 -c "import dolfinx"; echo $?)
     [[ $IMPORT_SUCCESS -ne 0 && $COUNTER -eq 10 ]] && echo "Giving up on dolfinx pybind11 wrappers" && exit 1
     [[ $IMPORT_SUCCESS -ne 0 && $IMPORT_SUCCESS -eq 139 ]] && echo "Import failed due to segfault: trying again"

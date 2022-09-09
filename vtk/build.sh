@@ -23,14 +23,14 @@ make install
 
 # Install vtk from wheels and patch it
 TEMPORARY_INSTALL_PREFIX="/tmp/vtk-install"
-PYTHONUSERBASE=$TEMPORARY_INSTALL_PREFIX pip3 install --user --pre vtk
+PYTHONUSERBASE=$TEMPORARY_INSTALL_PREFIX python3 -m pip install --user --pre vtk
 find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
 find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
 rsync -avh --remove-source-files $TEMPORARY_INSTALL_PREFIX/ $INSTALL_PREFIX/
 rm -rf $TEMPORARY_INSTALL_PREFIX
 
 # Install xvfbwrapper too
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user xvfbwrapper
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
 
 # Install pyvista
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user pyvista
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pyvista

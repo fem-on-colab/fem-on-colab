@@ -27,4 +27,4 @@ make -j $(nproc) LDFLAGS="-Wc,-static-libstdc++"
 make install LDFLAGS="-Wc,-static-libstdc++"
 
 # Install mpi4py
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user git+https://github.com/mpi4py/mpi4py.git
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user git+https://github.com/mpi4py/mpi4py.git
