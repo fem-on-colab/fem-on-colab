@@ -93,4 +93,4 @@ make -j $(nproc) install
 rm $INSTALL_PREFIX/lib/python3
 
 # Install a further ngsolve.webgui dependency
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install --user webgui_jupyter_widgets
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user webgui_jupyter_widgets

@@ -21,25 +21,25 @@ FENICS_ARCHIVE_PATH="skip" source fenics/install.sh
 # FIAT
 git clone https://github.com/FEniCS/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # dijitso
 git clone https://bitbucket.org/fenics-project/dijitso.git /tmp/dijitso-src
 cd /tmp/dijitso-src
 patch -p 1 < $REPODIR/fenics/patches/01-dijitso-static-libstdc++
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
 git checkout 2022.1.0
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # FFC
 git clone https://bitbucket.org/fenics-project/ffc.git /tmp/ffc-src
 cd /tmp/ffc-src
 patch -p 1 < $REPODIR/fenics/patches/08-add-cellname2facetname-to-ffc
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # dolfin
 git clone https://bitbucket.org/fenics-project/dolfin.git /tmp/dolfin-src
@@ -61,7 +61,7 @@ cmake \
 make -j $(nproc) install
 cd /tmp/dolfin-src/python
 export DOLFIN_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
 # mshr
 apt install -y -qq libgmp3-dev libmpfr-dev
@@ -78,4 +78,4 @@ cmake \
     ..
 make -j $(nproc) install
 cd /tmp/mshr-src/python
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user

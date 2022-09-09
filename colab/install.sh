@@ -32,29 +32,29 @@ PIP_RELEASE_FILE=${PIP_RELEASE_URL##*/}
 wget ${PIP_RELEASE_URL} -O ${PIP_RELEASE_FILE}
 export PYTHONPATH=/usr/lib/python3.7/dist-packages:/usr/lib/python3.7/site-packages
 PYTHONUSERBASE=/usr python3 ${PIP_RELEASE_FILE}/pip install --no-index --user ${PIP_RELEASE_FILE}
-PYTHONUSERBASE=/usr pip3 install --user setuptools
+PYTHONUSERBASE=/usr python3 -m pip install --user setuptools
 rm -f ${PIP_RELEASE_FILE}
 
 # Numpy
-PYTHONUSERBASE=/usr pip3 install --user numpy==1.21.6
+PYTHONUSERBASE=/usr python3 -m pip install --user numpy==1.21.6
 
 # matplotlib
-PYTHONUSERBASE=/usr pip3 install --user matplotlib==3.2.2
+PYTHONUSERBASE=/usr python3 -m pip install --user matplotlib==3.2.2
 
 # scipy
-PYTHONUSERBASE=/usr pip3 install --user scipy==1.7.3
+PYTHONUSERBASE=/usr python3 -m pip install --user scipy==1.7.3
 
 # Cython
-PYTHONUSERBASE=/usr pip3 install --user Cython==0.29.30
+PYTHONUSERBASE=/usr python3 -m pip install --user Cython==0.29.30
 
 # sympy
-PYTHONUSERBASE=/usr pip3 install --user sympy==1.7.1
+PYTHONUSERBASE=/usr python3 -m pip install --user sympy==1.7.1
 
 # jupyter (for testing)
-PYTHONUSERBASE=/usr pip3 install --user jupyter
+PYTHONUSERBASE=/usr python3 -m pip install --user jupyter
 
 # pytest and nbval (for testing)
-PYTHONUSERBASE=/usr pip3 install --user nbval pytest
+PYTHONUSERBASE=/usr python3 -m pip install --user nbval pytest
 
 # Install prefix
 export INSTALL_PREFIX=/usr/local

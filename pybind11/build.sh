@@ -20,4 +20,4 @@ cmake \
     .
 make -j $(nproc)
 make install
-PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user

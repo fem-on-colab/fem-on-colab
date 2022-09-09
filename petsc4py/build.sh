@@ -78,4 +78,4 @@ sed -i "s, -lstdc++ , ,g" $INSTALL_PREFIX/lib/petsc/conf/petscvariables
 
 # Install petsc4py
 cd /tmp/petsc-src/src/binding/petsc4py/
-PETSC_DIR=$INSTALL_PREFIX PYTHONUSERBASE=$INSTALL_PREFIX pip3 install . --user
+PETSC_DIR=$INSTALL_PREFIX PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
