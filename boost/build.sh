@@ -8,7 +8,7 @@ set -e
 set -x
 
 # Install gcc
-GCC_INSTALL_SCRIPT_PATH="gcc/install.sh" BOOST_ARCHIVE_PATH="skip" source boost/install.sh
+BOOST_ARCHIVE_PATH="skip" source boost/install.sh
 
 # Install boost
 git clone --recursive https://github.com/boostorg/boost.git /tmp/boost-src

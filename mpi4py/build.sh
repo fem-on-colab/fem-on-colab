@@ -8,7 +8,7 @@ set -e
 set -x
 
 # Install gcc
-GCC_INSTALL_SCRIPT_PATH="gcc/install.sh" MPI4PY_ARCHIVE_PATH="skip" source mpi4py/install.sh
+MPI4PY_ARCHIVE_PATH="skip" source mpi4py/install.sh
 
 # Install MPI
 git clone https://github.com/open-mpi/ompi /tmp/openmpi-src
