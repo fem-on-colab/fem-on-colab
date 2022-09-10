@@ -89,6 +89,8 @@ cd /tmp/libsupermesh-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
+    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -DBUILD_SHARED_LIBS:BOOL=ON \
@@ -110,6 +112,8 @@ cd /tmp/libspatialindex-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
+    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
