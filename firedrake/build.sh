@@ -97,6 +97,7 @@ make -j $(nproc) install
 git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
 cd /tmp/tinyasm-src
 patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
+patch -p 1 < $REPODIR/firedrake/patches/07-use-cxxflags-and-ldflags-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
