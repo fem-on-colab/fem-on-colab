@@ -61,7 +61,7 @@ cmake \
 make -j $(nproc) install
 cd /tmp/dolfin-src/python
 export DOLFIN_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
 # mshr
 apt install -y -qq libgmp3-dev libmpfr-dev
@@ -78,4 +78,4 @@ cmake \
     ..
 make -j $(nproc) install
 cd /tmp/mshr-src/python
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
