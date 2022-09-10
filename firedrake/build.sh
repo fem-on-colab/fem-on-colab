@@ -98,7 +98,7 @@ git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
 cd /tmp/tinyasm-src
 patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
 # libspatialindex
 git clone https://github.com/firedrakeproject/libspatialindex.git /tmp/libspatialindex-src
@@ -152,7 +152,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     # roltrilinos
     git clone https://bitbucket.org/pyrol/trilinos/src/pyrol/ /tmp/roltrilinos-src
     cd /tmp/roltrilinos-src
-    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
     # Move roltrilinos already to dist-packages (which normally would be done at a later CI step),
     # so that patchelf will set the correct path
@@ -167,7 +167,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     cd /tmp/rol-src
     patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
     export PYBIND11_DIR=$INSTALL_PREFIX
-    PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
     # wurlitzer (only used in notebooks to redirect the C++ output to the notebook cell ouput)
     PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user wurlitzer
