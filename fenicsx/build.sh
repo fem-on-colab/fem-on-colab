@@ -34,7 +34,7 @@ cmake \
 make -j $(nproc) install
 cd /tmp/basix-src/python
 export Basix_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
