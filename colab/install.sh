@@ -50,6 +50,9 @@ PYTHONUSERBASE=/usr python3 -m pip install --user Cython==0.29.32
 # sympy
 PYTHONUSERBASE=/usr python3 -m pip install --user sympy==1.7.1
 
+# Pillow
+PYTHONUSERBASE=/usr python3 -m pip install --user Pillow==7.1.2
+
 # jupyter (for testing)
 PYTHONUSERBASE=/usr python3 -m pip install --user jupyter
 
