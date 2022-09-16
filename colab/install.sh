@@ -7,7 +7,7 @@
 # This file mimicks Colab environment settings. Keep track of a Colab environment variable likely
 # related to software updates on Colab. Remember to update this variable for future reference
 # when changing versions in this file.
-LAST_FORCED_REBUILD=20220712
+LAST_FORCED_REBUILD=20220913
 
 # Common
 apt update
@@ -45,7 +45,7 @@ PYTHONUSERBASE=/usr python3 -m pip install --user matplotlib==3.2.2
 PYTHONUSERBASE=/usr python3 -m pip install --user scipy==1.7.3
 
 # Cython
-PYTHONUSERBASE=/usr python3 -m pip install --user Cython==0.29.30
+PYTHONUSERBASE=/usr python3 -m pip install --user Cython==0.29.32
 
 # sympy
 PYTHONUSERBASE=/usr python3 -m pip install --user sympy==1.7.1
