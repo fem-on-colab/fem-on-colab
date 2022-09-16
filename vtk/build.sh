@@ -34,3 +34,20 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
 
 # Install pyvista
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pyvista
+
+# Install pythreejs
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pythreejs
+
+# Automatically enable custom widgets
+ENABLE_CUSTOM_WIDGETS=$(cat <<-END
+
+try:
+    import google.colab
+except ImportError:
+    pass
+else:
+    google.colab.output.enable_custom_widget_manager()
+END
+)
+echo "$ENABLE_CUSTOM_WIDGETS" >> $(python3 -c 'import pyvista; print(pyvista.__file__)')
+echo "$ENABLE_CUSTOM_WIDGETS" >> $(python3 -c 'import pythreejs; print(pythreejs.__file__)')
