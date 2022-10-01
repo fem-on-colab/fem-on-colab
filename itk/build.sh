@@ -36,5 +36,4 @@ cd /tmp/itkwidgets-src
 git checkout master
 patch -p 1 < $REPODIR/itk/patches/01-unpin-itk-and-pin-ipympl-in-itkwidgets
 patch -p 1 < $REPODIR/itk/patches/02-enable-custom-widget-manager-in-itkwidgets
-patch -p 1 < $REPODIR/itk/patches/03-collections-abc-in-itkwidgets
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
