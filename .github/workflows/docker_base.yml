@@ -1,0 +1,39 @@
+name: Release new docker image containing the base Colab environment
+
+on:
+  schedule:
+    - cron: "0 0 * * FRI"
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      CI_REGISTRY_USER:
+        description: "Docker Hub username"
+      CI_REGISTRY_PASSWORD:
+        description: "Token that enables writing to Docker Hub"
+
+env:
+  IMAGE_PREFIX: femoncolab/base_images
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build docker image
+        run: |
+          docker build --pull -t ${IMAGE_PREFIX}:latest -f base/Dockerfile .
+      - name: Determine image tag
+        id: image_name
+        run: |
+          IMAGE_TAG=$(docker run -i ${IMAGE_PREFIX}:latest bash -c "cd /usr/local/share/colab-backend-info && git rev-parse --short HEAD")
+          echo "::set-output name=image_tag::${IMAGE_TAG}"
+      - name: Log into the docker registry
+        if: github.repository == 'fem-on-colab/fem-on-colab'
+        run: docker login -u ${{ secrets.CI_REGISTRY_USER }} -p ${{ secrets.CI_REGISTRY_PASSWORD }}
+      - name: Push to the docker registry
+        if: github.repository == 'fem-on-colab/fem-on-colab'
+        run: |
+          IMAGE_TAG="${{ steps.image_name.outputs.image_tag }}"
+          docker tag ${IMAGE_PREFIX}:latest ${IMAGE_PREFIX}:${IMAGE_TAG}
+          docker push ${IMAGE_PREFIX}:latest
+          docker push ${IMAGE_PREFIX}:${IMAGE_TAG}
