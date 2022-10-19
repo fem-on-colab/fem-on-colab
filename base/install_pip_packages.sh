@@ -4,9 +4,35 @@
 #
 # SPDX-License-Identifier: MIT
 
-# Install same packages as on Colab
-grep -v -e "^google-colab @ file:///" -e "^pathlib==" -e "^pip==" -e "^pytest==" -e "^python-apt==" -h ${COLAB_BACKEND_INFO}/pip-freeze.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
-C_INCLUDE_PATH=/usr/include/gdal CPLUS_INCLUDE_PATH=/usr/include/gdal PYTHONUSERBASE=/usr python3 -m pip install --user -r ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
+# Get packages list from Colab backend info
+grep -v "^#" -h ${COLAB_BACKEND_INFO}/pip-freeze.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
+
+# Remove packages which would give errors on installation
+grep -v -e "^GDAL==" -e "^google-colab @ file:///" -e "^pathlib==" -e "^python-apt==" -h ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt
+mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
+
+# Remove outdated packages
+grep -v -e "^pip==" -e "^pytest==" -h ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt
+mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
+
+# Remove machine learning packages to decrease the image size
+grep -v -e "^datascience" -e "^en-core-web-sm" -e "^fastai" -e "^gensim" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^torch" -e "^tensorboard" -e "^tensorflow" -h ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt
+mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
+
+# Remove cuda packages to decrease the image size
+grep -v -e "^albumentations" -e "^dopamine" -e "^imgaug" -e "^opencv" -e "^qudida" -h ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt
+mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
+
+# Remove R packages to decrease the image size
+grep -v -e "^rpy2" -h ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt
+mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
+
+# Remove mkl packages to decrease the image size
+grep -v -e "^mkl" -h ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt
+mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
+
+# Install the remaining packages from Colab backend info
+PYTHONUSERBASE=/usr python3 -m pip install --user -r ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
 
 # Install pytest (for testing)
 PYTHONUSERBASE=/usr python3 -m pip install --user pytest
