@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: MIT
 
+set -e
+set -x
+
 # Setup non-default python version
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2

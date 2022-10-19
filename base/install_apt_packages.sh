@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: MIT
 
+set -e
+set -x
+
 # Get packages list from Colab backend info
 grep -v -e "^#" -e "^Listing..." -h ${COLAB_BACKEND_INFO}/apt-list.txt > ${COLAB_BACKEND_INFO}/apt-list-clean.txt
 
