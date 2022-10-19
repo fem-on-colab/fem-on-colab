@@ -9,11 +9,29 @@ on:
         description: "Library to build and test."
 
 jobs:
-  # gcc build & test
-  build_gcc:
+  # base build
+  build_base:
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
-        github.event_name == 'schedule' || github.event.inputs.library == 'gcc'
+        github.event_name == 'schedule' || github.event.inputs.library == 'base'
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/docker_base.yml@main
+    secrets:
+      CI_REGISTRY_USER: ${{ secrets.CI_REGISTRY_USER }}
+      CI_REGISTRY_PASSWORD: ${{ secrets.CI_REGISTRY_PASSWORD }}
+
+  # gcc build & test
+  build_gcc:
+    needs: [build_base]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_base.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'gcc' && needs.build_base.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'gcc' && needs.build_base.result == 'success' && always()
+        )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:

@@ -1,8 +1,6 @@
 name: Release new docker image containing the base Colab environment
 
 on:
-  schedule:
-    - cron: "0 0 * * FRI"
   workflow_dispatch:
   workflow_call:
     secrets:
