@@ -24,7 +24,7 @@ jobs:
         id: image_name
         run: |
           IMAGE_TAG=$(docker run -i ${IMAGE_PREFIX}:latest bash -c "cd /usr/local/share/colab-backend-info && git rev-parse --short HEAD")
-          echo "::set-output name=image_tag::${IMAGE_TAG}"
+          echo "image_tag=${IMAGE_TAG}" >> ${GITHUB_OUTPUT}
       - name: Log into the docker registry
         if: github.repository == 'fem-on-colab/fem-on-colab'
         run: docker login -u ${{ secrets.CI_REGISTRY_USER }} -p ${{ secrets.CI_REGISTRY_PASSWORD }}

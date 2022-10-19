@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Store the current date and time
         id: date_time
-        run: echo "::set-output name=date_time::$(date '+%Y%m%d-%H%M%S')"
+        run: echo "date_time=$(date '+%Y%m%d-%H%M%S')" >> ${GITHUB_OUTPUT}
       - name: Mark workspace as safe
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
@@ -40,7 +40,7 @@ jobs:
           set-safe-directory: false
       - name: Compute short SHA of the commit
         id: sha_short
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
       - name: Print release name, release date, git commit sha, task and args
         run: echo "${{ (inputs || github.event.inputs).library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ (inputs || github.event.inputs).task }} ${{ (inputs || github.event.inputs).args }}"
       - name: Determine which token to use when cloning website repository
@@ -48,9 +48,9 @@ jobs:
         id: token_website
         run: |
           if [[ "${GITHUB_REPOSITORY}" == "fem-on-colab/fem-on-colab" ]]; then
-            echo "::set-output name=token::${{ secrets.REPO_ACCESS_TOKEN }}"
+            echo "token=${{ secrets.REPO_ACCESS_TOKEN }}" >> ${GITHUB_OUTPUT}
           else
-            echo "::set-output name=token::${{ github.token }}"
+            echo "token=${{ github.token }}" >> ${GITHUB_OUTPUT}
           fi
         shell: bash
       - name: Mark website directory as safe
@@ -110,8 +110,8 @@ jobs:
               fi
             fi
           done
-          echo "::set-output name=release_install_script_envs::${RELEASE_INSTALL_SCRIPT_ENVS[@]}"
-          echo "::set-output name=release_install_script_raw_urls::${RELEASE_INSTALL_SCRIPT_RAW_URLS[@]}"
+          echo "release_install_script_envs=${RELEASE_INSTALL_SCRIPT_ENVS[@]}" >> ${GITHUB_OUTPUT}
+          echo "release_install_script_raw_urls=${RELEASE_INSTALL_SCRIPT_RAW_URLS[@]}" >> ${GITHUB_OUTPUT}
           popd
         shell: bash
       - name: Build library
@@ -196,7 +196,7 @@ jobs:
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           ARGS_ARRAY=(${{ (inputs || github.event.inputs).args }})
           [[ -f "${LIBRARY}/build.sh" ]] && NEEDS_RELEASE_ARCHIVE="yes" || NEEDS_RELEASE_ARCHIVE="no"
-          echo "::set-output name=needs_release_archive::${NEEDS_RELEASE_ARCHIVE}"
+          echo "needs_release_archive=${NEEDS_RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
           if [[ -n "${ARGS_ARRAY[*]}" ]]; then
             ARGS_JOINED_SPACE=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
             ARGS_JOINED_HYPHEN=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
@@ -204,7 +204,7 @@ jobs:
           else
             RELEASE_FILE=_build/html/releases/${LIBRARY}-install.sh
           fi
-          echo "::set-output name=release_file::${RELEASE_FILE}"
+          echo "release_file=${RELEASE_FILE}" >> ${GITHUB_OUTPUT}
           if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
             DATETIME=${{ steps.date_time.outputs.date_time }}
             SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
@@ -216,9 +216,9 @@ jobs:
               RELEASE_TAG="${LIBRARY}-${DATETIME}-${SHA_SHORT}"
             fi
             RELEASE_ARCHIVE="${LIBRARY}-install.tar.gz"
-            echo "::set-output name=release_title::${RELEASE_TITLE}"
-            echo "::set-output name=release_tag::${RELEASE_TAG}"
-            echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
+            echo "release_title=${RELEASE_TITLE}" >> ${GITHUB_OUTPUT}
+            echo "release_tag=${RELEASE_TAG}" >> ${GITHUB_OUTPUT}
+            echo "release_archive=${RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
           fi
         shell: bash
       - name: Add release to repository
@@ -236,12 +236,12 @@ jobs:
           RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
           RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
           if wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null; then
-            echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
+            echo "release_archive=${RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
           else
             MD5_RELEASE_ARCHIVE=$(md5sum "${RELEASE_ARCHIVE}" | cut -d" " -f 1)
             RELEASE_ARCHIVE=${RELEASE_ARCHIVE/.gz/-${MD5_RELEASE_ARCHIVE}.gz}
             wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
-            echo "::set-output name=release_archive::${RELEASE_ARCHIVE}"
+            echo "release_archive=${RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
           fi
         shell: bash
       - name: Prepare release file for website
