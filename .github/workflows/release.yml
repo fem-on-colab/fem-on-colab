@@ -253,6 +253,7 @@ jobs:
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
           NEEDS_RELEASE_ARCHIVE=${{ steps.check_release.outputs.needs_release_archive }}
           RELEASE_FILE=${{ steps.check_release.outputs.release_file }}
+          RELEASE_FILE_DOCKER=${RELEASE_FILE/.sh/.docker}
           RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
           RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
           cp ${LIBRARY}/install.sh ${RELEASE_FILE}
@@ -264,6 +265,7 @@ jobs:
             RELEASE_ARCHIVE=${{ steps.update_release_archive.outputs.release_archive }}
             sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
           fi
+          echo $(cd /usr/local/share/colab-backend-info && git rev-parse --short HEAD) > ${RELEASE_FILE_DOCKER}
         shell: bash
       - name: Upload release file to website
         if: (inputs || github.event.inputs).task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
@@ -274,6 +276,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add releases/${LIBRARY}-install*.sh
+          git add releases/${LIBRARY}-install*.docker
           WEBSITE_BRANCH=$(git branch --show-current)
           git pull origin ${WEBSITE_BRANCH}
           [ -n "$(git status --porcelain=v1 2>/dev/null)" ] && git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
