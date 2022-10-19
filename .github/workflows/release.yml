@@ -114,6 +114,8 @@ jobs:
           echo "release_install_script_raw_urls=${RELEASE_INSTALL_SCRIPT_RAW_URLS[@]}" >> ${GITHUB_OUTPUT}
           popd
         shell: bash
+      - name: Fetch updated package list
+        run: apt update -qq
       - name: Build library
         if: (inputs || github.event.inputs).task != 'test'
         run: |
