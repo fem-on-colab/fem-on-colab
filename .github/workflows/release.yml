@@ -27,18 +27,11 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    container: ubuntu:18.04
+    container: femoncolab/base_images:latest
     steps:
       - name: Store the current date and time
         id: date_time
         run: echo "::set-output name=date_time::$(date '+%Y%m%d-%H%M%S')"
-      - name: Install git
-        run: |
-          apt update -qq
-          apt install -y -qq software-properties-common
-          add-apt-repository ppa:git-core/ppa
-          apt update -qq
-          apt install -y -qq git
       - name: Mark workspace as safe
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
@@ -121,17 +114,6 @@ jobs:
           echo "::set-output name=release_install_script_raw_urls::${RELEASE_INSTALL_SCRIPT_RAW_URLS[@]}"
           popd
         shell: bash
-      - name: Setup Colab base image
-        id: colab
-        run: |
-          source colab/install.sh
-          echo "::set-output name=path::${PATH}"
-          echo "::set-output name=ld_library_path::${LD_LIBRARY_PATH}"
-          echo "::set-output name=pythonpath::${PYTHONPATH}"
-          echo "::set-output name=install_prefix::${INSTALL_PREFIX}"
-          echo "::set-output name=cppflags::${CPPFLAGS}"
-          echo "::set-output name=ldflags::${LDFLAGS}"
-        shell: bash
       - name: Build library
         if: (inputs || github.event.inputs).task != 'test'
         run: |
@@ -146,12 +128,6 @@ jobs:
             bash ${LIBRARY}/build.sh ${ARGS}
           fi
         env:
-          PATH: ${{ steps.colab.outputs.path }}
-          LD_LIBRARY_PATH: ${{ steps.colab.outputs.ld_library_path }}
-          PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
-          INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
-          CPPFLAGS: ${{ steps.colab.outputs.cppflags }}
-          LDFLAGS: ${{ steps.colab.outputs.ldflags }}
           VERBOSE: 1
           V: 1
         shell: bash
@@ -172,8 +148,6 @@ jobs:
             done
             false
           fi
-        env:
-          INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
         shell: bash
       - name: Package library
         if: (inputs || github.event.inputs).task != 'test'
@@ -186,11 +160,6 @@ jobs:
           else
             source scripts/prepare_for_installation.sh ${LIBRARY}
           fi
-        env:
-          PATH: ${{ steps.colab.outputs.path }}
-          LD_LIBRARY_PATH: ${{ steps.colab.outputs.ld_library_path }}
-          PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
-          INSTALL_PREFIX: ${{ steps.colab.outputs.install_prefix }}
         shell: bash
       - name: Prepare pytest configuration file
         run: |
@@ -215,10 +184,10 @@ jobs:
             IFS=: read -r -a PYTHONPATH_ARRAY <<< "$PYTHONPATH"
             cp -rf colab/patches/google ${PYTHONPATH_ARRAY[-1]}/
           fi
-          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
+          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 LD_LIBRARY_PATH="" ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
         env:
-          PATH: ${{ steps.colab.outputs.path }}
-          PYTHONPATH: ${{ steps.colab.outputs.pythonpath }}
+          CPPFLAGS: ""
+          LDFLAGS: ""
         shell: bash
       - name: Check if a release is needed
         if: (inputs || github.event.inputs).task != 'test'
