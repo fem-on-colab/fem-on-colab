@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: MIT
 
+set -e
+set -x
+
 # Install add-apt-repository and wget
 apt update
 apt install -y -qq software-properties-common wget

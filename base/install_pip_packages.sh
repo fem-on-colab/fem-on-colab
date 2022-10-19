@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: MIT
 
+set -e
+set -x
+
 # Get packages list from Colab backend info
 grep -v "^#" -h ${COLAB_BACKEND_INFO}/pip-freeze.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
 
