@@ -291,7 +291,7 @@ jobs:
           if compgen -G "/tmp/*-src" > /dev/null; then
             tar czf build.tar.gz /tmp/*-src
           fi
-          tar czf install-prefix.tar.gz ${{ steps.colab.outputs.install_prefix }}
+          tar czf install-prefix.tar.gz ${INSTALL_PREFIX}
           tar czf test.tar.gz ${{ (inputs || github.event.inputs).library }}
         shell: bash
       - name: Upload archive as an artifact in case of failure
