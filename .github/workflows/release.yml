@@ -139,14 +139,14 @@ jobs:
           EXTENSIONS=('*\.so' '*\.so\.*')
           declare -a ERROR_LIBRARIES
           for EXTENSION in "${EXTENSIONS[@]}"; do
-            ERROR_LIBRARIES=("${ERROR_LIBRARIES[@]}" $(find $INSTALL_PREFIX -name $EXTENSION -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
+            ERROR_LIBRARIES=("${ERROR_LIBRARIES[@]}" $(find ${INSTALL_PREFIX} -name ${EXTENSION} -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
           done
           if [ ${#ERROR_LIBRARIES[@]} -eq 0 ]; then
             echo "No reference to libstdc++.so was found"
           else
             for ERROR_LIBRARY in "${ERROR_LIBRARIES[@]}"; do
-              echo "Error: library $ERROR_LIBRARY depends on libstdc++.so"
-              ldd -v $ERROR_LIBRARY
+              echo "Error: library ${ERROR_LIBRARY} depends on libstdc++.so"
+              ldd -v ${ERROR_LIBRARY}
             done
             false
           fi
