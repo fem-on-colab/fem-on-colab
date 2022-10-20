@@ -41,6 +41,9 @@ jobs:
       - name: Compute short SHA of the commit
         id: sha_short
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
+      - name: Compute docker tag
+        id: docker_tag
+        run: echo "docker_tag=$(cd /usr/local/share/colab-backend-info && git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
       - name: Print release name, release date, git commit sha, task and args
         run: echo "${{ (inputs || github.event.inputs).library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ (inputs || github.event.inputs).task }} ${{ (inputs || github.event.inputs).args }}"
       - name: Determine which token to use when cloning website repository
@@ -253,6 +256,7 @@ jobs:
           LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
           DATETIME=${{ steps.date_time.outputs.date_time }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+          DOCKER_TAG=${{ steps.docker_tag.outputs.docker_tag }}
           NEEDS_RELEASE_ARCHIVE=${{ steps.check_release.outputs.needs_release_archive }}
           RELEASE_FILE=${{ steps.check_release.outputs.release_file }}
           RELEASE_FILE_DOCKER=${RELEASE_FILE/.sh/.docker}
@@ -260,14 +264,20 @@ jobs:
           RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
           cp ${LIBRARY}/install.sh ${RELEASE_FILE}
           for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
-            sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" ${RELEASE_FILE}
+            if grep -q "${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN" "${RELEASE_FILE}"; then
+              RELEASE_INSTALL_SCRIPT_I_DOCKER_TAG="$(wget -qO- ${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]/.sh/.docker})"
+              if [[ "${RELEASE_INSTALL_SCRIPT_I_DOCKER_TAG}" != "${DOCKER_TAG}" ]]; then
+                echo "Incompatible docker tags: ${RELEASE_INSTALL_SCRIPT_ENVS[I]} has tag ${RELEASE_INSTALL_SCRIPT_I_DOCKER_TAG}, while ${LIBRARY} was built on an image tagged ${DOCKER_TAG}"
+              fi
+              sed -i "s|${RELEASE_INSTALL_SCRIPT_ENVS[I]}_IN|${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}|g" "${RELEASE_FILE}"
+            fi
           done
           if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
             RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
             RELEASE_ARCHIVE=${{ steps.update_release_archive.outputs.release_archive }}
             sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
           fi
-          echo $(cd /usr/local/share/colab-backend-info && git rev-parse --short HEAD) > ${RELEASE_FILE_DOCKER}
+          echo ${DOCKER_TAG} > ${RELEASE_FILE_DOCKER}
         shell: bash
       - name: Upload release file to website
         if: (inputs || github.event.inputs).task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
