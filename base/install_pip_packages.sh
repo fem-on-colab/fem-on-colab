@@ -18,6 +18,10 @@ mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-free
 grep -v -e "^pip==" -e "^pytest==" -h ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt
 mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
 
+# Remove packages which we are going to compile from source anyway
+grep -v -e "^h5py==" -h ${COLAB_BACKEND_INFO}/apt-list-clean.txt > ${COLAB_BACKEND_INFO}/apt-list-clean-tmp.txt
+mv ${COLAB_BACKEND_INFO}/apt-list-clean-tmp.txt ${COLAB_BACKEND_INFO}/apt-list-clean.txt
+
 # Remove machine learning packages to decrease the image size
 grep -v -e "^datascience" -e "^en-core-web-sm" -e "^fastai" -e "^gensim" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^torch" -e "^tensorboard" -e "^tensorflow" -h ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt > ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt
 mv ${COLAB_BACKEND_INFO}/pip-freeze-clean-tmp.txt ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt

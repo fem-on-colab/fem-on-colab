@@ -10,6 +10,10 @@ set -x
 # Get packages list from Colab backend info
 grep -v -e "^#" -e "^Listing..." -h ${COLAB_BACKEND_INFO}/apt-list.txt > ${COLAB_BACKEND_INFO}/apt-list-clean.txt
 
+# Remove packages (and their dependents) which we are going to compile from source anyway
+grep -v -e "^gdal" -e "^libarmadillo" -e "^libboost" -e "^libgdal" -e "^libhdf" -e "^libnetcdf" -e "^libvtk" -e "^python-gdal" -h ${COLAB_BACKEND_INFO}/apt-list-clean.txt > ${COLAB_BACKEND_INFO}/apt-list-clean-tmp.txt
+mv ${COLAB_BACKEND_INFO}/apt-list-clean-tmp.txt ${COLAB_BACKEND_INFO}/apt-list-clean.txt
+
 # Remove cuda packages to decrease the image size
 grep -v -e "^cuda-" -e "^libcu" -e "^libopencv" -e "^libncc" -e "^libnpp" -e "^libnvidia" -e "^libnvjpeg" -e "^libvdpau" -e "^libxnvctrl" -e "^nsight-compute" -e "^nsight-systems" -e "^nvidia" -e "^ocl" -e "^opencl" -e "^vdpau-driver" -e "^xserver-xorg-video-nvidia" -h ${COLAB_BACKEND_INFO}/apt-list-clean.txt > ${COLAB_BACKEND_INFO}/apt-list-clean-tmp.txt
 mv ${COLAB_BACKEND_INFO}/apt-list-clean-tmp.txt ${COLAB_BACKEND_INFO}/apt-list-clean.txt
