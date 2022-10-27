@@ -66,7 +66,7 @@ PYTHONUSERBASE=/usr python3 -m pip install --user -r ${COLAB_BACKEND_INFO}/pip-f
 PYTHONUSERBASE=/usr python3 -m pip install --user pipdeptree
 
 # Check that removed packages do get installed as part of other dependencies
-python3 -m pip freeze > ${COLAB_BACKEND_INFO}/pip-freeze-installed.txt
+PYTHONUSERBASE=/usr python3 -m pip freeze > ${COLAB_BACKEND_INFO}/pip-freeze-installed.txt
 assert_removed_packages () {
     cp ${1} ${1}.check
     ${2} ${1}.check
