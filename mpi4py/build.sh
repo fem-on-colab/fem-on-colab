@@ -11,7 +11,7 @@ set -x
 MPI4PY_ARCHIVE_PATH="skip" source mpi4py/install.sh
 
 # Install MPI
-git clone https://github.com/open-mpi/ompi /tmp/openmpi-src
+git clone https://github.com/open-mpi/ompi.git /tmp/openmpi-src
 cd /tmp/openmpi-src
 TAGS=($(git tag -l --sort=-version:refname "v4.[0-9].[0-9]"))
 echo "Latest tag in the v4 series is ${TAGS[0]}"
