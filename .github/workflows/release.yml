@@ -240,29 +240,23 @@ jobs:
             echo "release_archive=${RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
           fi
         shell: bash
+      - name: Add tag to be associated to the release
+        if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
+        run: |
+          SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+          RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
+          git tag ${RELEASE_TAG} ${SHA_SHORT}
+          git push origin ${RELEASE_TAG}
       - name: Add release to repository
         if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: ncipollo/release-action@v1
         with:
-          repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          automatic_release_tag: ${{ steps.check_release.outputs.release_tag }}
-          title: "${{ steps.check_release.outputs.release_title }}"
-          files: ${{ steps.check_release.outputs.release_archive }}
-      - name: Update release archive name, as sometimes the md5sum gets appended to release assets name
-        if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
-        id: update_release_archive
-        run: |
-          RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
-          RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
-          if wget https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null; then
-            echo "release_archive=${RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
-          else
-            MD5_RELEASE_ARCHIVE=$(md5sum "${RELEASE_ARCHIVE}" | cut -d" " -f 1)
-            RELEASE_ARCHIVE=${RELEASE_ARCHIVE/.gz/-${MD5_RELEASE_ARCHIVE}.gz}
-            wget https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
-            echo "release_archive=${RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
-          fi
-        shell: bash
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          commit: ${{ steps.sha_short.outputs.sha_short }}
+          tag: ${{ steps.check_release.outputs.release_tag }}
+          name: "${{ steps.check_release.outputs.release_title }}"
+          prerelease: true
+          artifacts: ${{ steps.check_release.outputs.release_archive }}
       - name: Prepare release file for website
         if: (inputs || github.event.inputs).task != 'test'
         run: |
@@ -291,7 +285,7 @@ jobs:
           done
           if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
             RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
-            RELEASE_ARCHIVE=${{ steps.update_release_archive.outputs.release_archive }}
+            RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
             sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
           fi
           for ANNOUNCEMENT_POSITION in pre post; do
