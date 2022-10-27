@@ -1,5 +1,5 @@
 diff --git a/config/BuildSystem/config/compilers.py b/config/BuildSystem/config/compilers.py
-index 4bc31fca11..a51eb45d92 100644
+index 4bc31fca114..a51eb45d928 100644
 --- a/config/BuildSystem/config/compilers.py
 +++ b/config/BuildSystem/config/compilers.py
 @@ -549,6 +549,7 @@ class Configure(config.base.Configure):
@@ -11,10 +11,10 @@ index 4bc31fca11..a51eb45d92 100644
  
      oldFlags = self.setCompilers.LDFLAGS
 diff --git a/config/BuildSystem/config/package.py b/config/BuildSystem/config/package.py
-index a63ca635e0..e39e0a47e4 100644
+index 81056992936..f3ff87d0268 100644
 --- a/config/BuildSystem/config/package.py
 +++ b/config/BuildSystem/config/package.py
-@@ -915,7 +915,17 @@ To use currently downloaded (local) git snapshot - use: --download-'+self.packag
+@@ -916,7 +916,17 @@ To use currently downloaded (local) git snapshot - use: --download-'+self.packag
      dpkgs = Package.sortPackageDependencies(self)
      dpkgs.remove(self)
      for package in dpkgs:
@@ -33,7 +33,7 @@ index a63ca635e0..e39e0a47e4 100644
        if hasattr(package, 'include'): self.dinclude += package.include
      return
  
-@@ -1711,7 +1721,24 @@ class GNUPackage(Package):
+@@ -1712,7 +1722,24 @@ class GNUPackage(Package):
  
    def preInstall(self):
      '''Run pre-install steps like generate configure script'''
@@ -59,7 +59,7 @@ index a63ca635e0..e39e0a47e4 100644
        if not self.programs.autoreconf:
          raise RuntimeError('autoreconf required for ' + self.PACKAGE+' not found (or broken)! Use your package manager to install autoconf')
        if not self.programs.libtoolize:
-@@ -1777,11 +1804,21 @@ class GNUPackage(Package):
+@@ -1778,11 +1805,21 @@ class GNUPackage(Package):
        self.logPrintBox('Running make on '+self.PACKAGE+'; this may take several minutes')
        if self.parallelMake: pmake = self.make.make_jnp+' '+self.makerulename+' '
        else: pmake = self.make.make+' '+self.makerulename+' '
@@ -83,10 +83,10 @@ index a63ca635e0..e39e0a47e4 100644
        self.logPrint('Error running make; make install on '+self.PACKAGE+': '+str(e))
        raise RuntimeError('Error running make; make install on '+self.PACKAGE)
 diff --git a/config/BuildSystem/config/packages/netcdf.py b/config/BuildSystem/config/packages/netcdf.py
-index d7fe9840cd..d73304e764 100644
+index d7fe9840cd5..c2b192c61cc 100644
 --- a/config/BuildSystem/config/packages/netcdf.py
 +++ b/config/BuildSystem/config/packages/netcdf.py
-@@ -30,7 +30,19 @@ class Configure(config.package.GNUPackage):
+@@ -30,11 +30,39 @@ class Configure(config.package.GNUPackage):
      ''' disable DAP and HDF4, enable NetCDF4'''
      args = config.package.GNUPackage.formGNUConfigureArgs(self)
      args.append('CPPFLAGS="'+self.headers.toString(self.dinclude)+'"')
@@ -107,8 +107,28 @@ index d7fe9840cd..d73304e764 100644
      args.append('--enable-netcdf-4')
      if self.pnetcdf.found:
        args.append('--enable-pnetcdf')
+     args.append('--disable-dap')
+     args.append('--disable-dynamic-loading') #This was disabled in v4.3.2 - but enabled in subsequent versions - giving config errors on freebsd (wrt -ldl)
+     args.append('--disable-hdf4')
++    args.append('--disable-libxml2')
+     return args
++
++  def preInstall(self):
++    """Strip manual additions of -lstdc++ to AM_LDFLAGS"""
++    lib_flags_am = os.path.join(self.packageDir, "lib_flags.am")
++    from pathlib import Path
++    assert os.path.isfile(lib_flags_am)
++    path = Path(lib_flags_am)
++    original_text = path.read_text()
++    text = original_text[:]
++    text = text.replace("AM_LDFLAGS += -lstdc++", "")
++    self.logPrintBox('Patching lib_flags.am in ' +self.PACKAGE)
++    path.write_text(text)
++    # Force reconfiguration when calling parent script
++    os.remove(os.path.join(self.packageDir, "configure"))
++    super().preInstall()
 diff --git a/config/BuildSystem/config/packages/pnetcdf.py b/config/BuildSystem/config/packages/pnetcdf.py
-index 50d3f32935..45733be311 100644
+index 50d3f329354..45733be311d 100644
 --- a/config/BuildSystem/config/packages/pnetcdf.py
 +++ b/config/BuildSystem/config/packages/pnetcdf.py
 @@ -24,6 +24,30 @@ class Configure(config.package.GNUPackage):
