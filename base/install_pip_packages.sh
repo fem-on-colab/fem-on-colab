@@ -19,7 +19,7 @@ remove_packages_error_from_source ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove outdated packages
 remove_outdated_packages () {
-    grep -v -e "^pip==" -e "^pytest==" -h ${1} > ${1}.tmp
+    grep -v -e "^cmake==" -e "^pip==" -e "^pytest==" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_outdated_packages ${COLAB_BACKEND_INFO}/pip-freeze-clean.txt
@@ -87,6 +87,9 @@ assert_removed_packages ${COLAB_BACKEND_INFO}/pip-freeze-installed.txt remove_ma
 assert_removed_packages ${COLAB_BACKEND_INFO}/pip-freeze-installed.txt remove_cuda_packages
 assert_removed_packages ${COLAB_BACKEND_INFO}/pip-freeze-installed.txt remove_R_packages
 assert_removed_packages ${COLAB_BACKEND_INFO}/pip-freeze-installed.txt remove_mkl_packages
+
+# Install cmake (for building)
+PYTHONUSERBASE=/usr python3 -m pip install --user cmake
 
 # Install pytest (for testing)
 PYTHONUSERBASE=/usr python3 -m pip install --user pytest
