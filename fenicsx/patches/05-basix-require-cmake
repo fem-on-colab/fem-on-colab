@@ -1,0 +1,11 @@
+diff --git a/python/pyproject.toml b/python/pyproject.toml
+index 4e49747..6cdc639 100644
+--- a/python/pyproject.toml
++++ b/python/pyproject.toml
+@@ -1,5 +1,5 @@
+ [build-system]
+ # We require that the user installs cmake
+-requires = ["setuptools>=42", "wheel", "pybind11>=2.9.1"]
++requires = ["setuptools>=42", "wheel", "pybind11>=2.9.1", "cmake"]
+ 
+ build-backend = "setuptools.build_meta"
