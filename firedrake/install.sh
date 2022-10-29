@@ -36,10 +36,6 @@ if [[ ! -f $FIREDRAKE_INSTALLED ]]; then
     FIREDRAKE_ARCHIVE_PATH=${FIREDRAKE_ARCHIVE_PATH:-"FIREDRAKE_ARCHIVE_PATH_IN"}
     [[ $FIREDRAKE_ARCHIVE_PATH == http* ]] && FIREDRAKE_ARCHIVE_DOWNLOAD=${FIREDRAKE_ARCHIVE_PATH} && FIREDRAKE_ARCHIVE_PATH=/tmp/firedrake-install.tar.gz && wget ${FIREDRAKE_ARCHIVE_DOWNLOAD} -O ${FIREDRAKE_ARCHIVE_PATH}
     if [[ $FIREDRAKE_ARCHIVE_PATH != skip ]]; then
-        rm -rf /usr/lib/python*/*-packages/cftime*
-        rm -rf /usr/local/lib/python*/*-packages/cftime*
-        rm -rf /usr/lib/python*/*-packages/networkx*
-        rm -rf /usr/local/lib/python*/*-packages/networkx*
         rm -rf /usr/lib/python*/*-packages/netCDF4*
         rm -rf /usr/local/lib/python*/*-packages/netCDF4*
         tar -xzf $FIREDRAKE_ARCHIVE_PATH --strip-components=2 --directory=/usr/local

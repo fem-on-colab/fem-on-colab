@@ -19,16 +19,6 @@ fi
 # Install boost, pybind11, slepc4py and vtk (and their dependencies)
 FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 
-# Remove conflicting package installed by jupyter
-python3 -m pip uninstall -y decorator
-
-# Firedrake may require newer packages than the one in the Colab base image. However, do not archive them
-# and install them to /usr
-PYTHONUSERBASE=/usr python3 -m pip install --user matplotlib pandas scipy --upgrade
-
-# Remove conflicting package installed by matplotlib
-python3 -m pip uninstall -y typing-extensions
-
 # islpy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --no-binary=islpy islpy
 
