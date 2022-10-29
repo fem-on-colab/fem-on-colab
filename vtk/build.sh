@@ -10,7 +10,7 @@ set -x
 # Install gcc
 VTK_ARCHIVE_PATH="skip" source vtk/install.sh
 
-# Install patchelf from source, as the version packaged by ubuntu:18.04 is too old
+# Install patchelf from source, as the version packaged by ubuntu may be too old
 git clone https://github.com/NixOS/patchelf.git /tmp/patchelf-src
 cd /tmp/patchelf-src
 TAGS=($(git tag -l --sort=-version:refname))
