@@ -306,7 +306,7 @@ jobs:
         shell: bash
       - name: Upload archive as an artifact in case of failure
         if: failure() || cancelled()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "artifact ${{ (inputs || github.event.inputs).library }} ${{ (inputs || github.event.inputs).task }} ${{ (inputs || github.event.inputs).args }}"
           path: |
