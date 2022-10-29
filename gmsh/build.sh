@@ -25,5 +25,5 @@ cmake \
 make -j $(nproc) install
 
 # Move gmsh into the dist-packages folder
-mv $INSTALL_PREFIX/lib/gmsh.py $INSTALL_PREFIX/lib/python3.7/dist-packages/
-mv $INSTALL_PREFIX/lib/gmsh-*.dist-info $INSTALL_PREFIX/lib/python3.7/dist-packages/
+mv $INSTALL_PREFIX/lib/gmsh.py $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/
+mv $INSTALL_PREFIX/lib/gmsh-*.dist-info $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/

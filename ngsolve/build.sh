@@ -21,9 +21,9 @@ apt install -y -qq libfontconfig1-dev libfreetype6-dev libx11-dev libxi-dev libx
 # Install OCC, petsc4py and pybind11 (and their dependencies)
 NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 
-# The next scripts may install files to $INSTALL_PREFIX/lib/python3 rather than $INSTALL_PREFIX/lib/python3.7.
+# The next scripts may install files to $INSTALL_PREFIX/lib/python3 rather than $INSTALL_PREFIX/lib/$PYTHON_VERSION.
 # Create a symbolic link so that the two folders coincide.
-ln -s $INSTALL_PREFIX/lib/python3.7 $INSTALL_PREFIX/lib/python3
+ln -s $INSTALL_PREFIX/lib/$PYTHON_VERSION $INSTALL_PREFIX/lib/python3
 
 # netgen
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src

@@ -163,7 +163,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
 
     # Move roltrilinos already to dist-packages (which normally would be done at a later CI step),
     # so that patchelf will set the correct path
-    mv $INSTALL_PREFIX/lib/python3.7/site-packages/roltrilinos* $INSTALL_PREFIX/lib/python3.7/dist-packages/
+    mv $INSTALL_PREFIX/lib/$PYTHON_VERSION/site-packages/roltrilinos* $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/
 
     # PETSc had downloaded ML from Trilinos: remove its CMake configuration so that it does not
     # get in the way of the detection of roltrilinos

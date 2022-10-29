@@ -21,7 +21,8 @@ if [[ ! -f $H5PY_INSTALLED ]]; then
     H5PY_ARCHIVE_PATH=${H5PY_ARCHIVE_PATH:-"H5PY_ARCHIVE_PATH_IN"}
     [[ $H5PY_ARCHIVE_PATH == http* ]] && H5PY_ARCHIVE_DOWNLOAD=${H5PY_ARCHIVE_PATH} && H5PY_ARCHIVE_PATH=/tmp/h5py-install.tar.gz && wget ${H5PY_ARCHIVE_DOWNLOAD} -O ${H5PY_ARCHIVE_PATH}
     if [[ $H5PY_ARCHIVE_PATH != skip ]]; then
-        rm -rf /usr/local/lib/python3.7/dist-packages/h5py*
+        rm -rf /usr/lib/python*/*-packages/h5py*
+        rm -rf /usr/local/lib/python*/*-packages/h5py*
         tar -xzf $H5PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
     fi
 
