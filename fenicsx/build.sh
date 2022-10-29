@@ -33,6 +33,7 @@ cmake \
     ..
 make -j $(nproc) install
 cd /tmp/basix-src/python
+patch -p 1 < $REPODIR/fenicsx/patches/05-basix-require-cmake
 export Basix_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
