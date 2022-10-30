@@ -8,16 +8,16 @@ import os
 import igraph
 
 dependencies = {
+    "base": [],
     "boost": ["gcc"],
-    "colab": [],
     "fenics": ["boost", "pybind11", "slepc4py"],
     "fenicsx": ["boost", "pybind11", "slepc4py", "itk"],
     "firedrake": ["boost", "pybind11", "slepc4py", "vtk"],
-    "gcc": ["colab"],
+    "gcc": ["base"],
     "gmsh": ["h5py", "occ"],
     "h5py": ["mpi4py"],
     "itk": ["vtk"],
-    "mock": ["colab"],
+    "mock": ["base"],
     "mpi4py": ["gcc"],
     "ngsolve": ["occ", "pybind11", "petsc4py"],
     "occ": ["gcc"],
@@ -52,13 +52,13 @@ g.add_edges([(len(dependencies), len(dependencies) + 1)])
 
 depths = dict()
 for package in dependencies.keys():
-    if package != "colab":
-        paths = g.get_all_simple_paths(v=package_to_vertex["colab"], to=package_to_vertex[package], mode="out")
+    if package != "base":
+        paths = g.get_all_simple_paths(v=package_to_vertex["base"], to=package_to_vertex[package], mode="out")
         depth = max([len(path) for path in paths])
         depths[package] = depth
 
-layout = g.layout_reingold_tilford(root=[package_to_vertex["colab"], len(dependencies)], mode="all")
+layout = g.layout_reingold_tilford(root=[package_to_vertex["base"], len(dependencies)], mode="all")
 for (i, package) in enumerate(dependencies.keys()):
-    if package != "colab":
+    if package != "base":
         layout[i][1] = depths[package]
 igraph.plot(g, "graph.png", layout=layout, margin=60, vertex_label_dist=1.5)
