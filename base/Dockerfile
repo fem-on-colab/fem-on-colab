@@ -8,9 +8,11 @@ FROM ubuntu:18.04
 MAINTAINER Francesco Ballarin <francesco.ballarin@unicatt.it>
 
 ENV INSTALL_PREFIX=/usr/local \
-    COLAB_BACKEND_INFO=/usr/local/share/colab-backend-info \
-    DOCKER_SCRIPTS=/usr/local/share/fem-on-colab \
+    PROJECT_NAME=fem-on-colab \
     PYTHON_VERSION=python3.7
+
+ENV COLAB_BACKEND_INFO=${INSTALL_PREFIX}/share/colab-backend-info \
+    DOCKER_SCRIPTS=${INSTALL_PREFIX}/share/${PROJECT_NAME}
 
 COPY . ${DOCKER_SCRIPTS}
 
