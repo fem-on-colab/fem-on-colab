@@ -43,7 +43,7 @@ jobs:
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
       - name: Compute docker tag
         id: docker_tag
-        run: echo "docker_tag=$(cd /usr/local/share/colab-backend-info && git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
+        run: echo "docker_tag=$(cd /usr/local/share/backend-info && git rev-parse --short HEAD)" >> ${GITHUB_OUTPUT}
       - name: Print release name, release date, git commit sha, task and args
         run: echo "${{ (inputs || github.event.inputs).library }} ${{ steps.date_time.outputs.date_time }} ${{ steps.sha_short.outputs.sha_short }} ${{ (inputs || github.event.inputs).task }} ${{ (inputs || github.event.inputs).args }}"
       - name: Determine which token to use when cloning website repository

@@ -11,7 +11,7 @@ ENV INSTALL_PREFIX=/usr/local \
     PROJECT_NAME=fem-on-colab \
     PYTHON_VERSION=python3.7
 
-ENV COLAB_BACKEND_INFO=${INSTALL_PREFIX}/share/colab-backend-info \
+ENV BACKEND_INFO=${INSTALL_PREFIX}/share/backend-info \
     DOCKER_SCRIPTS=${INSTALL_PREFIX}/share/${PROJECT_NAME}
 
 COPY . ${DOCKER_SCRIPTS}
@@ -25,7 +25,7 @@ RUN cd ${DOCKER_SCRIPTS} && \
 RUN cd ${DOCKER_SCRIPTS} && \
     . scripts/docker_pre.sh && \
     apt install -y -qq git && \
-    git clone https://github.com/googlecolab/backend-info.git ${COLAB_BACKEND_INFO} && \
+    git clone https://github.com/googlecolab/backend-info.git ${BACKEND_INFO} && \
     . scripts/docker_post.sh && \
     cd -
 
