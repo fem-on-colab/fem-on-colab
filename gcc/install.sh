@@ -27,18 +27,23 @@ if [[ ! -f $GCC_INSTALLED ]]; then
 
     # Set alternatives
     if [[ $GCC_ARCHIVE_PATH != skip ]]; then
-        GCC_VERSION="12"
-        update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 7
-        update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 7
-        update-alternatives --install /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-7 7
-        update-alternatives --install /usr/bin/gcc-nm gcc-nm /usr/bin/gcc-nm-7 7
-        update-alternatives --install /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-7 7
-        # update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-7 7 # was never installed
-        update-alternatives --install /usr/bin/x86_64-linux-gnu-g++ x86_64-linux-gnu-g++ /usr/bin/x86_64-linux-gnu-g++-7 7
-        update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc x86_64-linux-gnu-gcc /usr/bin/x86_64-linux-gnu-gcc-7 7
-        update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-ar x86_64-linux-gnu-gcc-ar /usr/bin/x86_64-linux-gnu-gcc-ar-7 7
-        update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-nm x86_64-linux-gnu-gcc-nm /usr/bin/x86_64-linux-gnu-gcc-nm-7 7
-        update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-ranlib x86_64-linux-gnu-gcc-ranlib /usr/bin/x86_64-linux-gnu-gcc-ranlib-7 7
+        # Legacy system-wide version
+        for LEGACY_GPP in /usr/bin/g++-*; do
+            LEGACY_GCC_VERSION=$($LEGACY_GPP -dumpversion)
+            update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            update-alternatives --install /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            update-alternatives --install /usr/bin/gcc-nm gcc-nm /usr/bin/gcc-nm-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            update-alternatives --install /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            # update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION} # was never installed
+            update-alternatives --install /usr/bin/x86_64-linux-gnu-g++ x86_64-linux-gnu-g++ /usr/bin/x86_64-linux-gnu-g++-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc x86_64-linux-gnu-gcc /usr/bin/x86_64-linux-gnu-gcc-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-ar x86_64-linux-gnu-gcc-ar /usr/bin/x86_64-linux-gnu-gcc-ar-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-nm x86_64-linux-gnu-gcc-nm /usr/bin/x86_64-linux-gnu-gcc-nm-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+            update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-ranlib x86_64-linux-gnu-gcc-ranlib /usr/bin/x86_64-linux-gnu-gcc-ranlib-${LEGACY_GCC_VERSION} ${LEGACY_GCC_VERSION}
+        done
+        # Downloaded version, installed to INSTALL_PREFIX
+        GCC_VERSION=$(${INSTALL_PREFIX}/bin/g++ -dumpversion)
         update-alternatives --install /usr/bin/g++ g++ ${INSTALL_PREFIX}/bin/g++-${GCC_VERSION} ${GCC_VERSION}
         update-alternatives --install /usr/bin/gcc gcc ${INSTALL_PREFIX}/bin/gcc-${GCC_VERSION} ${GCC_VERSION}
         update-alternatives --install /usr/bin/gcc-ar gcc-ar ${INSTALL_PREFIX}/bin/gcc-ar-${GCC_VERSION} ${GCC_VERSION}
@@ -50,6 +55,7 @@ if [[ ! -f $GCC_INSTALLED ]]; then
         update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-ar x86_64-linux-gnu-gcc-ar ${INSTALL_PREFIX}/bin/x86_64-linux-gnu-gcc-ar-${GCC_VERSION} ${GCC_VERSION}
         update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-nm x86_64-linux-gnu-gcc-nm ${INSTALL_PREFIX}/bin/x86_64-linux-gnu-gcc-nm-${GCC_VERSION} ${GCC_VERSION}
         update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc-ranlib x86_64-linux-gnu-gcc-ranlib ${INSTALL_PREFIX}/bin/x86_64-linux-gnu-gcc-ranlib-${GCC_VERSION} ${GCC_VERSION}
+        # Use by default the installation in INSTALL_PREFIX
         update-alternatives --set g++ ${INSTALL_PREFIX}/bin/g++-${GCC_VERSION}
         update-alternatives --set gcc ${INSTALL_PREFIX}/bin/gcc-${GCC_VERSION}
         update-alternatives --set gcc-ar ${INSTALL_PREFIX}/bin/gcc-ar-${GCC_VERSION}
