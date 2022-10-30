@@ -8,7 +8,9 @@ set -e
 set -x
 
 # Check for existing installation
-SHARE_PREFIX="/usr/local/share/fem-on-colab"
+INSTALL_PREFIX=${INSTALL_PREFIX:-"INSTALL_PREFIX_IN"}
+INSTALL_PREFIX_DEPTH=$(echo $INSTALL_PREFIX | awk -F"/" '{print NF-1}')
+SHARE_PREFIX="$INSTALL_PREFIX/share/fem-on-colab"
 PETSC4PY_INSTALLED="$SHARE_PREFIX/petsc4py.installed"
 
 if [[ ! -f $PETSC4PY_INSTALLED ]]; then
@@ -24,7 +26,7 @@ if [[ ! -f $PETSC4PY_INSTALLED ]]; then
     PETSC4PY_ARCHIVE_PATH=${PETSC4PY_ARCHIVE_PATH:-"PETSC4PY_ARCHIVE_PATH_IN"}
     [[ $PETSC4PY_ARCHIVE_PATH == http* ]] && PETSC4PY_ARCHIVE_DOWNLOAD=${PETSC4PY_ARCHIVE_PATH} && PETSC4PY_ARCHIVE_PATH=/tmp/petsc4py-install.tar.gz && wget ${PETSC4PY_ARCHIVE_DOWNLOAD} -O ${PETSC4PY_ARCHIVE_PATH}
     if [[ $PETSC4PY_ARCHIVE_PATH != skip ]]; then
-        tar -xzf $PETSC4PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+        tar -xzf $PETSC4PY_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
     # Mark package as installed

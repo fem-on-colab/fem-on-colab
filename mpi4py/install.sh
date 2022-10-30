@@ -8,7 +8,9 @@ set -e
 set -x
 
 # Check for existing installation
-SHARE_PREFIX="/usr/local/share/fem-on-colab"
+INSTALL_PREFIX=${INSTALL_PREFIX:-"INSTALL_PREFIX_IN"}
+INSTALL_PREFIX_DEPTH=$(echo $INSTALL_PREFIX | awk -F"/" '{print NF-1}')
+SHARE_PREFIX="$INSTALL_PREFIX/share/fem-on-colab"
 MPI4PY_INSTALLED="$SHARE_PREFIX/mpi4py.installed"
 
 if [[ ! -f $MPI4PY_INSTALLED ]]; then
@@ -21,15 +23,16 @@ if [[ ! -f $MPI4PY_INSTALLED ]]; then
     MPI4PY_ARCHIVE_PATH=${MPI4PY_ARCHIVE_PATH:-"MPI4PY_ARCHIVE_PATH_IN"}
     [[ $MPI4PY_ARCHIVE_PATH == http* ]] && MPI4PY_ARCHIVE_DOWNLOAD=${MPI4PY_ARCHIVE_PATH} && MPI4PY_ARCHIVE_PATH=/tmp/mpi4py-install.tar.gz && wget ${MPI4PY_ARCHIVE_DOWNLOAD} -O ${MPI4PY_ARCHIVE_PATH}
     if [[ $MPI4PY_ARCHIVE_PATH != skip ]]; then
-        tar -xzf $MPI4PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+        tar -xzf $MPI4PY_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
-    # Add symbolic links to the MPI libraries in /usr/lib, because Colab does not export /usr/local/lib to LD_LIBRARY_PATH
+    # Add symbolic links to the MPI libraries in /usr/lib, because INSTALL_PREFIX/lib may not be in LD_LIBRARY_PATH
+    # on the actual cloud instance
     if [[ $MPI4PY_ARCHIVE_PATH != skip ]]; then
-        ln -fs /usr/local/lib/libmca*.so* /usr/lib
-        ln -fs /usr/local/lib/libmpi*.so* /usr/lib
-        ln -fs /usr/local/lib/libopen*.so* /usr/lib
-        ln -fs /usr/local/lib/ompi*.so* /usr/lib
+        ln -fs $INSTALL_PREFIX/lib/libmca*.so* /usr/lib
+        ln -fs $INSTALL_PREFIX/lib/libmpi*.so* /usr/lib
+        ln -fs $INSTALL_PREFIX/lib/libopen*.so* /usr/lib
+        ln -fs $INSTALL_PREFIX/lib/ompi*.so* /usr/lib
     fi
 
     # Mark package as installed

@@ -8,7 +8,9 @@ set -e
 set -x
 
 # Check for existing installation
-SHARE_PREFIX="/usr/local/share/fem-on-colab"
+INSTALL_PREFIX=${INSTALL_PREFIX:-"INSTALL_PREFIX_IN"}
+INSTALL_PREFIX_DEPTH=$(echo $INSTALL_PREFIX | awk -F"/" '{print NF-1}')
+SHARE_PREFIX="$INSTALL_PREFIX/share/fem-on-colab"
 PYBIND11_INSTALLED="$SHARE_PREFIX/pybind11.installed"
 
 if [[ ! -f $PYBIND11_INSTALLED ]]; then
@@ -21,7 +23,7 @@ if [[ ! -f $PYBIND11_INSTALLED ]]; then
     PYBIND11_ARCHIVE_PATH=${PYBIND11_ARCHIVE_PATH:-"PYBIND11_ARCHIVE_PATH_IN"}
     [[ $PYBIND11_ARCHIVE_PATH == http* ]] && PYBIND11_ARCHIVE_DOWNLOAD=${PYBIND11_ARCHIVE_PATH} && PYBIND11_ARCHIVE_PATH=/tmp/pybind11-install.tar.gz && wget ${PYBIND11_ARCHIVE_DOWNLOAD} -O ${PYBIND11_ARCHIVE_PATH}
     if [[ $PYBIND11_ARCHIVE_PATH != skip ]]; then
-        tar -xzf $PYBIND11_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+        tar -xzf $PYBIND11_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
     # Mark package as installed

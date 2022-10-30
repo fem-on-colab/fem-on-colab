@@ -8,7 +8,9 @@ set -e
 set -x
 
 # Check for existing installation
-SHARE_PREFIX="/usr/local/share/fem-on-colab"
+INSTALL_PREFIX=${INSTALL_PREFIX:-"INSTALL_PREFIX_IN"}
+INSTALL_PREFIX_DEPTH=$(echo $INSTALL_PREFIX | awk -F"/" '{print NF-1}')
+SHARE_PREFIX="$INSTALL_PREFIX/share/fem-on-colab"
 BOOST_INSTALLED="$SHARE_PREFIX/boost.installed"
 
 if [[ ! -f $BOOST_INSTALLED ]]; then
@@ -21,12 +23,13 @@ if [[ ! -f $BOOST_INSTALLED ]]; then
     BOOST_ARCHIVE_PATH=${BOOST_ARCHIVE_PATH:-"BOOST_ARCHIVE_PATH_IN"}
     [[ $BOOST_ARCHIVE_PATH == http* ]] && BOOST_ARCHIVE_DOWNLOAD=${BOOST_ARCHIVE_PATH} && BOOST_ARCHIVE_PATH=/tmp/boost-install.tar.gz && wget ${BOOST_ARCHIVE_DOWNLOAD} -O ${BOOST_ARCHIVE_PATH}
     if [[ $BOOST_ARCHIVE_PATH != skip ]]; then
-        tar -xzf $BOOST_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+        tar -xzf $BOOST_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
-    # Add symbolic links to the MPI libraries in /usr/lib, because Colab does not export /usr/local/lib to LD_LIBRARY_PATH
+    # Add symbolic links to the MPI libraries in /usr/lib, because INSTALL_PREFIX/lib may not be in LD_LIBRARY_PATH
+    # on the actual cloud instance
     if [[ $BOOST_ARCHIVE_PATH != skip ]]; then
-        ln -fs /usr/local/lib/libboost*so* /usr/lib
+        ln -fs $INSTALL_PREFIX/lib/libboost*so* /usr/lib
     fi
 
     # Mark package as installed

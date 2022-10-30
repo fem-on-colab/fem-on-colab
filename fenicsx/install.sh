@@ -8,7 +8,9 @@ set -e
 set -x
 
 # Check for existing installation
-SHARE_PREFIX="/usr/local/share/fem-on-colab"
+INSTALL_PREFIX=${INSTALL_PREFIX:-"INSTALL_PREFIX_IN"}
+INSTALL_PREFIX_DEPTH=$(echo $INSTALL_PREFIX | awk -F"/" '{print NF-1}')
+SHARE_PREFIX="$INSTALL_PREFIX/share/fem-on-colab"
 FENICSX_INSTALLED="$SHARE_PREFIX/fenicsx.installed"
 
 if [[ ! -f $FENICSX_INSTALLED ]]; then
@@ -36,7 +38,7 @@ if [[ ! -f $FENICSX_INSTALLED ]]; then
     FENICSX_ARCHIVE_PATH=${FENICSX_ARCHIVE_PATH:-"FENICSX_ARCHIVE_PATH_IN"}
     [[ $FENICSX_ARCHIVE_PATH == http* ]] && FENICSX_ARCHIVE_DOWNLOAD=${FENICSX_ARCHIVE_PATH} && FENICSX_ARCHIVE_PATH=/tmp/fenicsx-install.tar.gz && wget ${FENICSX_ARCHIVE_DOWNLOAD} -O ${FENICSX_ARCHIVE_PATH}
     if [[ $FENICSX_ARCHIVE_PATH != skip ]]; then
-        tar -xzf $FENICSX_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+        tar -xzf $FENICSX_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
     # Mark package as installed

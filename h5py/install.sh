@@ -8,7 +8,9 @@ set -e
 set -x
 
 # Check for existing installation
-SHARE_PREFIX="/usr/local/share/fem-on-colab"
+INSTALL_PREFIX=${INSTALL_PREFIX:-"INSTALL_PREFIX_IN"}
+INSTALL_PREFIX_DEPTH=$(echo $INSTALL_PREFIX | awk -F"/" '{print NF-1}')
+SHARE_PREFIX="$INSTALL_PREFIX/share/fem-on-colab"
 H5PY_INSTALLED="$SHARE_PREFIX/h5py.installed"
 
 if [[ ! -f $H5PY_INSTALLED ]]; then
@@ -22,8 +24,8 @@ if [[ ! -f $H5PY_INSTALLED ]]; then
     [[ $H5PY_ARCHIVE_PATH == http* ]] && H5PY_ARCHIVE_DOWNLOAD=${H5PY_ARCHIVE_PATH} && H5PY_ARCHIVE_PATH=/tmp/h5py-install.tar.gz && wget ${H5PY_ARCHIVE_DOWNLOAD} -O ${H5PY_ARCHIVE_PATH}
     if [[ $H5PY_ARCHIVE_PATH != skip ]]; then
         rm -rf /usr/lib/python*/*-packages/h5py*
-        rm -rf /usr/local/lib/python*/*-packages/h5py*
-        tar -xzf $H5PY_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+        rm -rf $INSTALL_PREFIX/lib/python*/*-packages/h5py*
+        tar -xzf $H5PY_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
     # Mark package as installed

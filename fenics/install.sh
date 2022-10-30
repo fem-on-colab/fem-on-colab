@@ -8,7 +8,9 @@ set -e
 set -x
 
 # Check for existing installation
-SHARE_PREFIX="/usr/local/share/fem-on-colab"
+INSTALL_PREFIX=${INSTALL_PREFIX:-"INSTALL_PREFIX_IN"}
+INSTALL_PREFIX_DEPTH=$(echo $INSTALL_PREFIX | awk -F"/" '{print NF-1}')
+SHARE_PREFIX="$INSTALL_PREFIX/share/fem-on-colab"
 FENICS_INSTALLED="$SHARE_PREFIX/fenics.installed"
 
 if [[ ! -f $FENICS_INSTALLED ]]; then
@@ -31,13 +33,14 @@ if [[ ! -f $FENICS_INSTALLED ]]; then
     FENICS_ARCHIVE_PATH=${FENICS_ARCHIVE_PATH:-"FENICS_ARCHIVE_PATH_IN"}
     [[ $FENICS_ARCHIVE_PATH == http* ]] && FENICS_ARCHIVE_DOWNLOAD=${FENICS_ARCHIVE_PATH} && FENICS_ARCHIVE_PATH=/tmp/fenics-install.tar.gz && wget ${FENICS_ARCHIVE_DOWNLOAD} -O ${FENICS_ARCHIVE_PATH}
     if [[ $FENICS_ARCHIVE_PATH != skip ]]; then
-        tar -xzf $FENICS_ARCHIVE_PATH --strip-components=2 --directory=/usr/local
+        tar -xzf $FENICS_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
-    # Add symbolic links to FEniCS libraries in /usr/lib, because Colab does not export /usr/local/lib to LD_LIBRARY_PATH
+    # Add symbolic links to FEniCS libraries in /usr/lib, because INSTALL_PREFIX/lib may not be in LD_LIBRARY_PATH
+    # on the actual cloud instance
     if [[ $FENICS_ARCHIVE_PATH != skip ]]; then
-        ln -fs /usr/local/lib/libdolfin*.so* /usr/lib
-        ln -fs /usr/local/lib/libmshr*.so* /usr/lib
+        ln -fs $INSTALL_PREFIX/lib/libdolfin*.so* /usr/lib
+        ln -fs $INSTALL_PREFIX/lib/libmshr*.so* /usr/lib
     fi
 
     # Mark package as installed

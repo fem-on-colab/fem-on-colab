@@ -13,11 +13,12 @@ INPUT_ARCHIVE_NAME=${2}
 DEPENDENCIES=("${@:3}")
 
 # Extract archives
+INSTALL_PREFIX_DEPTH=$(echo $INSTALL_PREFIX | awk -F"/" '{print NF-1}')
 rm -rf /tmp/diff-${OUTPUT_ARCHIVE_NAME}-1 && mkdir -p /tmp/diff-${OUTPUT_ARCHIVE_NAME}-1
 rm -rf /tmp/diff-${OUTPUT_ARCHIVE_NAME}-2 && mkdir -p /tmp/diff-${OUTPUT_ARCHIVE_NAME}-2
-tar -xzf $INPUT_ARCHIVE_NAME --strip-components=2 --directory=/tmp/diff-${OUTPUT_ARCHIVE_NAME}-1
+tar -xzf $INPUT_ARCHIVE_NAME --strip-components=$INSTALL_PREFIX_DEPTH --directory=/tmp/diff-${OUTPUT_ARCHIVE_NAME}-1
 for DEPENDENCY in "${DEPENDENCIES[@]}"; do
-    tar -xzf $DEPENDENCY --strip-components=2 --directory=/tmp/diff-${OUTPUT_ARCHIVE_NAME}-2
+    tar -xzf $DEPENDENCY --strip-components=$INSTALL_PREFIX_DEPTH --directory=/tmp/diff-${OUTPUT_ARCHIVE_NAME}-2
 done
 
 # Remove duplicate files
