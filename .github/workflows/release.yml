@@ -279,6 +279,11 @@ jobs:
           fi
           echo ${DOCKER_TAG} > ${RELEASE_FILE_DOCKER}
         shell: bash
+      - name: Prepare notebook files for website
+        if: (inputs || github.event.inputs).task != 'test'
+        run: |
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/tests/
       - name: Upload release file to website
         if: (inputs || github.event.inputs).task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
         run: |
@@ -289,6 +294,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add releases/${LIBRARY}-install*.sh
           git add releases/${LIBRARY}-install*.docker
+          git add tests/${LIBRARY}/*.ipynb
           WEBSITE_BRANCH=$(git branch --show-current)
           git pull origin ${WEBSITE_BRANCH}
           [ -n "$(git status --porcelain=v1 2>/dev/null)" ] && git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
