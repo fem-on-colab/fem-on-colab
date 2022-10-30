@@ -185,9 +185,9 @@ jobs:
             LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
             declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="${PWD}/${LIBRARY}-install.tar.gz"
             bash ${LIBRARY}/install.sh
+            export PYTHONPATH="/usr/lib/${PYTHON_VERSION}/build-task/extra-site-packages:${PYTHONPATH}"
           else
-            IFS=: read -r -a PYTHONPATH_ARRAY <<< "$PYTHONPATH"
-            cp -rf base/patches/google ${PYTHONPATH_ARRAY[-1]}/
+            export PYTHONPATH="/usr/lib/${PYTHON_VERSION}/test-task/extra-site-packages:${PYTHONPATH}"
           fi
           LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 LD_LIBRARY_PATH="" ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
         env:
