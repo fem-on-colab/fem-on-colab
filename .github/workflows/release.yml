@@ -171,6 +171,18 @@ jobs:
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           PYTHONUSERBASE=/usr pip3 install --no-dependencies git+https://github.com/multiphenics/nbvalx.git
           wget https://github.com/multiphenics/nbvalx/raw/main/tests/notebooks/conftest.py -O ${LIBRARY}/conftest.py
+      - name: Prepare notebook files for testing
+        run: |
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          for TEST_NOTEBOOK in ${LIBRARY}/*.ipynb; do
+            sed -i "s|BACKEND_LIBRARY_IN|${BACKEND_LIBRARY}|g" ${TEST_NOTEBOOK}
+            sed -i "s|PROJECT_NAME_IN|${PROJECT_NAME}|g" ${TEST_NOTEBOOK}
+          done
+      - name: Copy notebook files for website upload
+        if: (inputs || github.event.inputs).task != 'test'
+        run: |
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/tests/
       - name: Test library
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
@@ -281,11 +293,6 @@ jobs:
           fi
           echo ${DOCKER_TAG} > ${RELEASE_FILE_DOCKER}
         shell: bash
-      - name: Prepare notebook files for website
-        if: (inputs || github.event.inputs).task != 'test'
-        run: |
-          LIBRARY=${{ (inputs || github.event.inputs).library }}
-          rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/tests/
       - name: Upload release and notebook files to website
         if: (inputs || github.event.inputs).task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
         run: |
