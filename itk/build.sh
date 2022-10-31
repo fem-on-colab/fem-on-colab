@@ -35,5 +35,11 @@ git clone https://github.com/InsightSoftwareConsortium/itkwidgets.git /tmp/itkwi
 cd /tmp/itkwidgets-src
 git checkout master
 patch -p 1 < $REPODIR/itk/patches/01-unpin-itk-and-pin-ipympl-in-itkwidgets
-patch -p 1 < $REPODIR/itk/patches/02-enable-custom-widget-manager-in-itkwidgets
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+
+# Automatically enable widgets
+ENABLE_WIDGETS_FILE="/usr/share/widgets/enable_widgets.py"
+if [ -f $ENABLE_WIDGETS_FILE ]; then
+    ENABLE_WIDGETS="\n$(cat $ENABLE_WIDGETS_FILE)"
+    echo "$ENABLE_WIDGETS" >> $(python3 -c 'import itkwidgets; print(itkwidgets.__file__)')
+fi
