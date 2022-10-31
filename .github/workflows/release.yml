@@ -183,6 +183,9 @@ jobs:
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/tests/
+          for TEST_NOTEBOOK in _build/html/tests/${LIBRARY}/*.ipynb; do
+            python3 /usr/bin/preprocess_notebook_for_website.py ${LIBRARY} ${TEST_NOTEBOOK}
+          done
       - name: Test library
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
