@@ -24,6 +24,9 @@ on:
       REPO_ACCESS_TOKEN:
         description: "Token that enables writing to the website repository"
 
+env:
+  PROJECT_NAME: fem-on-colab
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -50,7 +53,7 @@ jobs:
         if: (inputs || github.event.inputs).task != 'test'
         id: token_website
         run: |
-          if [[ "${GITHUB_REPOSITORY}" == "fem-on-colab/fem-on-colab" ]]; then
+          if [[ "${GITHUB_REPOSITORY}" == "${PROJECT_NAME}/${PROJECT_NAME}" ]]; then
             echo "token=${{ secrets.REPO_ACCESS_TOKEN }}" >> ${GITHUB_OUTPUT}
           else
             echo "token=${{ github.token }}" >> ${GITHUB_OUTPUT}
@@ -63,7 +66,7 @@ jobs:
         if: (inputs || github.event.inputs).task != 'test'
         uses: actions/checkout@v3
         with:
-          repository: fem-on-colab/fem-on-colab.github.io
+          repository: ${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.github.io
           token: ${{ steps.token_website.outputs.token }}
           ref: gh-pages
           fetch-depth: 0
@@ -252,12 +255,12 @@ jobs:
         run: |
           RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
           RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
-          if wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null; then
+          if wget https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null; then
             echo "release_archive=${RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
           else
             MD5_RELEASE_ARCHIVE=$(md5sum "${RELEASE_ARCHIVE}" | cut -d" " -f 1)
             RELEASE_ARCHIVE=${RELEASE_ARCHIVE/.gz/-${MD5_RELEASE_ARCHIVE}.gz}
-            wget https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
+            wget https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
             echo "release_archive=${RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
           fi
         shell: bash
@@ -289,7 +292,7 @@ jobs:
           if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
             RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
             RELEASE_ARCHIVE=${{ steps.update_release_archive.outputs.release_archive }}
-            sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
+            sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
           fi
           for ANNOUNCEMENT_POSITION in pre post; do
             if [[ -f "/usr/share/announcements/${ANNOUNCEMENT_POSITION}.txt" ]]; then
@@ -299,7 +302,7 @@ jobs:
           echo ${DOCKER_TAG} > ${RELEASE_FILE_DOCKER}
         shell: bash
       - name: Upload release and notebook files to website
-        if: (inputs || github.event.inputs).task != 'test' && github.repository == 'fem-on-colab/fem-on-colab'
+        if: (inputs || github.event.inputs).task != 'test' && github.repository == '${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}'
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
