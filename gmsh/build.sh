@@ -24,6 +24,11 @@ cmake \
     ..
 make -j $(nproc) install
 
-# Move gmsh into the dist-packages folder
-mv $INSTALL_PREFIX/lib/gmsh.py $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/
-mv $INSTALL_PREFIX/lib/gmsh-*.dist-info $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/
+# Move gmsh into the site target folder
+if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
+    SITE_TARGET="dist-packages"
+else
+    SITE_TARGET="site-packages"
+fi
+mv $INSTALL_PREFIX/lib/gmsh.py $INSTALL_PREFIX/lib/$PYTHON_VERSION/$SITE_TARGET/
+mv $INSTALL_PREFIX/lib/gmsh-*.dist-info $INSTALL_PREFIX/lib/$PYTHON_VERSION/$SITE_TARGET/

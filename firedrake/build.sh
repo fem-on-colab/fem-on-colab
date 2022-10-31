@@ -152,9 +152,11 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     cd /tmp/roltrilinos-src
     PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
-    # Move roltrilinos already to dist-packages (which normally would be done at a later CI step),
+    # Move roltrilinos already to the final site target (which normally would be done at a later CI step),
     # so that patchelf will set the correct path
-    mv $INSTALL_PREFIX/lib/$PYTHON_VERSION/site-packages/roltrilinos* $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/
+    if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
+        mv $INSTALL_PREFIX/lib/$PYTHON_VERSION/site-packages/roltrilinos* $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/
+    fi
 
     # PETSc had downloaded ML from Trilinos: remove its CMake configuration so that it does not
     # get in the way of the detection of roltrilinos
