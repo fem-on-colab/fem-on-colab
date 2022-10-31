@@ -69,7 +69,27 @@ PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip in
 apt install -y -qq libgmp3-dev libmpfr-dev
 git clone https://bitbucket.org/fenics-project/mshr.git /tmp/mshr-src
 cd /tmp/mshr-src/
-patch -p 1 < $REPODIR/fenics/patches/07-hardcode-install-path-in-mshr
+cat <<EOT > python/config.json.in
+{
+    "pybind11" : {
+           "found"        : \${pybind11_FOUND},
+           "version"      : "\${pybind11_VERSION}",
+           "include_dir"  : "\${pybind11_INCLUDE_DIRS}",
+           "include_dirs" : "\${pybind11_INCLUDE_DIR}",
+           "definitions"  : "\${pybind11_DEFINITIONS}"
+    },
+    "dolfin"   : {
+           "found"        : \${DOLFIN_FOUND},
+           "include_dirs" : "\${DOLFIN_INCLUDE_DIRS}"
+    },
+    "mshr"     : {
+           "found"        : 1,
+           "include_dirs" : "$INSTALL_PREFIX/include",
+           "lib_dirs"     : "$INSTALL_PREFIX/lib;$INSTALL_PREFIX/lib64",
+           "libs"         : "mshr"
+    }
+}
+EOT
 mkdir -p /tmp/mshr-src/build
 cd /tmp/mshr-src/build
 cmake \
