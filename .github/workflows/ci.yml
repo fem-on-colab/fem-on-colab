@@ -1,4 +1,4 @@
-name: FEM on Colab CI
+name: CI
 
 on:
   push:

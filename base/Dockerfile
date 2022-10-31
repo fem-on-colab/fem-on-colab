@@ -53,6 +53,7 @@ RUN cd ${DOCKER_SCRIPTS} && \
 RUN cd ${DOCKER_SCRIPTS} && \
     cp base/bin/compute_docker_tag.sh /usr/bin && \
     cp -r base/lib/python3/* /usr/lib/${PYTHON_VERSION} && \
+    cp -r base/share/* /usr/share && \
     cd -
 
 ENV PATH="${INSTALL_PREFIX}/bin:${PATH}" \

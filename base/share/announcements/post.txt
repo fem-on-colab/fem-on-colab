@@ -1,0 +1,10 @@
+This installation is offered by FEM on Colab, an open-source project
+developed and maintained at Università Cattolica del Sacro Cuore
+by Dr. Francesco Ballarin. Please see https://fem-on-colab.github.io/
+for more details, including a list of further available packages
+and how to contribute to the project.
+
+We are conducting an informal survey on FEM on Colab usage by our users.
+The survey is anonymous, and its compilation will typically only require
+a couple of minutes of your time. If you wish, give us your feedback at
+https://forms.gle/36sZZWNvPpUv8XWr7

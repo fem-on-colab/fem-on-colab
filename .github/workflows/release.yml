@@ -291,6 +291,11 @@ jobs:
             RELEASE_ARCHIVE=${{ steps.update_release_archive.outputs.release_archive }}
             sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/fem-on-colab/fem-on-colab/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
           fi
+          for ANNOUNCEMENT_POSITION in pre post; do
+            if [[ -f "/usr/share/announcements/${ANNOUNCEMENT_POSITION}.txt" ]]; then
+              python3 scripts/add_announcement.py ${LIBRARY} ${RELEASE_FILE} "/usr/share/announcements/${ANNOUNCEMENT_POSITION}.txt" "${ANNOUNCEMENT_POSITION}"
+            fi
+          done
           echo ${DOCKER_TAG} > ${RELEASE_FILE_DOCKER}
         shell: bash
       - name: Upload release and notebook files to website
