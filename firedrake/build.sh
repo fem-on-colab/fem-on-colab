@@ -117,6 +117,7 @@ if [[ "$SCALAR_TYPE" == "complex" ]]; then
 else
     patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-real-mode-in-firedrake
 fi
+sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
