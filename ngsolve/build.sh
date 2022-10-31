@@ -15,7 +15,7 @@ if [ $# -ne 0 ]; then
     exit 1
 fi
 
-# Install OCC dependencies (already available on Colab)
+# Install OCC dependencies
 apt install -y -qq libfontconfig1-dev libfreetype6-dev libx11-dev libxi-dev libxmu-dev libgl1-mesa-dev mesa-common-dev
 
 # Install OCC, petsc4py and pybind11 (and their dependencies)
