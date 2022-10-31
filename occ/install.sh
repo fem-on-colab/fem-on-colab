@@ -33,6 +33,12 @@ if [[ ! -f $OCC_INSTALLED ]]; then
         ln -fs $INSTALL_PREFIX/lib/libTK*.so* /usr/lib
     fi
 
+    # Add symbolic links to opencascade in /usr/include, because INSTALL_PREFIX/include may not be in CPLUS_INCLUDE_PATH
+    # on the actual cloud instance
+    if [[ $OCC_ARCHIVE_PATH != skip ]]; then
+        ln -fs $INSTALL_PREFIX/include/opencascade /usr/include
+    fi
+
     # Install X11 for OCC
     apt install -y -qq libfontconfig1 libgl1
 
