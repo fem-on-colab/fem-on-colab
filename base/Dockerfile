@@ -51,7 +51,7 @@ RUN cd ${DOCKER_SCRIPTS} && \
     cd -
 
 RUN cd ${DOCKER_SCRIPTS} && \
-    cp base/bin/compute_docker_tag.sh /usr/bin && \
+    cp -r base/bin/* /usr/bin && \
     cp -r base/lib/python3/* /usr/lib/${PYTHON_VERSION} && \
     cp -r base/share/* /usr/share && \
     cd -
