@@ -177,15 +177,13 @@ jobs:
           for TEST_NOTEBOOK in ${LIBRARY}/*.ipynb; do
             sed -i "s|BACKEND_LIBRARY_IN|${BACKEND_LIBRARY}|g" ${TEST_NOTEBOOK}
             sed -i "s|PROJECT_NAME_IN|${PROJECT_NAME}|g" ${TEST_NOTEBOOK}
+            python3 /usr/bin/preprocess_notebook.py ${LIBRARY} ${TEST_NOTEBOOK}
           done
       - name: Copy notebook files for website upload
         if: (inputs || github.event.inputs).task != 'test'
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/tests/
-          for TEST_NOTEBOOK in _build/html/tests/${LIBRARY}/*.ipynb; do
-            python3 /usr/bin/preprocess_notebook_for_website.py ${LIBRARY} ${TEST_NOTEBOOK}
-          done
       - name: Test library
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}

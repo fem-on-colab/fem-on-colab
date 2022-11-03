@@ -3,7 +3,7 @@
 # This file is part of FEM on Colab.
 #
 # SPDX-License-Identifier: MIT
-"""Preprocess notebook for website."""
+"""Preprocess notebook."""
 
 import sys
 
