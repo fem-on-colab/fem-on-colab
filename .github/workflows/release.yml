@@ -241,7 +241,7 @@ jobs:
         shell: bash
       - name: Add release to repository
         if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: maggie0002/actions/packages/automatic-releases@built-packages
         with:
           repo_token: ${{ secrets.REPO_ACCESS_TOKEN }}
           automatic_release_tag: ${{ steps.check_release.outputs.release_tag }}
