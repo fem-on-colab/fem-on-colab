@@ -38,8 +38,7 @@ patch -p 1 < $REPODIR/itk/patches/01-unpin-itk-and-pin-ipympl-in-itkwidgets
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # Automatically enable widgets
-ENABLE_WIDGETS_FILE="/usr/share/widgets/enable_widgets.py"
-if [ -f $ENABLE_WIDGETS_FILE ]; then
-    ENABLE_WIDGETS="$(cat $ENABLE_WIDGETS_FILE)"
-    echo "$ENABLE_WIDGETS" >> $(python3 -c 'import itkwidgets; print(itkwidgets.__file__)')
+ENABLE_WIDGETS_SCRIPT="/usr/bin/enable_widgets.py"
+if [ -f $ENABLE_WIDGETS_SCRIPT ]; then
+    python3 $ENABLE_WIDGETS_SCRIPT itkwidgets $(python3 -c 'import itkwidgets; print(itkwidgets.__file__)')
 fi
