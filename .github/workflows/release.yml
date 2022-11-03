@@ -275,6 +275,7 @@ jobs:
           RELEASE_FILE_DOCKER=${RELEASE_FILE/.sh/.docker}
           RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
           RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
+          mkdir -p $(dirname ${RELEASE_FILE})
           cp ${LIBRARY}/install.sh ${RELEASE_FILE}
           sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" ${RELEASE_FILE}
           sed -i "s|PROJECT_NAME_IN|${PROJECT_NAME}|g" ${RELEASE_FILE}
