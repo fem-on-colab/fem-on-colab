@@ -15,10 +15,12 @@ ITK_ARCHIVE_PATH="skip" source itk/install.sh
 # Install itk from wheels and patch it
 TEMPORARY_INSTALL_PREFIX="/tmp/itk-install"
 PYTHONUSERBASE=$TEMPORARY_INSTALL_PREFIX python3 -m pip install --user --pre itk itk-meshtopolydata
-find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
-find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
-rsync -avh --remove-source-files $TEMPORARY_INSTALL_PREFIX/ $INSTALL_PREFIX/
-rm -rf $TEMPORARY_INSTALL_PREFIX
+if [ -d "$TEMPORARY_INSTALL_PREFIX" ]; then
+    find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
+    find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
+    rsync -avh --remove-source-files $TEMPORARY_INSTALL_PREFIX/ $INSTALL_PREFIX/
+    rm -rf $TEMPORARY_INSTALL_PREFIX
+fi
 
 # Install zstandard
 git clone https://github.com/indygreg/python-zstandard.git /tmp/zstandard-src
