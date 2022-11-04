@@ -27,6 +27,14 @@ if [[ ! -f $MPI4PY_INSTALLED ]]; then
         tar -xzf $MPI4PY_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
+    # Add symbolic links to the MPI executables in /usr/bin, because INSTALL_PREFIX/bin may not be in PATH
+    # on the actual cloud instance
+    if [[ $MPI4PY_ARCHIVE_PATH != skip ]]; then
+        if ! command -v mpicc; then
+            ln -fs $INSTALL_PREFIX/bin/mpi* /usr/bin
+        fi
+    fi
+
     # Add symbolic links to the MPI libraries in /usr/lib, because INSTALL_PREFIX/lib may not be in LD_LIBRARY_PATH
     # on the actual cloud instance
     if [[ $MPI4PY_ARCHIVE_PATH != skip ]]; then
