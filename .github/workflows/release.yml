@@ -57,6 +57,7 @@ jobs:
           fi
         shell: bash
       - name: Mark website directory as safe
+        if: (inputs || github.event.inputs).task != 'test'
         run: |
           git config --global --add safe.directory _build/html
       - name: Clone website repository
