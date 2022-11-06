@@ -65,6 +65,7 @@ cmake \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
     -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
     -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
+    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
 
