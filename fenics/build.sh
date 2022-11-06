@@ -52,6 +52,8 @@ patch -p 1 < $REPODIR/fenics/patches/06-drop-dev-from-requirements
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX
+export PETSC_DIR=$INSTALL_PREFIX
+export SLEPC_DIR=$INSTALL_PREFIX
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \

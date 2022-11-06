@@ -76,6 +76,8 @@ patch -p 1 < $REPODIR/fenicsx/patches/04-allow-python37
 cd /tmp/dolfinx-src/build
 export UFC_DIR=$INSTALL_PREFIX
 export HDF5_ROOT=$INSTALL_PREFIX
+export PETSC_DIR=$INSTALL_PREFIX
+export SLEPC_DIR=$INSTALL_PREFIX
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
