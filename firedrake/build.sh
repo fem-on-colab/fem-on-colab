@@ -36,7 +36,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 # netCDF4-python
 git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --no-build-isolation --user
 
 # FIAT
 git clone https://github.com/firedrakeproject/fiat.git /tmp/fiat-src
