@@ -9,7 +9,7 @@ MAINTAINER Francesco Ballarin <francesco.ballarin@unicatt.it>
 
 ENV INSTALL_PREFIX=/usr/local \
     PROJECT_NAME=fem-on-colab \
-    PYTHON_VERSION=python3.7
+    PYTHON_VERSION=python3.8
 
 ENV BACKEND_INFO=${INSTALL_PREFIX}/share/backend-info \
     BACKEND_LIBRARY=google.colab \
