@@ -36,7 +36,7 @@ apt install -y -qq nodejs
 git clone https://github.com/InsightSoftwareConsortium/itkwidgets.git /tmp/itkwidgets-src
 cd /tmp/itkwidgets-src
 git checkout master
-patch -p 1 < $REPODIR/itk/patches/01-unpin-itk-and-pin-ipympl-in-itkwidgets
+patch -p 1 < $REPODIR/itk/patches/01-pin-ipympl-in-itkwidgets
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # Automatically enable widgets
