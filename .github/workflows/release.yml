@@ -161,10 +161,10 @@ jobs:
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           DEPENDENCIES=($(find /tmp -name '*-install\.tar.gz'))
           if [ "${#DEPENDENCIES[@]}" -gt "0" ]; then
-            source scripts/prepare_for_installation.sh ${LIBRARY}-full
-            source scripts/remove_dependencies_from_archive.sh ${LIBRARY} ${PWD}/${LIBRARY}-full-install.tar.gz ${DEPENDENCIES[@]}
+            bash scripts/prepare_for_installation.sh ${LIBRARY}-full
+            bash scripts/remove_dependencies_from_archive.sh ${LIBRARY} ${PWD}/${LIBRARY}-full-install.tar.gz ${DEPENDENCIES[@]}
           else
-            source scripts/prepare_for_installation.sh ${LIBRARY}
+            bash scripts/prepare_for_installation.sh ${LIBRARY}
           fi
         shell: bash
       - name: Prepare pytest configuration file
