@@ -203,7 +203,7 @@ jobs:
           else
             export PYTHONPATH="/usr/lib/${PYTHON_VERSION}/test-task/extra-site-packages:${PYTHONPATH}"
           fi
-          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 LD_LIBRARY_PATH="" ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
+          LD_LIBRARY_PATH="" ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
         env:
           CPPFLAGS: ""
           LDFLAGS: ""
