@@ -1,0 +1,34 @@
+diff --git a/dolfin/io/HDF5File.cpp b/dolfin/io/HDF5File.cpp
+index fa14042cf..c696f5b74 100644
+--- a/dolfin/io/HDF5File.cpp
++++ b/dolfin/io/HDF5File.cpp
+@@ -21,6 +21,7 @@
+
+ #include <cstdio>
+ #include <fstream>
++#include <functional>
+ #include <iomanip>
+ #include <iostream>
+ #include <string>
+@@ -916,7 +917,7 @@ void HDF5File::write(const Function& u, const std::string name)
+   std::transform(x_cell_dofs.begin(),
+                  x_cell_dofs.end(),
+                  x_cell_dofs.begin(),
+-                 std::bind2nd(std::plus<std::size_t>(), offset));
++                 std::bind(std::plus<std::size_t>(), std::placeholders::_1, offset));
+
+   const bool mpi_io = _mpi_comm.size() > 1 ? true : false;
+
+diff --git a/dolfin/io/XDMFFile.cpp b/dolfin/io/XDMFFile.cpp
+index fd5b0a202..314c9644a 100644
+--- a/dolfin/io/XDMFFile.cpp
++++ b/dolfin/io/XDMFFile.cpp
+@@ -1265,7 +1265,7 @@ void XDMFFile::add_function(MPI_Comm mpi_comm, pugi::xml_node& xml_node,
+   std::transform(x_cell_dofs.begin(),
+                  x_cell_dofs.end(),
+                  x_cell_dofs.begin(),
+-                 std::bind2nd(std::plus<std::size_t>(), offset));
++                 std::bind(std::plus<std::size_t>(), std::placeholders::_1, offset));
+
+   const std::int64_t num_cell_dofs_global
+     = MPI::sum(mpi_comm, cell_dofs.size());
