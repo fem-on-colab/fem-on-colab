@@ -207,10 +207,12 @@ jobs:
           else
             export PYTHONPATH="/usr/lib/${PYTHON_VERSION}/test-task/extra-site-packages:${PYTHONPATH}"
           fi
-          LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 LD_LIBRARY_PATH="" ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
-        env:
-          CPPFLAGS: ""
-          LDFLAGS: ""
+          if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+            LD_PRELOAD_FOR_PYTEST="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+          else
+            LD_PRELOAD_FOR_PYTEST=""
+          fi
+          CPPFLAGS="" LDFLAGS="" LD_LIBRARY_PATH="" LD_PRELOAD="${LD_PRELOAD_FOR_PYTEST}" ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
         shell: bash
       - name: Check if a release is needed
         if: (inputs || github.event.inputs).task != 'test'
