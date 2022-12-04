@@ -1,0 +1,13 @@
+diff --git a/dijitso/params.py b/dijitso/params.py
+index d05abbe..1e6d760 100644
+--- a/dijitso/params.py
++++ b/dijitso/params.py
+@@ -114,7 +114,7 @@ def default_cxx_flags():
+     "Default C++ flags for all build modes."
+     # Dropped because of some symbol sharing across dependent modules from ffc:
+     # "-fvisibility=hidden",
+-    return ("-Wall", "-shared", "-fPIC", "-std=c++11")
++    return ("-Wall", "-shared", "-fPIC", "-std=c++14")
+ 
+ 
+ def default_cxx_debug_flags():

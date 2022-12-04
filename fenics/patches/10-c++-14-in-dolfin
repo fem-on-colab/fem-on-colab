@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fe4757422..d771be3a7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,7 +20,7 @@ endif()
+ # Require and use C++11
+ 
+ # Use C++11
+-set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD 14)
+ 
+ # Require C++11
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+diff --git a/cmake/templates/UseDOLFIN.cmake.in b/cmake/templates/UseDOLFIN.cmake.in
+index bd0d89688..9efa85b64 100644
+--- a/cmake/templates/UseDOLFIN.cmake.in
++++ b/cmake/templates/UseDOLFIN.cmake.in
+@@ -13,7 +13,7 @@ if (NOT DOLFIN_USE_FILE_INCLUDED)
+   endif()
+ 
+   # Require and use C++11
+-  set(CMAKE_CXX_STANDARD 11)
++  set(CMAKE_CXX_STANDARD 14)
+   set(CMAKE_CXX_STANDARD_REQUIRED ON)
+   set(CMAKE_CXX_EXTENSIONS OFF)
+ 
