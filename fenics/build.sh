@@ -46,6 +46,7 @@ git clone https://bitbucket.org/fenics-project/dolfin.git /tmp/dolfin-src
 cd /tmp/dolfin-src/
 patch -p 1 < $REPODIR/fenics/patches/02-xdmf-checkpoint-fix
 patch -p 1 < $REPODIR/fenics/patches/03-pkgconfig-slepc-lowercase
+patch -p 1 < $REPODIR/fenics/patches/04-deprecated-boost-filesystem
 patch -p 1 < $REPODIR/fenics/patches/06-drop-dev-from-requirements
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build

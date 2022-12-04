@@ -1,0 +1,43 @@
+diff --git a/dolfin/io/File.cpp b/dolfin/io/File.cpp
+index 7ad5a7422..bc748a4b5 100644
+--- a/dolfin/io/File.cpp
++++ b/dolfin/io/File.cpp
+@@ -147,14 +147,13 @@ void File::init(MPI_Comm comm, const std::string filename,
+
+   // Get file path and extension
+   const boost::filesystem::path path(filename);
+-  const std::string extension = boost::filesystem::extension(path);
++  const std::string extension = path.extension().string();
+
+   // Choose format based on extension
+   if (extension == ".gz")
+   {
+     // Get suffix after discarding .gz
+-    const std::string ext =
+-      boost::filesystem::extension(boost::filesystem::basename(path));
++    const std::string ext = path.stem().extension().string();
+     if (ext == ".xml")
+       _file.reset(new XMLFile(comm, filename));
+     else
+diff --git a/dolfin/io/XMLFile.cpp b/dolfin/io/XMLFile.cpp
+index 4c62f7b84..023f6a1d9 100644
+--- a/dolfin/io/XMLFile.cpp
++++ b/dolfin/io/XMLFile.cpp
+@@ -400,7 +400,7 @@ void XMLFile::load_xml_doc(pugi::xml_document& xml_doc) const
+
+   // Get file path and extension
+   const boost::filesystem::path path(_filename);
+-  const std::string extension = boost::filesystem::extension(path);
++  const std::string extension = path.extension().string();
+
+   // Check that file exists
+   if (!boost::filesystem::is_regular_file(_filename))
+@@ -464,7 +464,7 @@ void XMLFile::save_xml_doc(const pugi::xml_document& xml_doc) const
+   {
+     // Compress if filename has extension '.gz'
+     const boost::filesystem::path path(_filename);
+-    const std::string extension = boost::filesystem::extension(path);
++    const std::string extension = path.extension().string();
+     if (extension == ".gz")
+     {
+       std::stringstream xml_stream;
