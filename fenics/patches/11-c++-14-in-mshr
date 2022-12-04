@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 78fee4a1..f2fec33c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,7 +44,7 @@ MACRO(LIST_CONTAINS var value)
+ ENDMACRO(LIST_CONTAINS)
+ 
+ # Use C++11
+-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall")
++SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
+ 
+ # Boost
+ # This is workaround to avoid that find_package(Boost)
+diff --git a/python/setup.py b/python/setup.py
+index 2ead3e73..2dde610d 100644
+--- a/python/setup.py
++++ b/python/setup.py
+@@ -27,8 +27,8 @@ mshr_ext = Extension('mshr.cpp',
+                      include_dirs=include_dirs,
+                      library_dirs=config['mshr']['lib_dirs'].split(";"),
+                      libraries=config['mshr']['libs'].split(";"),
+-                     extra_compile_args=['-std=c++11'],
+-                     language='c++11')
++                     extra_compile_args=['-std=c++14'],
++                     language='c++14')
+ 
+ 
+ setup(name             = 'mshr',

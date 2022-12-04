@@ -27,6 +27,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 git clone https://bitbucket.org/fenics-project/dijitso.git /tmp/dijitso-src
 cd /tmp/dijitso-src
 patch -p 1 < $REPODIR/fenics/patches/01-dijitso-static-libstdc++
+patch -p 1 < $REPODIR/fenics/patches/09-c++-14-in-dijitso
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # UFL
@@ -50,6 +51,7 @@ patch -p 1 < $REPODIR/fenics/patches/04-deprecated-boost-filesystem
 patch -p 1 < $REPODIR/fenics/patches/05-deprecated-std-bind2nd
 patch -p 1 < $REPODIR/fenics/patches/06-drop-dev-from-requirements
 patch -p 1 < $REPODIR/fenics/patches/07-deprecated-petsc
+patch -p 1 < $REPODIR/fenics/patches/10-c++-14-in-dolfin
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX
@@ -72,6 +74,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip in
 apt install -y -qq libgmp3-dev libmpfr-dev
 git clone https://bitbucket.org/fenics-project/mshr.git /tmp/mshr-src
 cd /tmp/mshr-src/
+patch -p 1 < $REPODIR/fenics/patches/11-c++-14-in-mshr
 cat <<EOT > python/config.json.in
 {
     "pybind11" : {
