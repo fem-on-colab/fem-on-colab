@@ -61,7 +61,9 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 # PyOP2
 git clone https://github.com/OP2/PyOP2.git /tmp/pyop2-src
 cd /tmp/pyop2-src
-patch -p 1 < $REPODIR/firedrake/patches/01-pyop2-static-libstdc++
+if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+    patch -p 1 < $REPODIR/firedrake/patches/01-pyop2-static-libstdc++
+fi
 export PETSC_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 

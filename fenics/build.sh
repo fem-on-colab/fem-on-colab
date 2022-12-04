@@ -26,7 +26,9 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 # dijitso
 git clone https://bitbucket.org/fenics-project/dijitso.git /tmp/dijitso-src
 cd /tmp/dijitso-src
-patch -p 1 < $REPODIR/fenics/patches/01-dijitso-static-libstdc++
+if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+    patch -p 1 < $REPODIR/fenics/patches/01-dijitso-static-libstdc++
+fi
 patch -p 1 < $REPODIR/fenics/patches/09-c++-14-in-dijitso
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 

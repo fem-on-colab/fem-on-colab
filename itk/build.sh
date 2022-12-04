@@ -16,8 +16,10 @@ ITK_ARCHIVE_PATH="skip" source itk/install.sh
 TEMPORARY_INSTALL_PREFIX="/tmp/itk-install"
 PYTHONUSERBASE=$TEMPORARY_INSTALL_PREFIX python3 -m pip install --user --pre itk itk-meshtopolydata
 if [ -d "$TEMPORARY_INSTALL_PREFIX" ]; then
-    find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
-    find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
+    if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+        find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
+        find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
+    fi
     rsync -avh --remove-source-files $TEMPORARY_INSTALL_PREFIX/ $INSTALL_PREFIX/
     rm -rf $TEMPORARY_INSTALL_PREFIX
 fi

@@ -46,13 +46,17 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
-patch -p 1 < $REPODIR/fenicsx/patches/01-ffcx-cffi-static-libstdc++
+if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+    patch -p 1 < $REPODIR/fenicsx/patches/01-ffcx-cffi-static-libstdc++
+fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # cppimport
 git clone https://github.com/tbenthompson/cppimport /tmp/cppimport-src
 cd /tmp/cppimport-src/
-patch -p 1 < $REPODIR/fenicsx/patches/02-cppimport-static-libstdc++
+if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+    patch -p 1 < $REPODIR/fenicsx/patches/02-cppimport-static-libstdc++
+fi
 patch -p 1 < $REPODIR/fenicsx/patches/03-cppimport-distutils-imports
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 

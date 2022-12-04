@@ -19,7 +19,9 @@ cd /tmp/occt-src
 TAGS=($(git tag -l --sort=-version:refname))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
-sed -i "s/pthread rt stdc++/pthread rt/g" adm/cmake/occt_csf.cmake
+if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+    sed -i "s/pthread rt stdc++/pthread rt/g" adm/cmake/occt_csf.cmake
+fi
 mkdir -p /tmp/occt-src/build
 cd /tmp/occt-src/build
 cmake \

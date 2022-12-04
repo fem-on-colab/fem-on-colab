@@ -21,8 +21,10 @@ cd /tmp/gcc-src
 sed -i 's|    \\\$(top_builddir)/../libstdc++-v3/src/libstdc++.la"|    "|g' config/libstdc++-raw-cxx.m4
 sed -i 's|AC_DEFUN(\[_GCC_AUTOCONF_VERSION_CHECK\]|AC_DEFUN([_GCC_AUTOCONF_VERSION_CHECK_DISABLED]|g' config/override.m4
 sed -i 's|_GCC_AUTOCONF_VERSION_CHECK||g' config/override.m4
-sed -i 's|gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++|gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++ -static-libstdc++|g' configure.ac
-sed -i 's|gcc/xgcc -shared-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++|gcc/xg++ -static-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++ -static-libstdc++|g' configure.ac
+if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+    sed -i 's|gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++|gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++ -static-libstdc++|g' configure.ac
+    sed -i 's|gcc/xgcc -shared-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++|gcc/xg++ -static-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++ -static-libstdc++|g' configure.ac
+fi
 for configure_ac in $(find ./ -type f -name 'configure.ac'); do
     tac $configure_ac | sed '0,/AC_OUTPUT/I s/.*AC_OUTPUT.*/&\npostdeps_CXX=`echo " \$postdeps_CXX " | sed "s, \-lstdc++ ,,g"`/I' | tac > reversed_file
     mv reversed_file $configure_ac

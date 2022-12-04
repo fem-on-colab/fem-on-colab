@@ -57,7 +57,9 @@ cd /tmp/ngsolve-src
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
 patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
-patch -p 1 < $REPODIR/ngsolve/patches/03-ngscxx-ngsld-static-libstdc++
+if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+    patch -p 1 < $REPODIR/ngsolve/patches/03-ngscxx-ngsld-static-libstdc++
+fi
 mkdir -p /tmp/ngsolve-src/build
 cd /tmp/ngsolve-src/build
 cmake \
