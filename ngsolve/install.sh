@@ -37,6 +37,15 @@ if [[ ! -f $NGSOLVE_INSTALLED ]]; then
         tar -xzf $NGSOLVE_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
+    # Add symbolic links to python libraries in /usr/lib, because PYTHONHOME/lib may not be in LD_LIBRARY_PATH
+    # on the actual cloud instance
+    if [[ $NGSOLVE_ARCHIVE_PATH != skip ]]; then
+        PYTHONHOME=$(python3 -c "import sys; print(sys.exec_prefix)")
+        if [[ $PYTHONHOME != "/usr" ]]; then
+            ln -fs $PYTHONHOME/lib/libpython*.so* /usr/lib
+        fi
+    fi
+
     # Mark package as installed
     mkdir -p $SHARE_PREFIX
     touch $NGSOLVE_INSTALLED
