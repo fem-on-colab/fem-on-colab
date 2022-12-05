@@ -1,0 +1,11 @@
+diff --git a/python/dolfin/jit/jit.py b/python/dolfin/jit/jit.py
+index 5ac1ba23b..439c52817 100644
+--- a/python/dolfin/jit/jit.py
++++ b/python/dolfin/jit/jit.py
+@@ -1,4 +1,6 @@
+ # -*- coding: utf-8 -*-
++import os
++os.environ["PKG_CONFIG_PATH"] = "INSTALL_PREFIX_IN/lib/pkgconfig:INSTALL_PREFIX_IN/lib64/pkgconfig"
+
+ import pkgconfig
+ import numpy
