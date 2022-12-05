@@ -48,7 +48,6 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 git clone https://bitbucket.org/fenics-project/dolfin.git /tmp/dolfin-src
 cd /tmp/dolfin-src/
 patch -p 1 < $REPODIR/fenics/patches/02-xdmf-checkpoint-fix
-patch -p 1 < $REPODIR/fenics/patches/03-pkgconfig-slepc-lowercase
 patch -p 1 < $REPODIR/fenics/patches/04-deprecated-boost-filesystem
 patch -p 1 < $REPODIR/fenics/patches/05-deprecated-std-bind2nd
 patch -p 1 < $REPODIR/fenics/patches/06-drop-dev-from-requirements
