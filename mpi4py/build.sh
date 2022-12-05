@@ -25,11 +25,13 @@ fi
     --prefix=$INSTALL_PREFIX \
     --disable-silent-rules --disable-maintainer-mode --disable-dependency-tracking --disable-wrapper-runpath \
     --enable-mpi-cxx
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+if [[ -n "$LDFLAGS" ]]; then
     LDFLAGS_WITH_WC=$(echo "$LDFLAGS" | sed 's/[^ ]* */-Wc,&/g')
-    make -j $(nproc) LDFLAGS=${LDFLAGS_WITH_WC}
-    make install LDFLAGS=${LDFLAGS_WITH_WC}
+else
+    LDFLAGS_WITH_WC=""
 fi
+make -j $(nproc) LDFLAGS=${LDFLAGS_WITH_WC}
+make install LDFLAGS=${LDFLAGS_WITH_WC}
 
 # Install mpi4py
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user git+https://github.com/mpi4py/mpi4py.git
