@@ -255,6 +255,7 @@ jobs:
           git push origin ${RELEASE_TAG}
       - name: Add release to repository
         if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
+        timeout-minutes: 5
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
