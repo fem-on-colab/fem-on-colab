@@ -35,10 +35,15 @@ bash /tmp/npm-repos
 apt install -y -qq nodejs
 
 # Install itkwidgets (legacy branch)
+TRAITLETS_TOO_NEW=$(python3 -c 'import traitlets; traitlets_version = tuple(map(int, traitlets.__version__.split(".")[:2])); print(traitlets_version >= (5, 7))')
+if [ "${TRAITLETS_TOO_NEW}" == "True" ]; then
+    PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --upgrade "traitlets<5.7.0"
+fi
 git clone https://github.com/InsightSoftwareConsortium/itkwidgets.git /tmp/itkwidgets-src
 cd /tmp/itkwidgets-src
 git checkout master
 patch -p 1 < $REPODIR/itk/patches/01-pin-ipympl-in-itkwidgets
+patch -p 1 < $REPODIR/itk/patches/02-unpin-traitlets-in-itkwidgets
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # Automatically enable widgets

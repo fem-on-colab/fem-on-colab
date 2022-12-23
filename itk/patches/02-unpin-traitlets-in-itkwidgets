@@ -1,0 +1,11 @@
+diff --git a/requirements.txt b/requirements.txt
+index 06f8452..280dd2a 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -10,6 +10,3 @@ matplotlib
+ numpy
+ six
+ zstandard
+-traitlets<5.7.0
+-notebook<6.5.0
+-ipywidgets<8.0.0
