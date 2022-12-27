@@ -279,43 +279,6 @@ jobs:
       task: "test"
       args: ""
 
-  # itk build & test
-  build_itk:
-    needs: [test_vtk]
-    if: >-
-      github.repository == 'fem-on-colab/fem-on-colab' && (
-        (
-          github.event_name == 'schedule' && needs.test_vtk.result == 'success'
-        ) || (
-          github.event_name != 'schedule' && github.event.inputs.library == 'itk' && needs.test_vtk.result == 'skipped' && always()
-        ) || (
-          github.event_name != 'schedule' && github.event.inputs.library != 'itk' && needs.test_vtk.result == 'success' && always()
-        )
-      )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
-    with:
-      library: "itk"
-      task: "build"
-      args: ""
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-  test_itk:
-    needs: [build_itk]
-    if: >-
-      github.repository == 'fem-on-colab/fem-on-colab' && (
-        (
-          github.event_name == 'schedule' && needs.build_itk.result == 'success'
-        ) || (
-          github.event_name != 'schedule' && needs.build_itk.result == 'success' && always()
-        )
-      )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
-    with:
-      library: "itk"
-      task: "test"
-      args: ""
-
   # petsc4py/real build & test
   build_petsc4py_real:
     needs: [test_h5py]
