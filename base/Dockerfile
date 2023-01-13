@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 MAINTAINER Francesco Ballarin <francesco.ballarin@unicatt.it>
 
 ENV INSTALL_PREFIX=/usr/local \
