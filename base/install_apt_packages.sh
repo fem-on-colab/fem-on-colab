@@ -12,7 +12,7 @@ grep -v -e "^#" -e "^Listing..." -h ${BACKEND_INFO}/apt-list.txt > ${BACKEND_INF
 
 # Remove packages (and their dependents) which we are going to compile from source anyway
 remove_packages_built_from_source () {
-    grep -v -e "^gdal" -e "^libarmadillo" -e "^libboost" -e "^libgdal" -e "^libhdf" -e "^libhwloc" -e "^libkml" -e "^libnetcdf" -e "^libopenmpi" -e "^libvtk" -e "^mpi-default" -e "^openmpi" -e "^python-gdal" -e "^python3-gdal" -h ${1} > ${1}.tmp
+    grep -v -e "^gdal" -e "^libarmadillo" -e "^libboost" -e "^libgdal" -e "^libhdf" -e "^libhwloc" -e "^libkml" -e "^libnetcdf" -e "^libopenmpi" -e "^libpmix2" -e "^libvtk" -e "^mpi-default" -e "^openmpi" -e "^python-gdal" -e "^python3-gdal" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_packages_built_from_source ${BACKEND_INFO}/apt-list-clean.txt
