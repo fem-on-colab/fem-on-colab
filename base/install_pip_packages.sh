@@ -12,10 +12,17 @@ grep -v "^#" -h ${BACKEND_INFO}/pip-freeze.txt > ${BACKEND_INFO}/pip-freeze-clea
 
 # Remove packages which would give errors on installation
 remove_packages_error_from_source () {
-    grep -v -e "^GDAL==" -e "^google-colab @ file:///" -e "^pathlib==" -e "^python-apt==0.0.0" -h ${1} > ${1}.tmp
+    grep -v -e "^GDAL==" -e "^google-colab @ file:///" -e "^pathlib==" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_packages_error_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
+
+# Remove packages which are already installed by apt
+remove_packages_already_installed_by_apt () {
+    grep -v -e "^python-apt==" -h ${1} > ${1}.tmp
+    mv ${1}.tmp ${1}
+}
+remove_packages_already_installed_by_apt ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove outdated packages
 remove_outdated_packages () {
@@ -81,6 +88,7 @@ assert_removed_packages () {
     fi
 }
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_packages_error_from_source
+# do not check remove_packages_already_installed_by_apt, because they would still be listed by pip freeze
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_outdated_packages
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_packages_built_from_source
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_machine_learning_packages
