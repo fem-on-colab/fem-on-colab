@@ -76,9 +76,7 @@ fi
 PETSC_ARCH=$(grep "^PETSC_ARCH" $PWD/lib/petsc/conf/petscvariables | sed "s/PETSC_ARCH=//")
 make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH all
 make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH install
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    sed -i "s, -lstdc++ , ,g" $INSTALL_PREFIX/lib/petsc/conf/petscvariables
-fi
+sed -i "s, -lstdc++ , ,g" $INSTALL_PREFIX/lib/petsc/conf/petscvariables
 
 # Install petsc4py
 cd /tmp/petsc-src/src/binding/petsc4py/
