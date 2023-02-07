@@ -30,9 +30,7 @@ make install
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
 cd /tmp/petsc-src
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    patch -p1 < $REPODIR/petsc4py/patches/01-force-static-libstdc++
-fi
+patch -p1 < $REPODIR/petsc4py/patches/01-force-static-libstdc++
 patch -p1 < $REPODIR/petsc4py/patches/02-strip-lstdc++
 DOWNLOADS="\
     --download-metis \
