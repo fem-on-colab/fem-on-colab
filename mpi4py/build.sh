@@ -16,9 +16,7 @@ cd /tmp/openmpi-src
 TAGS=($(git tag -l --sort=-version:refname "v4.[0-9].[0-9]"))
 echo "Latest tag in the v4 series is ${TAGS[0]}"
 git checkout ${TAGS[0]}
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    sed -i 's/AC_SUBST(CXXCPPFLAGS)/AC_SUBST(CXXCPPFLAGS)\npostdeps_CXX=`echo " $postdeps_CXX " | sed "s, -lstdc++ ,,g"`/g' configure.ac
-fi
+sed -i 's/AC_SUBST(CXXCPPFLAGS)/AC_SUBST(CXXCPPFLAGS)\npostdeps_CXX=`echo " $postdeps_CXX " | sed "s, -lstdc++ ,,g"`/g' configure.ac
 ./autogen.pl --force
 ./configure \
     --build=x86_64-linux-gnu \
