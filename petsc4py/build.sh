@@ -30,9 +30,9 @@ make install
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
 cd /tmp/petsc-src
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+# if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
     patch -p1 < $REPODIR/petsc4py/patches/01-force-static-libstdc++
-fi
+# fi
 DOWNLOADS="\
     --download-metis \
     --download-parmetis \
@@ -76,9 +76,9 @@ fi
 PETSC_ARCH=$(grep "^PETSC_ARCH" $PWD/lib/petsc/conf/petscvariables | sed "s/PETSC_ARCH=//")
 make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH all
 make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH install
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+# if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
     sed -i "s, -lstdc++ , ,g" $INSTALL_PREFIX/lib/petsc/conf/petscvariables
-fi
+# fi
 
 # Install petsc4py
 cd /tmp/petsc-src/src/binding/petsc4py/
