@@ -21,8 +21,8 @@ except ImportError:
 else:
     google.colab.output.enable_custom_widget_manager()
 """
-    assert package_name in ("itkwidgets", "pythreejs", "pyvista", "webgui_jupyter_widgets")
-    if package_name in ("itkwidgets", "pythreejs", "pyvista"):
+    assert package_name in ("pythreejs", "pyvista", "webgui_jupyter_widgets")
+    if package_name in ("pythreejs", "pyvista"):
         with open(package_init_file, "r") as f:
             package_init_file_content = f.read().strip("\n")
         with open(package_init_file, "w") as f:
