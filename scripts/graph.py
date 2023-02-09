@@ -23,7 +23,7 @@ dependencies = {
     "petsc4py": ["h5py"],
     "pybind11": ["mpi4py"],
     "slepc4py": ["petsc4py"],
-    "vtk": ["gcc"]
+    "vtk": ["h5py"]
 }
 
 g = igraph.Graph(directed=True)

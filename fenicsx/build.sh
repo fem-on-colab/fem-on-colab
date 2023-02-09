@@ -73,24 +73,6 @@ cmake \
     ..
 make -j $(nproc) install
 
-# ADIOS2
-git clone https://github.com/ornladios/ADIOS2.git /tmp/adios2-src
-mkdir -p /tmp/adios2-src/build
-cd /tmp/adios2-src/build
-cmake \
-    -DCMAKE_C_COMPILER=$(which mpicc) \
-    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
-    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
-    -DADIOS2_USE_HDF5=on \
-    -DADIOS2_USE_Fortran=off \
-    -DADIOS2_USE_ZeroMQ=off \
-    -DBUILD_TESTING=off \
-    -DADIOS2_BUILD_EXAMPLES=off \
-    ..
-make -j $(nproc) install
-
 # dolfinx
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 mkdir -p /tmp/dolfinx-src/build

@@ -25,6 +25,36 @@ if [ -d "$TEMPORARY_INSTALL_PREFIX" ]; then
     rm -rf $TEMPORARY_INSTALL_PREFIX
 fi
 
+# ADIOS2 may install files to $INSTALL_PREFIX/lib/python3 rather than $INSTALL_PREFIX/lib/$PYTHON_VERSION.
+# Create a symbolic link so that the two folders coincide.
+ln -s $INSTALL_PREFIX/lib/$PYTHON_VERSION $INSTALL_PREFIX/lib/python3
+
+# Install ADIOS2
+git clone https://github.com/ornladios/ADIOS2.git /tmp/adios2-src
+cd /tmp/adios2-src
+TAGS=($(git tag -l --sort=-version:refname "v[0-9][0-9].[0-9]"))
+echo "Latest tag is ${TAGS[0]}"
+git checkout ${TAGS[0]}
+mkdir -p /tmp/adios2-src/build
+cd /tmp/adios2-src/build
+cmake \
+    -DCMAKE_C_COMPILER=$(which mpicc) \
+    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
+    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
+    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    -DADIOS2_USE_HDF5=on \
+    -DADIOS2_USE_Fortran=off \
+    -DADIOS2_USE_ZeroMQ=off \
+    -DADIOS2_USE_Python=on \
+    -DBUILD_TESTING=off \
+    -DADIOS2_BUILD_EXAMPLES=off \
+    ..
+make -j $(nproc) install
+
+# Remove temporary symbolic link
+rm $INSTALL_PREFIX/lib/python3
+
 # Install xvfbwrapper too
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
 
