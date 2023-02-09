@@ -12,21 +12,13 @@ REPODIR=$PWD
 # Install gcc
 VTK_ARCHIVE_PATH="skip" source vtk/install.sh
 
-# Install patchelf from source, as the version packaged by ubuntu may be too old
-git clone https://github.com/NixOS/patchelf.git /tmp/patchelf-src
-cd /tmp/patchelf-src
-TAGS=($(git tag -l --sort=-version:refname))
-echo "Latest tag is ${TAGS[0]}"
-git checkout ${TAGS[0]}
-./bootstrap.sh
-./configure --prefix=$INSTALL_PREFIX
-make
-make install
-
 # Install vtk from wheels and patch it
 TEMPORARY_INSTALL_PREFIX="/tmp/vtk-install"
 PYTHONUSERBASE=$TEMPORARY_INSTALL_PREFIX python3 -m pip install --user --pre vtk
 if [ -d "$TEMPORARY_INSTALL_PREFIX" ]; then
+    # Since we do not compile vtk ourselves, we cannot honor any request about libstdc++ being statically linked.
+    # The simplest workaround is to replace the system-wide libstdc++.so with the one installed in INSTALL_PREFIX
+    # in the library dependencies.
     if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
         find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
         find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
