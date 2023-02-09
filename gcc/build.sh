@@ -29,6 +29,9 @@ for configure_ac in $(find ./ -type f -name 'configure.ac'); do
     tac $configure_ac | sed '0,/AC_OUTPUT/I s/.*AC_OUTPUT.*/&\npostdeps_CXX=`echo " \$postdeps_CXX " | sed "s, \-lstdc++ ,,g"`/I' | tac > reversed_file
     mv reversed_file $configure_ac
 done
+if [[ "$LDFLAGS" == *"${INSTALL_PREFIX}/lib/libstdcxx.so"* ]]; then
+    export LDFLAGS="$(echo $LDFLAGS | sed "s|${INSTALL_PREFIX}/lib/libstdcxx.so||g")"
+fi
 find ./ -name configure | while read f; do d=$( dirname "$f" ) && echo -n "$d:" && l=$d/regenerate.log && ( cd "$d"/ && if test -f Makefile.am; then autoreconf; else autoconf; fi ) > "$l" 2>&1; echo $?; if test -s "$l"; then echo "Review '$l'"; else rm "$l"; fi; done
 ./configure \
     --prefix=$INSTALL_PREFIX \
