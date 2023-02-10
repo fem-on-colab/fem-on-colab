@@ -21,6 +21,13 @@ remove_packages_built_from_source () {
 }
 remove_packages_built_from_source ${BACKEND_INFO}/apt-list-clean.txt
 
+# Remove packages (and their dependents) which would require additional repositories
+remove_packages_additional_apt_repositories () {
+    grep -v -e "^libgeos" -e "^libgeotiff" -e "^libproj" -e "^libspatialite" -e "^librttopo" -h ${1} > ${1}.tmp
+    mv ${1}.tmp ${1}
+}
+remove_packages_additional_apt_repositories ${BACKEND_INFO}/apt-list-clean.txt
+
 # Remove cuda packages to decrease the image size
 remove_cuda_packages () {
     grep -v -e "^clinfo" -e "^cuda-" -e "^ffmpeg" -e "^gds-tools" -e "^libavcodec" -e "^libavdevice" -e "^libavfilter" -e "^libavformat" -e "^libavresample" -e "^libavutil" -e "^libchromaprint" -e "^libcublas" -e "^libcudnn8" -e "^libcufft" -e "^libcufile" -e "^libcurand" -e "^libcusolver" -e "^libcusparse" -e "^libopencv" -e "^libncc" -e "^libnpp" -e "^libnvidia" -e "^libnvjpeg" -e "^libpostproc" -e "^libsw" -e "^libvdpau" -e "^libxnvctrl" -e "^nsight-compute" -e "^nsight-systems" -e "^nvidia" -e "^ocl" -e "^opencl" -e "^mesa-vdpau" -e "^vdpau-driver" -e "^xserver-xorg-video-nvidia" -h ${1} > ${1}.tmp
@@ -62,6 +69,7 @@ assert_removed_packages () {
     fi
 }
 assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_packages_built_from_source
+assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_packages_additional_apt_repositories
 assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_cuda_packages
 assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_R_packages
 assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_java_packages
