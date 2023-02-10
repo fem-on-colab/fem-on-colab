@@ -7,6 +7,8 @@
 set -e
 set -x
 
+REPODIR=$PWD
+
 # Install gcc
 VTK_ARCHIVE_PATH="skip" source vtk/install.sh
 
@@ -58,15 +60,20 @@ rm $INSTALL_PREFIX/lib/python3
 # Install xvfbwrapper too
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
 
-# Install pyvista
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pyvista
+# Install ipygany
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ipygany
 
-# Install pythreejs
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pythreejs
+# Install pyvista
+git clone https://github.com/pyvista/pyvista.git /tmp/pyvista-src
+cd /tmp/pyvista-src
+TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9]*.[0-9]"))
+echo "Latest tag is ${TAGS[0]}"
+git checkout ${TAGS[0]}
+patch -p 1 < $REPODIR/vtk/patches/01-ipygany
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # Automatically enable widgets
 ENABLE_WIDGETS_SCRIPT="/usr/bin/enable_widgets.py"
 if [ -f $ENABLE_WIDGETS_SCRIPT ]; then
     python3 $ENABLE_WIDGETS_SCRIPT pyvista $(python3 -c 'import pyvista; print(pyvista.__file__)')
-    python3 $ENABLE_WIDGETS_SCRIPT pythreejs $(python3 -c 'import pythreejs; print(pythreejs.__file__)')
 fi
