@@ -63,6 +63,9 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
 # Install ipygany
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ipygany
 
+# Upgrade matplotlib (to support colormaps in pyvista)
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --upgrade matplotlib
+
 # Install pyvista
 git clone https://github.com/pyvista/pyvista.git /tmp/pyvista-src
 cd /tmp/pyvista-src
