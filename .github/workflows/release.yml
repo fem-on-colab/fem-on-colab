@@ -195,7 +195,7 @@ jobs:
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           TASK=${{ (inputs || github.event.inputs).task }}
           ARGS="${{ (inputs || github.event.inputs).args }}"
-          if [[ "${TASK}" != "test" ]]; then
+          if [[ "${TASK}" != "ALWAYS_DO_THIS" ]]; then
             RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
             RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
             for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
