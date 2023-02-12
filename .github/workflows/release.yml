@@ -195,15 +195,19 @@ jobs:
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           TASK=${{ (inputs || github.event.inputs).task }}
           ARGS="${{ (inputs || github.event.inputs).args }}"
-          if [[ "${TASK}" != "test" ]]; then
+          if [[ "${TASK}" != "ALWAYS_DO_THIS" ]]; then
             RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
             RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
             for I in "${!RELEASE_INSTALL_SCRIPT_ENVS[@]}"; do
               declare -x "${RELEASE_INSTALL_SCRIPT_ENVS[I]}"="${RELEASE_INSTALL_SCRIPT_RAW_URLS[I]}"
             done
             LIBRARY_CAPITAL=$(echo ${LIBRARY} | tr a-z A-Z)
-            declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="${PWD}/${LIBRARY}-install.tar.gz"
-            bash ${LIBRARY}/install.sh
+            if [[ "${TASK}" != "test" ]]; then
+                declare -x "${LIBRARY_CAPITAL}_ARCHIVE_PATH"="${PWD}/${LIBRARY}-install.tar.gz"
+                bash ${LIBRARY}/install.sh
+            else
+                wget "https://fem-on-colab.github.io/releases/${LIBRARY}-install.sh" -O "/tmp/tmp-install.sh" && bash "/tmp/tmp-install.sh" && rm "/tmp/tmp-install.sh"
+            fi
             export PYTHONPATH="/usr/lib/${PYTHON_VERSION}/build-task/extra-site-packages:${PYTHONPATH}"
           else
             export PYTHONPATH="/usr/lib/${PYTHON_VERSION}/test-task/extra-site-packages:${PYTHONPATH}"
