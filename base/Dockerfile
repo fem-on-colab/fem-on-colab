@@ -7,7 +7,7 @@
 FROM ubuntu:20.04
 MAINTAINER Francesco Ballarin <francesco.ballarin@unicatt.it>
 
-ENV INSTALL_PREFIX=/usr/local \
+ENV INSTALL_PREFIX=/root/.local \
     PROJECT_NAME=fem-on-colab \
     PYTHON_VERSION=python3.8
 
