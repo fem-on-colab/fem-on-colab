@@ -137,29 +137,6 @@ jobs:
           VERBOSE: 1
           V: 1
         shell: bash
-      - name: Look for libstdc++.so in ldd of generated libraries
-        if: (inputs || github.event.inputs).task != 'test'
-        run: |
-          EXTENSIONS=('*\.so' '*\.so\.*')
-          declare -a ERROR_LIBRARIES
-          if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-            ADMISSIBLE_LIBSTDCXX="NO_ADMISSIBLE_libstdc++"
-          else
-            ADMISSIBLE_LIBSTDCXX="${INSTALL_PREFIX}/lib/libstdc++.so.6"
-          fi
-          for EXTENSION in "${EXTENSIONS[@]}"; do
-            ERROR_LIBRARIES=("${ERROR_LIBRARIES[@]}" $(find ${INSTALL_PREFIX} -name ${EXTENSION} -exec bash -c 'ldd $0 | grep libstdc++.so.6 | grep -v ${ADMISSIBLE_LIBSTDCXX} 1>/dev/null 2>/dev/null && echo $0' {} \;))
-          done
-          if [ ${#ERROR_LIBRARIES[@]} -eq 0 ]; then
-            echo "No reference to libstdc++.so was found"
-          else
-            for ERROR_LIBRARY in "${ERROR_LIBRARIES[@]}"; do
-              echo "Error: library ${ERROR_LIBRARY} depends on libstdc++.so"
-              ldd -v ${ERROR_LIBRARY}
-            done
-            false
-          fi
-        shell: bash
       - name: Package library
         if: (inputs || github.event.inputs).task != 'test'
         run: |
@@ -209,7 +186,7 @@ jobs:
             export PYTHONPATH="/usr/lib/${PYTHON_VERSION}/test-task/extra-site-packages:${PYTHONPATH}"
           fi
           if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-            LD_PRELOAD_FOR_PYTEST="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+            LD_PRELOAD_FOR_PYTEST=""
           else
             LD_PRELOAD_FOR_PYTEST=""
           fi

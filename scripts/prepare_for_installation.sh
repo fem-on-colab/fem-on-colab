@@ -30,6 +30,15 @@ cd -
 find $INSTALL_PREFIX -type f -name '*.pc' -exec sed -i "s|$INSTALL_PREFIX/lib/$PYTHON_VERSION/$OTHER_SITE_TARGET|$INSTALL_PREFIX/lib/$PYTHON_VERSION/$SITE_TARGET|g" {} \;
 find $INSTALL_PREFIX -type f -name '*.cmake' -exec sed -i "s|$INSTALL_PREFIX/lib/$PYTHON_VERSION/$OTHER_SITE_TARGET|$INSTALL_PREFIX/lib/$PYTHON_VERSION/$SITE_TARGET|g" {} \;
 find $INSTALL_PREFIX -type d -empty -delete
+
+# Add system-wide libstdc++.so in the dependencies of the built libraries, which mimicks LD_PRELOAD
+# being set to system-wide libstdc++.so
+if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
+    find $INSTALL_PREFIX -name "*\.so" -exec patchelf --add-needed /usr/lib/x86_64-linux-gnu/libstdc++.so.6 {} \;
+    find $INSTALL_PREFIX -name "*\.so.*" -exec patchelf --add-needed /usr/lib/x86_64-linux-gnu/libstdc++.so.6 {} \;
+fi
+
+# Compress
 tar czf ${1}-install.tar.gz $INSTALL_PREFIX
 rm -rf $INSTALL_PREFIX
 mkdir -p $INSTALL_PREFIX
