@@ -168,43 +168,6 @@ jobs:
       task: "test"
       args: ""
 
-  # vtk build & test
-  build_vtk:
-    needs: [test_gcc]
-    if: >-
-      github.repository == 'fem-on-colab/fem-on-colab' && (
-        (
-          github.event_name == 'schedule' && needs.test_gcc.result == 'success'
-        ) || (
-          github.event_name != 'schedule' && github.event.inputs.library == 'vtk' && needs.test_gcc.result == 'skipped' && always()
-        ) || (
-          github.event_name != 'schedule' && github.event.inputs.library != 'vtk' && needs.test_gcc.result == 'success' && always()
-        )
-      )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
-    with:
-      library: "vtk"
-      task: "build"
-      args: ""
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-  test_vtk:
-    needs: [build_vtk]
-    if: >-
-      github.repository == 'fem-on-colab/fem-on-colab' && (
-        (
-          github.event_name == 'schedule' && needs.build_vtk.result == 'success'
-        ) || (
-          github.event_name != 'schedule' && needs.build_vtk.result == 'success' && always()
-        )
-      )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
-    with:
-      library: "vtk"
-      task: "test"
-      args: ""
-
   # h5py build & test
   build_h5py:
     needs: [test_mpi4py]
@@ -352,6 +315,43 @@ jobs:
       library: "petsc4py"
       task: "test"
       args: "complex"
+
+  # vtk build & test
+  build_vtk:
+    needs: [test_h5py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.test_h5py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'vtk' && needs.test_h5py.result == 'skipped' && always()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'vtk' && needs.test_h5py.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "vtk"
+      task: "build"
+      args: ""
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  test_vtk:
+    needs: [build_vtk]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_vtk.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_vtk.result == 'success' && always()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "vtk"
+      task: "test"
+      args: ""
 
   # slepc4py/real build & test
   build_slepc4py_real:
