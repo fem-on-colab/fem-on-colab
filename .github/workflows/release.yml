@@ -195,6 +195,7 @@ jobs:
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           TASK=${{ (inputs || github.event.inputs).task }}
           ARGS="${{ (inputs || github.event.inputs).args }}"
+          mkdir -p ${INSTALL_PREFIX}/lib/${PYTHON_VERSION}/site-packages
           if [[ "${TASK}" != "test" ]]; then
             RELEASE_INSTALL_SCRIPT_ENVS=(${{ steps.releases_website.outputs.release_install_script_envs }})
             RELEASE_INSTALL_SCRIPT_RAW_URLS=(${{ steps.releases_website.outputs.release_install_script_raw_urls }})
