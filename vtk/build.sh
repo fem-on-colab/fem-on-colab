@@ -19,10 +19,6 @@ if [ -d "$TEMPORARY_INSTALL_PREFIX" ]; then
     # Since we do not compile vtk ourselves, we cannot honor any request about libstdc++ being statically linked.
     # The simplest workaround is to replace the system-wide libstdc++.so with the one installed in INSTALL_PREFIX
     # in the library dependencies.
-    if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-        find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
-        find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
-    fi
     rsync -avh --remove-source-files $TEMPORARY_INSTALL_PREFIX/ $INSTALL_PREFIX/
     rm -rf $TEMPORARY_INSTALL_PREFIX
 fi
