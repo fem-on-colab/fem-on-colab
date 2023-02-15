@@ -14,14 +14,7 @@ VTK_ARCHIVE_PATH="skip" source vtk/install.sh
 
 # Install vtk from wheels and patch it
 TEMPORARY_INSTALL_PREFIX="/tmp/vtk-install"
-PYTHONUSERBASE=$TEMPORARY_INSTALL_PREFIX python3 -m pip install --user --pre vtk
-if [ -d "$TEMPORARY_INSTALL_PREFIX" ]; then
-    # Since we do not compile vtk ourselves, we cannot honor any request about libstdc++ being statically linked.
-    # The simplest workaround is to replace the system-wide libstdc++.so with the one installed in INSTALL_PREFIX
-    # in the library dependencies.
-    rsync -avh --remove-source-files $TEMPORARY_INSTALL_PREFIX/ $INSTALL_PREFIX/
-    rm -rf $TEMPORARY_INSTALL_PREFIX
-fi
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --pre vtk
 
 # ADIOS2 may install files to $INSTALL_PREFIX/lib/python3 rather than $INSTALL_PREFIX/lib/$PYTHON_VERSION.
 # Create a symbolic link so that the two folders coincide.
@@ -57,16 +50,12 @@ rm $INSTALL_PREFIX/lib/python3
 # Install xvfbwrapper too
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
 
-# Install ipygany
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ipygany
-
 # Install pyvista
 git clone https://github.com/pyvista/pyvista.git /tmp/pyvista-src
 cd /tmp/pyvista-src
 TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9]*.[0-9]"))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
-patch -p 1 < $REPODIR/vtk/patches/01-ipygany
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 cd -
 
