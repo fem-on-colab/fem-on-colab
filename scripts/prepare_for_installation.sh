@@ -34,8 +34,8 @@ find $INSTALL_PREFIX -type d -empty -delete
 # Add system-wide libstdc++.so in the dependencies of the built libraries, which mimicks LD_PRELOAD
 # being set to system-wide libstdc++.so
 if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    find $INSTALL_PREFIX -name "*\.so" -exec patchelf --add-needed /usr/lib/x86_64-linux-gnu/libstdc++.so.6 {} \;
-    find $INSTALL_PREFIX -name "*\.so.*" -exec patchelf --add-needed /usr/lib/x86_64-linux-gnu/libstdc++.so.6 {} \;
+    find $INSTALL_PREFIX -name "*\.so" ! -name "*libstdc++.so*" -exec patchelf --add-needed $INSTALL_PREFIX/lib/libstdc++.so.6 {} \;
+    find $INSTALL_PREFIX -name "*\.so.*" ! -name "*libstdc++.so*" -exec patchelf --add-needed $INSTALL_PREFIX/lib/libstdc++.so.6 {} \;
 fi
 
 # Compress
