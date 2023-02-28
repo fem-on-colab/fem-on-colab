@@ -104,6 +104,6 @@ if [[ ! -f $GCC_INSTALLED ]]; then
 #            https://github.com/googlecolab/colabtools/issues/3397             #
 ################################################################################
 EOF
-        kill -9 `ps --pid $$ -oppid=`; exit
+        sleep 2; kill -9 `ps --pid $$ -oppid=`; exit
     fi
 fi
