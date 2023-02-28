@@ -120,6 +120,16 @@ jobs:
         shell: bash
       - name: Fetch updated package list
         run: apt update -qq
+      - name: Manually install gcc before building, since gcc installation cell is expected to fail the first time
+        if: (inputs || github.event.inputs).task != 'test'
+        run: |
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          if [[ "${LIBRARY}" != "gcc" ]]; then
+            wget "https://${PROJECT_NAME}.github.io/releases/gcc-install.sh" -O "/tmp/gcc-install.sh"
+            LIBSTDCXX_IGNORE_REPLACED="yes" bash "/tmp/gcc-install.sh"
+            rm "/tmp/gcc-install.sh"
+          fi
+        shell: bash
       - name: Build library
         if: (inputs || github.event.inputs).task != 'test'
         run: |
@@ -189,6 +199,16 @@ jobs:
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/tests/
+      - name: Manually install gcc before testing, since gcc installation cell is expected to fail the first time
+        run: |
+          LIBRARY=${{ (inputs || github.event.inputs).library }}
+          TASK=${{ (inputs || github.event.inputs).task }}
+          if [[ "${LIBRARY}" != "gcc" || ("${LIBRARY}" == "gcc" && "${TASK}" == "test") ]]; then
+            wget "https://${PROJECT_NAME}.github.io/releases/gcc-install.sh" -O "/tmp/gcc-install.sh"
+            LIBSTDCXX_IGNORE_REPLACED="yes" bash "/tmp/gcc-install.sh"
+            rm "/tmp/gcc-install.sh"
+          fi
+        shell: bash
       - name: Test library
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
