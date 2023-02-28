@@ -1,8 +1,17 @@
 name: Release new docker image containing the base environment
 
 on:
+  schedule:
+    - cron: "0 0 * * *"
   workflow_dispatch:
+    inputs:
+      push:
+        description: "Push the released image to docker registry (yes or no, default no)"
   workflow_call:
+    inputs:
+      push:
+        description: "Push the released image to docker registry (yes or no, default no)"
+        type: string
     secrets:
       CI_REGISTRY_USER:
         description: "Docker Hub username"
@@ -17,19 +26,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Determine whether to push the released image to docker registry
+        id: push
+        run: |
+          PUSH=${{ (inputs || github.event.inputs).push }}
+          if [[ "${PUSH}" == "yes" ]]; then
+            echo "push=yes" >> ${GITHUB_OUTPUT}
+          else
+            echo "push=no" >> ${GITHUB_OUTPUT}
+          fi
+        shell: bash
       - name: Build docker image
         run: |
           docker build --pull -t ${IMAGE_PREFIX}:latest -f base/Dockerfile .
       - name: Determine image tag
+        if: github.repository == 'fem-on-colab/fem-on-colab' && steps.push.outputs.push == 'yes'
         id: image_name
         run: |
           IMAGE_TAG=$(docker run -i ${IMAGE_PREFIX}:latest bash /usr/bin/compute_docker_tag.sh)
           echo "image_tag=${IMAGE_TAG}" >> ${GITHUB_OUTPUT}
       - name: Log into the docker registry
-        if: github.repository == 'fem-on-colab/fem-on-colab'
+        if: github.repository == 'fem-on-colab/fem-on-colab' && steps.push.outputs.push == 'yes'
         run: docker login -u ${{ secrets.CI_REGISTRY_USER }} -p ${{ secrets.CI_REGISTRY_PASSWORD }}
       - name: Push to the docker registry
-        if: github.repository == 'fem-on-colab/fem-on-colab'
+        if: github.repository == 'fem-on-colab/fem-on-colab' && steps.push.outputs.push == 'yes'
         run: |
           IMAGE_TAG="${{ steps.image_name.outputs.image_tag }}"
           docker tag ${IMAGE_PREFIX}:latest ${IMAGE_PREFIX}:${IMAGE_TAG}
