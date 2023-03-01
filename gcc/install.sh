@@ -71,7 +71,7 @@ if [[ ! -f $GCC_INSTALLED ]]; then
 
     # Replace system libstdc++ library
     LIBSTDCXX_REPLACED="no"
-    if [[ $GCC_ARCHIVE_PATH != skip ]]; then
+    if [[ $GCC_ARCHIVE_PATH != skip || ${LIBSTDCXX_FORCE_REPLACE_CHECK} == "yes" ]]; then
         PYTHON_EXEC=$(which python3)
         PYTHON_EXEC_DIR=$(dirname $PYTHON_EXEC)
         PYTHON_RPATH=$(objdump -x $PYTHON_EXEC | grep 'R.*PATH' | sed 's|R.*PATH||g' | sed 's| ||g' | sed "s|\$ORIGIN|${PYTHON_EXEC_DIR}|g")

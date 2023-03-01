@@ -7,6 +7,8 @@
 set -e
 set -x
 
+REPODIR=$PWD
+
 # Install zlib
 GCC_ARCHIVE_PATH="skip" source gcc/install.sh
 
@@ -70,3 +72,10 @@ make install
 # Add symbolic links to programs without version suffix
 cd ${INSTALL_PREFIX}/bin
 find * -name "*-${GCC_VERSION}" -exec bash -c 'ln -s "$1" "${1/-$2/}"' -- {} ${GCC_VERSION} \;
+
+# Run again installation script to force creation of symbolic links to installed libstdc++ library
+SHARE_PREFIX="$INSTALL_PREFIX/share/$PROJECT_NAME"
+GCC_INSTALLED="$SHARE_PREFIX/gcc.installed"
+rm $GCC_INSTALLED
+cd $REPODIR
+GCC_ARCHIVE_PATH="skip" LIBSTDCXX_IGNORE_REPLACED="yes" LIBSTDCXX_FORCE_REPLACE_CHECK="yes" source gcc/install.sh
