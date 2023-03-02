@@ -42,7 +42,7 @@ if [[ ! -f $MPI4PY_INSTALLED ]]; then
     # Add symbolic links to the MPI libraries in /usr/lib, because INSTALL_PREFIX/lib may not be in LD_LIBRARY_PATH
     # on the actual cloud instance
     if [[ $MPI4PY_ARCHIVE_PATH != skip ]]; then
-        MPI_LIBS=('libmca*.so*' 'libmpi*.so*' 'libompi*.so*' 'libopen*.so*' 'ompi*.so*')
+        MPI_LIBS=('libmca*.so*' 'libmpi*.so*' 'libompi*.so*' 'libopen-pal*.so*' 'libopen-rte*.so*' 'ompi*.so*')
         for MPI_LIB in "${MPI_LIBS[@]}"; do
             rm -f /usr/lib/${MPI_LIB}
             rm -f /usr/lib/x86_64-linux-gnu/${MPI_LIB}
