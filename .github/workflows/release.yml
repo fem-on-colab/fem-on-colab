@@ -166,7 +166,7 @@ jobs:
               false
             fi
           else
-            echo "Statically linked to libstdc++.so was not requested"
+            echo "Statically linking to libstdc++.so was not requested"
           fi
         shell: bash
       - name: Package library
