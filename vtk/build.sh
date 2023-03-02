@@ -77,5 +77,5 @@ cd -
 # Automatically enable widgets
 ENABLE_WIDGETS_SCRIPT="/usr/bin/enable_widgets.py"
 if [ -f $ENABLE_WIDGETS_SCRIPT ]; then
-    python3 $ENABLE_WIDGETS_SCRIPT pyvista $(python3 -c 'import pyvista; print(pyvista.__file__)')
+    python3 $ENABLE_WIDGETS_SCRIPT pyvista $(python3 -c 'import ipygany; print(ipygany.__file__)')
 fi
