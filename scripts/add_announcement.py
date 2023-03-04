@@ -72,6 +72,9 @@ cat << EOF
 EOF
 set -x
 """
+        announcement_number_of_blank_lines = (60 - announcement_box.count("\n")) // 2
+        announcement_blank_lines = "\n" * announcement_number_of_blank_lines
+        announcement_box = announcement_blank_lines + announcement_box + announcement_blank_lines
         with open(install_file, "w") as f:
             if announcement_position == "pre":
                 f.write(announcement_box + "\n" + install_file_content)
