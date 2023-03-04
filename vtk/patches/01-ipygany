@@ -5,7 +5,7 @@ index 292dfd17..1d78a898 100644
 @@ -92,13 +92,6 @@ def _validate_jupyter_backend(backend):
          # raises an import error when fail
          from pyvista.jupyter import pv_ipygany
- 
+
 -        if not pyvista.BUILDING_GALLERY:
 -            warnings.warn(
 -                '`ipygany` backend is deprecated and is planned for future removal.',
@@ -29,12 +29,12 @@ index 1ef7b776..06b5816d 100644
 +    if "DISPLAY" not in os.environ:
 +        import pyvista as pv
 +        pyvista.start_xvfb()
- 
+
  try:
      from ipywidgets import HTML, AppLayout, Dropdown, VBox, jslink
 @@ -188,11 +193,6 @@ def show_ipygany(plotter, height=None, width=None):
                  break
- 
+
      if cbar is not None:
 -        # Colormap choice widget
 -        options = list(colormaps.items())
@@ -45,24 +45,11 @@ index 1ef7b776..06b5816d 100644
          # window is large.
          cbar.layout.max_width = '500px'
 @@ -209,7 +209,7 @@ def show_ipygany(plotter, height=None, width=None):
- 
+
          # create app
          title = HTML(value=f'<h3>{list(plotter.scalar_bars.keys())[0]}</h3>')
 -        legend = VBox((title, colormap_dd, cbar))
 +        legend = VBox((title, cbar))
          scene = AppLayout(center=scene, footer=legend, pane_heights=[0, 0, '150px'])
- 
+
      return scene
-diff --git a/pyvista/themes.py b/pyvista/themes.py
-index 02c3b78e..181083f0 100644
---- a/pyvista/themes.py
-+++ b/pyvista/themes.py
-@@ -1502,7 +1502,7 @@ class DefaultTheme(_ThemeConfig):
-         # Grab system flag for auto-closing
-         self._auto_close = os.environ.get('PYVISTA_AUTO_CLOSE', '').lower() != 'false'
- 
--        self._jupyter_backend = os.environ.get('PYVISTA_JUPYTER_BACKEND', 'trame')
-+        self._jupyter_backend = os.environ.get('PYVISTA_JUPYTER_BACKEND', 'ipygany')
-         self._trame = _TrameConfig()
- 
-         self._multi_rendering_splitting_position = None
