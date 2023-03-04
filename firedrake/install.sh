@@ -48,3 +48,6 @@ if [[ ! -f $FIREDRAKE_INSTALLED ]]; then
     mkdir -p $SHARE_PREFIX
     touch $FIREDRAKE_INSTALLED
 fi
+
+# Display end user packages announcement
+echo $FIREDRAKE_ANNOUNCEMENT_0

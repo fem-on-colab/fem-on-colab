@@ -42,3 +42,6 @@ if [[ ! -f $GMSH_INSTALLED ]]; then
     mkdir -p $SHARE_PREFIX
     touch $GMSH_INSTALLED
 fi
+
+# Display end user packages announcement
+echo $GMSH_ANNOUNCEMENT_0
