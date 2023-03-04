@@ -46,3 +46,6 @@ if [[ ! -f $FENICSX_INSTALLED ]]; then
     mkdir -p $SHARE_PREFIX
     touch $FENICSX_INSTALLED
 fi
+
+# Display end user packages announcement
+echo $FENICSX_ANNOUNCEMENT_0

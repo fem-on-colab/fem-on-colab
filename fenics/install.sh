@@ -48,3 +48,6 @@ if [[ ! -f $FENICS_INSTALLED ]]; then
     mkdir -p $SHARE_PREFIX
     touch $FENICS_INSTALLED
 fi
+
+# Display end user packages announcement
+echo $FENICS_ANNOUNCEMENT_0
