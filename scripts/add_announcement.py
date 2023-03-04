@@ -44,7 +44,9 @@ class TextBox(object):
         return first_last + "\n" + content + "\n" + first_last
 
 
-def add_announcement(package_name: str, install_file: str, announcement_file: str, announcement_position: str) -> None:
+def add_announcement(
+    package_name: str, install_file: str, announcement_file: str, announcement_placeholder: str
+) -> None:
     """
     Add an announcement at the beginning or end of the installation script.
 
@@ -56,30 +58,25 @@ def add_announcement(package_name: str, install_file: str, announcement_file: st
         Name of the installation script.
     announcement_file
         Name of the announcement file.
-    announcement_position
-        Position of the announcement, either at the beginning or end of the install script.
+    announcement_placeholder
+        Placeholder instructions to be replaced with the actual announcement.
     """
 
-    assert announcement_position in ("pre", "post")
-    if package_name in ("fenics", "fenicsx", "firedrake", "gmsh", "mock", "ngsolve"):
-        with open(install_file, "r") as f:
-            install_file_content = f.read().strip("\n")
-        with open(announcement_file, "r") as f:
-            announcement_file_content = f.read().strip("\n")
-        announcement_box = f"""set +x
+    with open(install_file, "r") as f:
+        install_file_content = f.read().strip("\n")
+    with open(announcement_file, "r") as f:
+        announcement_file_content = f.read().strip("\n")
+    announcement_box = f"""set +x
 cat << EOF
 {TextBox(announcement_file_content, "#")}
 EOF
 set -x
 """
-        announcement_number_of_blank_lines = (60 - announcement_box.count("\n")) // 2
-        announcement_blank_lines = "\n" * announcement_number_of_blank_lines
-        announcement_box = announcement_blank_lines + announcement_box + announcement_blank_lines
-        with open(install_file, "w") as f:
-            if announcement_position == "pre":
-                f.write(announcement_box + "\n" + install_file_content)
-            elif announcement_position == "post":
-                f.write(install_file_content + "\n" + announcement_box)
+    announcement_number_of_blank_lines = (60 - announcement_box.count("\n")) // 2
+    announcement_blank_lines = "\n" * announcement_number_of_blank_lines
+    announcement_box = announcement_blank_lines + announcement_box + announcement_blank_lines
+    with open(install_file, "w") as f:
+        f.write(install_file_content.replace(announcement_placeholder, announcement_box))
 
 
 if __name__ == "__main__":

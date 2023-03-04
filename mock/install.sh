@@ -28,3 +28,6 @@ if [[ ! -f $MOCK_INSTALLED ]]; then
     mkdir -p $SHARE_PREFIX
     touch $MOCK_INSTALLED
 fi
+
+# Display end user packages announcement
+echo $MOCK_ANNOUNCEMENT_0
