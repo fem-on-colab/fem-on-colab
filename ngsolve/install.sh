@@ -50,3 +50,6 @@ if [[ ! -f $NGSOLVE_INSTALLED ]]; then
     mkdir -p $SHARE_PREFIX
     touch $NGSOLVE_INSTALLED
 fi
+
+# Display end user packages announcement
+echo $NGSOLVE_ANNOUNCEMENT_0

@@ -94,16 +94,7 @@ if [[ ! -f $GCC_INSTALLED ]]; then
 
     # Force a kernel restart if libstdc++ was replaced
     if [[ ${LIBSTDCXX_REPLACED} != "no" && ${LIBSTDCXX_IGNORE_REPLACED} != "yes" ]]; then
-        cat << EOF
-################################################################################
-#        Due to a recent Google Colab breaking change, FEM on Colab now        #
-#      requires a kernel restart for all of its packages to work properly.     #
-#      The kernel will be now killed on your behalf, but you will have to      #
-#     restart it manually. If this breaking change is affecting your work      #
-#   please report so in the following issue in the Google Colab repository     #
-#            https://github.com/googlecolab/colabtools/issues/3397             #
-################################################################################
-EOF
+        echo $GCC_ANNOUNCEMENT_0
         sleep 2; kill -9 `ps --pid $$ -oppid=`; exit
     fi
 fi

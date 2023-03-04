@@ -320,9 +320,11 @@ jobs:
             RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
             sed -i "s|${LIBRARY_CAPITAL}_ARCHIVE_PATH_IN|https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}|g" ${RELEASE_FILE}
           fi
-          for ANNOUNCEMENT_POSITION in pre post; do
-            if [[ -f "/usr/share/announcements/${ANNOUNCEMENT_POSITION}.txt" ]]; then
-              python3 scripts/add_announcement.py ${LIBRARY} ${RELEASE_FILE} "/usr/share/announcements/${ANNOUNCEMENT_POSITION}.txt" "${ANNOUNCEMENT_POSITION}"
+          for ANNOUNCEMENT_INDEX in {0..9}; do
+            if [[ -f "/usr/share/announcements/${LIBRARY}_${ANNOUNCEMENT_INDEX}.txt" ]]; then
+              python3 scripts/add_announcement.py ${LIBRARY} ${RELEASE_FILE} "/usr/share/announcements/${LIBRARY}_${ANNOUNCEMENT_INDEX}.txt" "echo \$${LIBRARY_CAPITAL}_ANNOUNCEMENT_${ANNOUNCEMENT_INDEX}"
+            else
+              break
             fi
           done
           echo ${DOCKER_TAG} > ${RELEASE_FILE_DOCKER}
