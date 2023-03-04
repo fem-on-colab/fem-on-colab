@@ -52,8 +52,9 @@ cmake \
 make -j $(nproc) install
 
 # ngsolve
-git clone https://github.com/NGSolve/ngsolve /tmp/ngsolve-src
+git clone https://github.com/francesco-ballarin/ngsolve.git /tmp/ngsolve-src
 cd /tmp/ngsolve-src
+git checkout mumps
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
 patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
