@@ -124,11 +124,19 @@ jobs:
         if: (inputs || github.event.inputs).task != 'test'
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
+          TASK=${{ (inputs || github.event.inputs).task }}
           if [[ "${REQUIRE_LIBSTDCXX_REPLACEMENT}" == "yes" ]]; then
             if [[ "${LIBRARY}" != "gcc" ]]; then
-              wget "https://${PROJECT_NAME}.github.io/releases/gcc-install.sh" -O "/tmp/gcc-install.sh"
-              LIBSTDCXX_IGNORE_REPLACED="yes" bash "/tmp/gcc-install.sh"
-              rm "/tmp/gcc-install.sh"
+              if [[ "${TASK}" != "test" ]]; then
+                GCC_INSTALL_FILE="$PWD/_build/html/releases/gcc-install.sh"
+              else
+                GCC_INSTALL_FILE="/tmp/gcc-install.sh"
+                wget "https://${PROJECT_NAME}.github.io/releases/gcc-install.sh" -O ${GCC_INSTALL_FILE}
+              fi
+              LIBSTDCXX_IGNORE_REPLACED="yes" bash ${GCC_INSTALL_FILE}
+              if [[ "${TASK}" == "test" ]]; then
+                rm ${GCC_INSTALL_FILE}
+              fi
             fi
           fi
         shell: bash
@@ -207,9 +215,16 @@ jobs:
           TASK=${{ (inputs || github.event.inputs).task }}
           if [[ "${REQUIRE_LIBSTDCXX_REPLACEMENT}" == "yes" ]]; then
             if [[ "${LIBRARY}" != "gcc" || ("${LIBRARY}" == "gcc" && "${TASK}" == "test") ]]; then
-              wget "https://${PROJECT_NAME}.github.io/releases/gcc-install.sh" -O "/tmp/gcc-install.sh"
-              LIBSTDCXX_IGNORE_REPLACED="yes" bash "/tmp/gcc-install.sh"
-              rm "/tmp/gcc-install.sh"
+              if [[ "${TASK}" != "test" ]]; then
+                GCC_INSTALL_FILE="$PWD/_build/html/releases/gcc-install.sh"
+              else
+                GCC_INSTALL_FILE="/tmp/gcc-install.sh"
+                wget "https://${PROJECT_NAME}.github.io/releases/gcc-install.sh" -O ${GCC_INSTALL_FILE}
+              fi
+              LIBSTDCXX_IGNORE_REPLACED="yes" bash ${GCC_INSTALL_FILE}
+              if [[ "${TASK}" == "test" ]]; then
+                rm ${GCC_INSTALL_FILE}
+              fi
             fi
           fi
         shell: bash
