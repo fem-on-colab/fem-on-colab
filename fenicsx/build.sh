@@ -77,6 +77,7 @@ make -j $(nproc) install
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src
+git checkout setup-py-improvements
 patch -p 1 < $REPODIR/fenicsx/patches/04-allow-python37
 cd /tmp/dolfinx-src/build
 export UFC_DIR=$INSTALL_PREFIX
