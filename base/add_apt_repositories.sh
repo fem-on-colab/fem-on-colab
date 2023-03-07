@@ -11,6 +11,9 @@ set -x
 apt update
 apt install -y -qq software-properties-common wget
 
+# Python (as on Colab)
+add-apt-repository -y ppa:deadsnakes/ppa
+
 # CMake (actually newer than the one on Colab)
 wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
 apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ bionic main'
