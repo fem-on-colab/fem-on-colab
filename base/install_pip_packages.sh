@@ -31,9 +31,9 @@ remove_outdated_packages () {
 }
 remove_outdated_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
-# Remove packages which we are going to compile from source anyway
+# Remove packages (and their dependents) which we are going to compile from source anyway
 remove_packages_built_from_source () {
-    grep -v -e "^h5py==" -h ${1} > ${1}.tmp
+    grep -v -e "^arviz==" -e "^h5py==" -e "^h5netcdf==" -e "^pymc==" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_packages_built_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
