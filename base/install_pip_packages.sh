@@ -83,7 +83,7 @@ assert_removed_packages () {
         EXTRA_PACKAGES=$(cat ${1}.diff | grep "^> " | cut -f2 -d ">" | cut -f1 -d "=" | tr "\n" " " | sed "s/  */ /g" | xargs)
         echo "The following extra packages have been detected: ${EXTRA_PACKAGES}."
         echo "They may have been installed as part of the following dependencies:"
-        pipdeptree --reverse --packages ${EXTRA_PACKAGES/ /,}
+        PYTHONUSERBASE=/usr python3 -m pipdeptree --reverse --packages ${EXTRA_PACKAGES/ /,}
         return 1
     fi
 }
