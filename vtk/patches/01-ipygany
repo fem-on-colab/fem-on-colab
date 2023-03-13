@@ -27,7 +27,7 @@ index 1ef7b776..06b5816d 100644
 +else:
 +    import os
 +    if "DISPLAY" not in os.environ:
-+        import pyvista as pv
++        import pyvista
 +        pyvista.start_xvfb()
 
  try:

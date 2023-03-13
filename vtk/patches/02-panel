@@ -12,7 +12,7 @@ index 292dfd17..d94641c5 100644
 -                PyVistaDeprecationWarning,
 -                stacklevel=3,
 -            )
- 
+
      if backend == 'ipygany':
          # raises an import error when fail
 diff --git a/pyvista/jupyter/notebook.py b/pyvista/jupyter/notebook.py
@@ -26,8 +26,8 @@ index 91a6796f..58943384 100644
 +    else:
 +        import os
 +        if "DISPLAY" not in os.environ:
-+            import pyvista as pv
++            import pyvista
 +            pyvista.start_xvfb()
- 
+
      # check if panel extension has been set
      if not PANEL_EXTENSION_SET[0]:
