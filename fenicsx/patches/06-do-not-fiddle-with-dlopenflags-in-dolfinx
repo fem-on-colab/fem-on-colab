@@ -1,0 +1,28 @@
+diff --git a/python/dolfinx/__init__.py b/python/dolfinx/__init__.py
+index 308221b8e4..4f6e1e2219 100644
+--- a/python/dolfinx/__init__.py
++++ b/python/dolfinx/__init__.py
+@@ -7,23 +7,6 @@
+ 
+ # flake8: noqa
+ 
+-# Store dl open flags to restore them after import
+-import sys
+-
+-stored_dlopen_flags = sys.getdlopenflags()
+-
+-# Developer note: below is related to OpenMPI 
+-# Fix dlopen flags
+-if "linux" in sys.platform:
+-    RTLD_NOW = 2
+-    RTLD_GLOBAL = 256
+-    sys.setdlopenflags(RTLD_NOW | RTLD_GLOBAL)
+-del sys
+-
+-# Reset dl open flags
+-# sys.setdlopenflags(stored_dlopen_flags)
+-# del sys
+-
+ import sys
+ 
+ from dolfinx import common
