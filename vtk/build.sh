@@ -73,6 +73,7 @@ git checkout ${TAGS[0]}
 patch -p 1 < $REPODIR/vtk/patches/01-ipygany
 patch -p 1 < $REPODIR/vtk/patches/02-panel
 patch -p 1 < $REPODIR/vtk/patches/03-default-backend
+patch -p 1 < $REPODIR/vtk/patches/04-disable-xvfb-warning
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 cd -
 
