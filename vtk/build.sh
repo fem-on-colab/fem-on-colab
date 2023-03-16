@@ -51,6 +51,7 @@ cmake \
     -DADIOS2_USE_Python=on \
     -DBUILD_TESTING=off \
     -DADIOS2_BUILD_EXAMPLES=off \
+    -DPython_EXECUTABLE=$(which python3) \
     ..
 make -j $(nproc) install
 cd -
