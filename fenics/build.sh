@@ -68,6 +68,7 @@ cmake \
     -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    -DBOOST_ROOT=$INSTALL_PREFIX -DBoost_NO_BOOST_CMAKE=ON \
     ..
 make -j $(nproc) install
 cd /tmp/dolfin-src/python
