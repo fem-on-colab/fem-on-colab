@@ -40,7 +40,7 @@ remove_packages_built_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove machine learning packages to decrease the image size
 remove_machine_learning_packages () {
-    grep -v -e "^datascience" -e "^en-core-web-sm" -e "^fastai" -e "^gensim" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^torch" -e "^tensorboard" -e "^tensorflow" -e "^xgboost" -h ${1} > ${1}.tmp
+    grep -v -e "^chex" -e "^datascience" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^optax" -e "^orbax" -e "^torch" -e "^tensorboard" -e "^tensorflow" -e "^xgboost" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_machine_learning_packages ${BACKEND_INFO}/pip-freeze-clean.txt
