@@ -1,5 +1,5 @@
 diff --git a/python/dolfinx/__init__.py b/python/dolfinx/__init__.py
-index 308221b8e4..4f6e1e2219 100644
+index 4e27549732..4f6e1e2219 100644
 --- a/python/dolfinx/__init__.py
 +++ b/python/dolfinx/__init__.py
 @@ -7,23 +7,6 @@
@@ -11,7 +11,7 @@ index 308221b8e4..4f6e1e2219 100644
 -
 -stored_dlopen_flags = sys.getdlopenflags()
 -
--# Developer note: below is related to OpenMPI 
+-# Developer note: below is related to OpenMPI
 -# Fix dlopen flags
 -if "linux" in sys.platform:
 -    RTLD_NOW = 2
