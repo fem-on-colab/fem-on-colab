@@ -63,10 +63,6 @@ find ./ -name configure | while read f; do d=$( dirname "$f" ) && echo -n "$d:" 
     --with-tune=generic \
     --without-included-gettext
 make -j $(nproc)
-
-# Install
-mkdir -p ${INSTALL_PREFIX}/lib
-ln -s ${INSTALL_PREFIX}/lib ${INSTALL_PREFIX}/lib64
 make install
 
 # Add symbolic links to programs without version suffix
