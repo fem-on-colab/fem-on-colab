@@ -16,6 +16,11 @@ ENV BACKEND_INFO=${INSTALL_PREFIX}/share/backend-info \
     BACKEND_LIBRARY=google.colab \
     DOCKER_SCRIPTS=${INSTALL_PREFIX}/share/${PROJECT_NAME}
 
+RUN mkdir -p ${INSTALL_PREFIX} && \
+    mkdir -p ${INSTALL_PREFIX}/bin && \
+    mkdir -p ${INSTALL_PREFIX}/lib/${PYTHON_VERSION}/dist-packages && \
+    ln -s ${INSTALL_PREFIX}/lib ${INSTALL_PREFIX}/lib64
+
 COPY . ${DOCKER_SCRIPTS}
 
 RUN cd ${DOCKER_SCRIPTS} && \
@@ -62,4 +67,4 @@ ENV DOCKER_SCRIPTS=
 
 ENV PATH="${INSTALL_PREFIX}/bin:${PATH}" \
     LD_LIBRARY_PATH="${INSTALL_PREFIX}/lib:${LD_LIBRARY_PATH}" \
-    PYTHONPATH="${INSTALL_PREFIX}/lib/${PYTHON_VERSION}/dist-packages:${INSTALL_PREFIX}/lib/${PYTHON_VERSION}/site-packages:/usr/lib/${PYTHON_VERSION}/dist-packages:/usr/lib/${PYTHON_VERSION}/site-packages:${PYTHONPATH}"
+    PYTHONPATH="${INSTALL_PREFIX}/lib/${PYTHON_VERSION}/dist-packages:/usr/lib/${PYTHON_VERSION}/dist-packages:/usr/lib/${PYTHON_VERSION}/site-packages:${PYTHONPATH}"

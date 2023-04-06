@@ -34,4 +34,5 @@ rm -rf /tmp/diff-${OUTPUT_ARCHIVE_NAME}-1
 rm -rf /tmp/diff-${OUTPUT_ARCHIVE_NAME}-2
 tar czf ${OUTPUT_ARCHIVE_NAME}-install.tar.gz $INSTALL_PREFIX
 rm -rf $INSTALL_PREFIX
-mkdir -p $INSTALL_PREFIX
+mkdir -p $INSTALL_PREFIX/bin
+mkdir -p $INSTALL_PREFIX/lib/$PYTHON_VERSION
