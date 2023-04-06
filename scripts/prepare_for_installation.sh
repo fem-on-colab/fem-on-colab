@@ -32,4 +32,5 @@ find $INSTALL_PREFIX -type f -name '*.cmake' -exec sed -i "s|$INSTALL_PREFIX/lib
 find $INSTALL_PREFIX -type d -empty -delete
 tar czf ${1}-install.tar.gz $INSTALL_PREFIX
 rm -rf $INSTALL_PREFIX
-mkdir -p $INSTALL_PREFIX
+mkdir -p $INSTALL_PREFIX/bin
+mkdir -p $INSTALL_PREFIX/lib/$PYTHON_VERSION/$SITE_TARGET
