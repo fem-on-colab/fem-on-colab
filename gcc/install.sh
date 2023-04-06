@@ -14,6 +14,18 @@ PROJECT_NAME=${PROJECT_NAME:-"PROJECT_NAME_IN"}
 SHARE_PREFIX="$INSTALL_PREFIX/share/$PROJECT_NAME"
 GCC_INSTALLED="$SHARE_PREFIX/gcc.installed"
 
+if [[ ! -L ${INSTALL_PREFIX}/lib64 ]]; then
+    if [[ -e ${INSTALL_PREFIX}/lib64 ]]; then
+        rsync -avz --remove-source-files ${INSTALL_PREFIX}/lib64/ ${INSTALL_PREFIX}/lib
+        rm -rf ${INSTALL_PREFIX}/lib64
+    fi
+    ln -s ${INSTALL_PREFIX}/lib ${INSTALL_PREFIX}/lib64
+fi
+if [[ ! -L ${INSTALL_PREFIX}/lib64 || ! -d ${INSTALL_PREFIX}/lib64 ]]; then
+    echo "Error: ${INSTALL_PREFIX}/lib64 is not a link to a directory."
+    exit 1
+fi
+
 if [[ ! -f $GCC_INSTALLED ]]; then
     # Download and uncompress library archive
     GCC_ARCHIVE_PATH=${GCC_ARCHIVE_PATH:-"GCC_ARCHIVE_PATH_IN"}
