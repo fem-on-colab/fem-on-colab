@@ -77,7 +77,6 @@ make -j $(nproc) install
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src
-patch -p 1 < $REPODIR/fenicsx/patches/04-allow-python37
 patch -p 1 < $REPODIR/fenicsx/patches/06-do-not-fiddle-with-dlopenflags-in-dolfinx
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/07-pkg-config-path-in-dolfinx
 patch -p 1 < $REPODIR/fenicsx/patches/07-pkg-config-path-in-dolfinx
