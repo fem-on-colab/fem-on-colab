@@ -8,7 +8,7 @@ set -e
 set -x
 
 SYSTEM_PYTHON_VERSION="python3.8"
-COLAB_PYTHON_VERSION="python3.9"
+COLAB_PYTHON_VERSION="python3.10"
 
 # Setup non-default python version
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/${SYSTEM_PYTHON_VERSION} 1
