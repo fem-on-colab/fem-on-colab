@@ -307,7 +307,16 @@ jobs:
         run: |
           RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
           RELEASE_ARCHIVE=${{ steps.check_release.outputs.release_archive }}
-          wget https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE} -O /dev/null
+          export RELEASE_ARCHIVE_URL="https://github.com/${PROJECT_NAME}/${PROJECT_NAME}/releases/download/${RELEASE_TAG}/${RELEASE_ARCHIVE}"
+          COUNTER=0
+          DOWNLOAD_SUCCESS=1
+          while [[ $DOWNLOAD_SUCCESS -ne 0 ]]; do
+              DOWNLOAD_SUCCESS=$(wget ${RELEASE_ARCHIVE_URL} -O /dev/null; echo $?)
+              [[ $DOWNLOAD_SUCCESS -ne 0 && $COUNTER -eq 3 ]] && echo "Giving up on archive download" && exit 1
+              [[ $DOWNLOAD_SUCCESS -ne 0 ]] && echo "Error downloading archive: trying again" && sleep 10
+              COUNTER=$((COUNTER+1))
+          done
+        shell: bash
       - name: Prepare release file for website
         if: (inputs || github.event.inputs).task != 'test'
         run: |
