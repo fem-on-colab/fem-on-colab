@@ -13,9 +13,11 @@ REPODIR=$PWD
 GCC_ARCHIVE_PATH="skip" source gcc/install.sh
 
 # Compile gcc
-GCC_VERSION="12"
+: ${1?"Usage: $0 version"}
+GCC_VERSION="$1"
+GCC_SHORT_VERSION=$(echo ${GCC_VERSION} | cut -d "." -f 1)
 GCC_REPO="https://gcc.gnu.org/git/gcc.git"
-GCC_TAG=$(git -c "versionsort.suffix=-" ls-remote --tags --sort=-version:refname ${GCC_REPO} "releases/gcc-${GCC_VERSION}.[0-9].[0-9]" | head --lines=1 | cut --delimiter='/' --fields=3-)
+GCC_TAG=$(git -c "versionsort.suffix=-" ls-remote --tags --sort=-version:refname ${GCC_REPO} "releases/gcc-${GCC_VERSION}" | head --lines=1 | cut --delimiter='/' --fields=3-)
 echo "Latest tag in the v${GCC_VERSION} series is ${GCC_TAG}"
 git clone --depth 1 --branch ${GCC_TAG} ${GCC_REPO} /tmp/gcc-src
 cd /tmp/gcc-src
@@ -55,7 +57,7 @@ find ./ -name configure | while read f; do d=$( dirname "$f" ) && echo -n "$d:" 
     --enable-plugin \
     --enable-shared \
     --enable-threads=posix \
-    --program-suffix=-${GCC_VERSION} \
+    --program-suffix=-${GCC_SHORT_VERSION} \
     --with-default-libstdcxx-abi=new \
     --with-gcc-major-version-only \
     --with-system-zlib \
@@ -67,7 +69,13 @@ make install
 
 # Add symbolic links to programs without version suffix
 cd ${INSTALL_PREFIX}/bin
-find * -name "*-${GCC_VERSION}" -exec bash -c 'ln -s "$1" "${1/-$2/}"' -- {} ${GCC_VERSION} \;
+find * -name "*-${GCC_SHORT_VERSION}" -exec bash -c 'ln -s "$1" "${1/-$2/}"' -- {} ${GCC_SHORT_VERSION} \;
+
+# Add a file with the expected gcc version
+GCC_EXPECTED_VERSION_SCRIPT="${INSTALL_PREFIX}/bin/gcc-expected-version"
+echo "#!/bin/bash" > ${GCC_EXPECTED_VERSION_SCRIPT}
+echo "echo ${GCC_VERSION}" >> ${GCC_EXPECTED_VERSION_SCRIPT}
+chmod +x ${GCC_EXPECTED_VERSION_SCRIPT}
 
 # Run again installation script to force creation of symbolic links to installed libstdc++ library
 SHARE_PREFIX="$INSTALL_PREFIX/share/$PROJECT_NAME"
