@@ -1,7 +1,2 @@
-Due to a recent Google Colab breaking change, FEM on Colab now
-requires a kernel restart for all of its packages to work properly.
-The kernel will be now killed on your behalf, but you will have to
-restart it manually, e.g. simply by running again this cell.
-If this breaking change is affecting your work please report so
-in the following issue in the official Google Colab repository
-https://github.com/googlecolab/colabtools/issues/3397
+The version of libstdc++.so is different from the expected one.
+Please report this at https://github.com/fem-on-colab/fem-on-colab/issues

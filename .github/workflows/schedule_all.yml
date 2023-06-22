@@ -39,7 +39,7 @@ jobs:
     with:
       library: "gcc"
       task: "build"
-      args: ""
+      args: "11.3.0"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
