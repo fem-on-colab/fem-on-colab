@@ -1,0 +1,22 @@
+diff --git a/setup.py b/setup.py
+index de648ba1..c481f341 100755
+--- a/setup.py
++++ b/setup.py
+@@ -14,7 +14,7 @@ on_rtd = os.environ.get('READTHEDOCS') == 'True'
+ 
+ VERSION = "2019.2.0.dev0"
+ RESTRICT_REQUIREMENTS = ">=2019.2.0.dev0,<2019.3"
+-UFL_RESTRICT_REQUIREMENTS = ">=2021.1.0" # UFL 2019.2.0.dev0 does not exist
++UFL_RESTRICT_REQUIREMENTS = ">=2022.3.0" # version of new ufl_legacy
+ 
+ if on_rtd:
+     REQUIREMENTS = []
+@@ -22,7 +22,7 @@ else:
+     REQUIREMENTS = [
+         "numpy",
+         "fenics-fiat%s" % RESTRICT_REQUIREMENTS,
+-        "fenics-ufl%s" % UFL_RESTRICT_REQUIREMENTS,
++        "fenics-ufl-legacy%s" % UFL_RESTRICT_REQUIREMENTS,
+         "fenics-dijitso%s" % RESTRICT_REQUIREMENTS,
+     ]
+ 
