@@ -32,27 +32,35 @@ fi
 patch -p 1 < $REPODIR/fenics/patches/09-c++-14-in-dijitso
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
-# UFL
+# UFL (legacy)
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
-git checkout 2022.1.0
+git checkout ufl_legacy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+
+# Add an error about ufl to ufl_legacy transition
+if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
+    UFL_WARNING_DIR=$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/ufl
+else
+    UFL_WARNING_DIR=$INSTALL_PREFIX/lib/$PYTHON_VERSION/site-packages/ufl
+fi
+mkdir -p ${UFL_WARNING_DIR}
+echo 'raise RuntimeError("Please import ufl_legacy rather than ufl, see https://fenicsproject.discourse.group/t/announcement-ufl-legacy-and-legacy-dolfin/11583 for more information")' > ${UFL_WARNING_DIR}/__init__.py
 
 # FFC
 git clone https://bitbucket.org/fenics-project/ffc.git /tmp/ffc-src
 cd /tmp/ffc-src
-patch -p 1 < $REPODIR/fenics/patches/08-add-cellname2facetname-to-ffc
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # dolfin
 git clone https://bitbucket.org/fenics-project/dolfin.git /tmp/dolfin-src
 cd /tmp/dolfin-src/
+git checkout dparsons/ufl_legacy
 patch -p 1 < $REPODIR/fenics/patches/02-xdmf-checkpoint-fix
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenics/patches/03-add-pkg-config-path
 patch -p 1 < $REPODIR/fenics/patches/03-add-pkg-config-path
 patch -p 1 < $REPODIR/fenics/patches/04-deprecated-boost-filesystem
 patch -p 1 < $REPODIR/fenics/patches/05-deprecated-std-bind2nd
-patch -p 1 < $REPODIR/fenics/patches/06-drop-dev-from-requirements
 patch -p 1 < $REPODIR/fenics/patches/07-deprecated-petsc
 patch -p 1 < $REPODIR/fenics/patches/10-c++-14-in-dolfin
 patch -p 1 < $REPODIR/fenics/patches/12-do-not-fiddle-with-dlopenflags-in-dolfin
