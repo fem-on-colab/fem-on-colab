@@ -32,16 +32,27 @@ fi
 patch -p 1 < $REPODIR/fenics/patches/09-c++-14-in-dijitso
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
-# UFL
+# UFL (legacy)
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
-git checkout 2022.1.0
+git checkout ufl_legacy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+
+# Create symbolic link from ufl_legacy to ufl for backward compatibility.
+# This requires moving ufl_legacy already to the final site target (which normally would be done at a later CI step),
+# so that the symbolic link will get createad at the correct path
+if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
+    mv $INSTALL_PREFIX/lib/$PYTHON_VERSION/site-packages/ufl_legacy* $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/
+    ln -s $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/ufl_legacy $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/ufl
+else
+    ln -s $INSTALL_PREFIX/lib/$PYTHON_VERSION/site-packages/ufl_legacy $INSTALL_PREFIX/lib/$PYTHON_VERSION/site-packages/ufl
+fi
 
 # FFC
 git clone https://bitbucket.org/fenics-project/ffc.git /tmp/ffc-src
 cd /tmp/ffc-src
 patch -p 1 < $REPODIR/fenics/patches/08-add-cellname2facetname-to-ffc
+patch -p 1 < $REPODIR/fenics/patches/13-ufl-legacy-in-ffc
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # dolfin
@@ -52,7 +63,7 @@ sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenics/patches/03-add-
 patch -p 1 < $REPODIR/fenics/patches/03-add-pkg-config-path
 patch -p 1 < $REPODIR/fenics/patches/04-deprecated-boost-filesystem
 patch -p 1 < $REPODIR/fenics/patches/05-deprecated-std-bind2nd
-patch -p 1 < $REPODIR/fenics/patches/06-drop-dev-from-requirements
+patch -p 1 < $REPODIR/fenics/patches/06-ufl-legacy-in-dolfin
 patch -p 1 < $REPODIR/fenics/patches/07-deprecated-petsc
 patch -p 1 < $REPODIR/fenics/patches/10-c++-14-in-dolfin
 patch -p 1 < $REPODIR/fenics/patches/12-do-not-fiddle-with-dlopenflags-in-dolfin
