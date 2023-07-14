@@ -73,7 +73,7 @@ cd /tmp/pyadjoint-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # libsupermesh
-git clone https://bitbucket.org/libsupermesh/libsupermesh.git /tmp/libsupermesh-src
+git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
 cd /tmp/libsupermesh-src
 patch -p 1 < $REPODIR/firedrake/patches/08-use-cxxflags-in-supermesh
 mkdir -p /tmp/libsupermesh-src/build
