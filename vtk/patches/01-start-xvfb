@@ -1,8 +1,8 @@
-diff --git a/pyvista/plotting/plotting.py b/pyvista/plotting/plotting.py
-index 8a8faf65..28e0680d 100644
---- a/pyvista/plotting/plotting.py
-+++ b/pyvista/plotting/plotting.py
-@@ -144,13 +144,8 @@ def _warn_xserver():  # pragma: no cover
+diff --git a/pyvista/plotting/plotter.py b/pyvista/plotting/plotter.py
+index 4b48f987..061cce35 100644
+--- a/pyvista/plotting/plotter.py
++++ b/pyvista/plotting/plotter.py
+@@ -142,13 +142,8 @@ def _warn_xserver():  # pragma: no cover
          if uses_egl():
              return
  
