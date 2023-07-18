@@ -7,12 +7,14 @@
 set -e
 set -x
 
-SYSTEM_PYTHON_VERSION="python3.8"
+SYSTEM_PYTHON_VERSION="python3.10"
 COLAB_PYTHON_VERSION="python3.10"
 
 # Setup non-default python version
 update-alternatives --install /usr/bin/python3 python3 /usr/bin/${SYSTEM_PYTHON_VERSION} 1
-update-alternatives --install /usr/bin/python3 python3 /usr/bin/${COLAB_PYTHON_VERSION} 2
+if [[ ${COLAB_PYTHON_VERSION} != ${SYSTEM_PYTHON_VERSION} ]]; then
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/${COLAB_PYTHON_VERSION} 2
+fi
 update-alternatives --set python3 /usr/bin/${COLAB_PYTHON_VERSION}
 
 # Changing system-wide python version may break apt
