@@ -40,6 +40,7 @@ jobs:
       library: "gcc"
       task: "build"
       args: "11.3.0"
+      strip-args-when-packaging: "true"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -58,6 +59,7 @@ jobs:
       library: "gcc"
       task: "test"
       args: ""
+      strip-args-when-packaging: ""
 
   # Boost build & test
   build_boost:
@@ -77,6 +79,7 @@ jobs:
       library: "boost"
       task: "build"
       args: ""
+      strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -95,6 +98,7 @@ jobs:
       library: "boost"
       task: "test"
       args: ""
+      strip-args-when-packaging: ""
 
   # mpi4py build & test
   build_mpi4py:
@@ -114,6 +118,7 @@ jobs:
       library: "mpi4py"
       task: "build"
       args: ""
+      strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -132,6 +137,7 @@ jobs:
       library: "mpi4py"
       task: "test"
       args: ""
+      strip-args-when-packaging: ""
 
   # OCC build & test
   build_occ:
@@ -151,6 +157,7 @@ jobs:
       library: "occ"
       task: "build"
       args: ""
+      strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -169,6 +176,7 @@ jobs:
       library: "occ"
       task: "test"
       args: ""
+      strip-args-when-packaging: ""
 
   # h5py build & test
   build_h5py:
@@ -188,6 +196,7 @@ jobs:
       library: "h5py"
       task: "build"
       args: ""
+      strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -206,6 +215,7 @@ jobs:
       library: "h5py"
       task: "test"
       args: ""
+      strip-args-when-packaging: ""
 
   # pybind11 build & test
   build_pybind11:
@@ -225,6 +235,7 @@ jobs:
       library: "pybind11"
       task: "build"
       args: ""
+      strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -243,6 +254,7 @@ jobs:
       library: "pybind11"
       task: "test"
       args: ""
+      strip-args-when-packaging: ""
 
   # petsc4py/real build & test
   build_petsc4py_real:
@@ -262,6 +274,7 @@ jobs:
       library: "petsc4py"
       task: "build"
       args: "real"
+      strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -280,6 +293,7 @@ jobs:
       library: "petsc4py"
       task: "test"
       args: "real"
+      strip-args-when-packaging: ""
 
   # petsc4py/complex build & test
   build_petsc4py_complex:
@@ -299,6 +313,7 @@ jobs:
       library: "petsc4py"
       task: "build"
       args: "complex"
+      strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -317,6 +332,7 @@ jobs:
       library: "petsc4py"
       task: "test"
       args: "complex"
+      strip-args-when-packaging: ""
 
   # vtk build & test
   build_vtk:
@@ -336,6 +352,7 @@ jobs:
       library: "vtk"
       task: "build"
       args: ""
+      strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -354,6 +371,7 @@ jobs:
       library: "vtk"
       task: "test"
       args: ""
+      strip-args-when-packaging: ""
 
   # slepc4py/real build & test
   build_slepc4py_real:
@@ -373,6 +391,7 @@ jobs:
       library: "slepc4py"
       task: "build"
       args: "real"
+      strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -391,6 +410,7 @@ jobs:
       library: "slepc4py"
       task: "test"
       args: "real"
+      strip-args-when-packaging: ""
 
   # slepc4py/complex build & test
   build_slepc4py_complex:
@@ -410,6 +430,7 @@ jobs:
       library: "slepc4py"
       task: "build"
       args: "complex"
+      strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -428,6 +449,7 @@ jobs:
       library: "slepc4py"
       task: "test"
       args: "complex"
+      strip-args-when-packaging: ""
 
   # Warn if scheduled workflow is about to be disabled
   warn:

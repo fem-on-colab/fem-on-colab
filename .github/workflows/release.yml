@@ -9,6 +9,8 @@ on:
         description: "Task to be done: package (default) or test. If empty, a package job is requested"
       args:
         description: "Additional space separated arguments to be passed to the build script. If empty, no arguments are passed"
+      strip-args-when-packaging:
+        description: "Strip additional argument when packaging"
   workflow_call:
     inputs:
       library:
@@ -19,6 +21,9 @@ on:
         type: string
       args:
         description: "Additional space separated arguments to be passed to the build script. If empty, no arguments are passed"
+        type: string
+      strip-args-when-packaging:
+        description: "Strip additional argument when packaging"
         type: string
     secrets:
       REPO_ACCESS_TOKEN:
@@ -76,7 +81,12 @@ jobs:
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           ARGS_ARRAY=(${{ (inputs || github.event.inputs).args }})
-          ARGS_JOINED=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
+          STRIP_ARGS_WHEN_PACKAGING=${{ (inputs || github.event.inputs).strip-args-when-packaging }}
+          if [[ "${STRIP_ARGS_WHEN_PACKAGING}" == "false" ]]; then
+            ARGS_JOINED=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
+          else
+            ARGS_JOINED=""
+          fi
           REPODIR=${PWD}
           pushd _build/html
           WEBSITE_FETCH_URL=$(git remote get-url origin)
@@ -261,18 +271,20 @@ jobs:
           ARGS_ARRAY=(${{ (inputs || github.event.inputs).args }})
           [[ -f "${LIBRARY}/build.sh" ]] && NEEDS_RELEASE_ARCHIVE="yes" || NEEDS_RELEASE_ARCHIVE="no"
           echo "needs_release_archive=${NEEDS_RELEASE_ARCHIVE}" >> ${GITHUB_OUTPUT}
-          if [[ -n "${ARGS_ARRAY[*]}" ]]; then
-            ARGS_JOINED_SPACE=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
+          if [[ -n "${ARGS_ARRAY[*]}" && "${STRIP_ARGS_WHEN_PACKAGING}" == "false" ]]; then
+            ARGS_JOINED_SPACE=$(IFS=" " ; echo "${ARGS_ARRAY[*]}")
             ARGS_JOINED_HYPHEN=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
             RELEASE_FILE=_build/html/releases/${LIBRARY}-install-${ARGS_JOINED_HYPHEN}.sh
           else
+            ARGS_JOINED_SPACE=""
+            ARGS_JOINED_HYPHEN=""
             RELEASE_FILE=_build/html/releases/${LIBRARY}-install.sh
           fi
           echo "release_file=${RELEASE_FILE}" >> ${GITHUB_OUTPUT}
           if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
             DATETIME=${{ steps.date_time.outputs.date_time }}
             SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
-            if [[ -n "${ARGS_ARRAY[*]}" ]]; then
+            if [[ -n "${ARGS_JOINED_SPACE}" ]]; then
               RELEASE_TITLE="${LIBRARY} ${DATETIME} ${SHA_SHORT} ${ARGS_JOINED_SPACE}"
               RELEASE_TAG="${LIBRARY}-${DATETIME}-${SHA_SHORT}-${ARGS_JOINED_HYPHEN}"
             else
