@@ -36,6 +36,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
 git checkout ufl_legacy
+patch -p 1 < $REPODIR/fenics/patches/06-pkg-resources-to-importlib-in-ufl-legacy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # Add an error about ufl to ufl_legacy transition
