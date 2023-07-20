@@ -1,0 +1,20 @@
+diff --git a/dijitso/__init__.py b/dijitso/__init__.py
+index c647f88..8ab4cae 100644
+--- a/dijitso/__init__.py
++++ b/dijitso/__init__.py
+@@ -16,13 +16,13 @@
+ # You should have received a copy of the GNU Lesser General Public License
+ # along with DIJITSO. If not, see <http://www.gnu.org/licenses/>.
+ 
+-from pkg_resources import get_distribution
++import importlib.metadata
+ 
+ """This is dijitso -- a lightweight distributed just-in-time shared
+ library builder."""
+ 
+ __author__ = "Martin Sandve Alnæs"
+-__version__ = get_distribution('fenics-dijitso').version
++__version__ = importlib.metadata.version('fenics-dijitso')
+ 
+ __all__ = ["validate_params", "jit", "extract_factory_function",
+            "set_log_level"]
