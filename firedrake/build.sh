@@ -152,6 +152,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     # roltrilinos
     git clone https://bitbucket.org/pyrol/trilinos/src/pyrol/ /tmp/roltrilinos-src
     cd /tmp/roltrilinos-src
+    patch -p 1 < $REPODIR/firedrake/patches/09-add-cstdint-include-in-roltrilinos
     PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
 
     # Move roltrilinos already to the final site target (which normally would be done at a later CI step),
