@@ -41,6 +41,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --no-build-isolation --u
 # FIAT
 git clone https://github.com/firedrakeproject/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
+patch -p 1 < $REPODIR/firedrake/patches/05-pkg-resources-to-importlib-in-fiat
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # FInAT

@@ -1,0 +1,16 @@
+diff --git a/ffc/__init__.py b/ffc/__init__.py
+index d875bf8b..0d6fdb2d 100644
+--- a/ffc/__init__.py
++++ b/ffc/__init__.py
+@@ -14,9 +14,9 @@ The interface consists of the following functions:
+   ufc_signature      - Signature of UFC interface (SHA-1 hash of ufc.h)
+ """
+ 
+-import pkg_resources
++import importlib.metadata
+ 
+-__version__ = pkg_resources.get_distribution("fenics-ffc").version
++__version__ = importlib.metadata.version("fenics-ffc")
+ 
+ from ffc.git_commit_hash import git_commit_hash
+ 

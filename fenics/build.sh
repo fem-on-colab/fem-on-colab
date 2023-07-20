@@ -21,6 +21,7 @@ FENICS_ARCHIVE_PATH="skip" source fenics/install.sh
 # FIAT
 git clone https://github.com/FEniCS/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
+patch -p 1 < $REPODIR/fenics/patches/06-pkg-resources-to-importlib-in-fiat
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # dijitso
@@ -36,6 +37,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
 git checkout ufl_legacy
+patch -p 1 < $REPODIR/fenics/patches/08-pkg-resources-to-importlib-in-ufl-legacy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # Add an error about ufl to ufl_legacy transition
@@ -50,6 +52,7 @@ echo 'raise RuntimeError("Please import ufl_legacy rather than ufl, see https://
 # FFC
 git clone https://bitbucket.org/fenics-project/ffc.git /tmp/ffc-src
 cd /tmp/ffc-src
+patch -p 1 < $REPODIR/fenics/patches/13-pkg-resources-to-importlib-in-ffc
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 
 # dolfin
