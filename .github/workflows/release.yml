@@ -315,6 +315,7 @@ jobs:
           name: "${{ steps.check_release.outputs.release_title }}"
           prerelease: true
           artifacts: ${{ steps.check_release.outputs.release_archive }}
+          artifactErrorsFailBuild: true
       - name: Verify that archive has been correctly uploaded
         if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
         run: |
