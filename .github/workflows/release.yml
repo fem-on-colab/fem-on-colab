@@ -308,14 +308,18 @@ jobs:
       - name: Add release to repository
         if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
         timeout-minutes: 5
-        uses: ncipollo/release-action@v1
+        uses: Wandalen/wretry.action@master
         with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          tag: ${{ steps.check_release.outputs.release_tag }}
-          name: "${{ steps.check_release.outputs.release_title }}"
-          prerelease: true
-          artifacts: ${{ steps.check_release.outputs.release_archive }}
-          artifactErrorsFailBuild: true
+          action: ncipollo/release-action@v1
+          with: |
+            token: ${{ secrets.REPO_ACCESS_TOKEN }}
+            tag: ${{ steps.check_release.outputs.release_tag }}
+            name: "${{ steps.check_release.outputs.release_title }}"
+            prerelease: true
+            artifacts: ${{ steps.check_release.outputs.release_archive }}
+            artifactErrorsFailBuild: true
+          attempt_limit: 10
+          attempt_delay: 30000
       - name: Verify that archive has been correctly uploaded
         if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
         run: |
