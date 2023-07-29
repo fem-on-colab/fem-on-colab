@@ -1,5 +1,5 @@
 diff --git a/linalg/la.hpp b/linalg/la.hpp
-index 3949920e5..866aec8b8 100644
+index dc5377bda..6b005b601 100644
 --- a/linalg/la.hpp
 +++ b/linalg/la.hpp
 @@ -33,8 +33,8 @@ namespace ngla
@@ -13,7 +13,7 @@ index 3949920e5..866aec8b8 100644
  // #include "superluinverse.hpp"
  // #include "mumpsinverse.hpp"
 diff --git a/linalg/pardisoinverse.cpp b/linalg/pardisoinverse.cpp
-index bb79f372b..b6a5628a5 100644
+index c0c7ea64f..62e68f0d4 100644
 --- a/linalg/pardisoinverse.cpp
 +++ b/linalg/pardisoinverse.cpp
 @@ -48,20 +48,10 @@ extern  integer F77_FUNC(pardisoinit)
@@ -38,13 +38,14 @@ index bb79f372b..b6a5628a5 100644
  
  #ifdef USE_MKL
  namespace ngstd
-@@ -74,31 +64,6 @@ namespace ngstd
+@@ -74,35 +64,6 @@ namespace ngstd
  
  namespace ngla
  {
 -#ifdef USE_PARDISO
 -  bool is_pardiso_available = true;
 -#else
+-#ifndef __EMSCRIPTEN__
 -  static SharedLibrary libmkl;
 -  static bool LoadMKL()
 -  {
@@ -65,12 +66,15 @@ index bb79f372b..b6a5628a5 100644
 -      }
 -  };
 -  bool is_pardiso_available = LoadMKL();
+-#else // __EMSCRIPTEN__
+-  bool is_pardiso_available = false;
+-#endif // __EMSCRIPTEN__
 -#endif
 -
    int pardiso_msg = 0;
  
  
-@@ -214,7 +179,7 @@ namespace ngla
+@@ -219,7 +180,7 @@ namespace ngla
  
      for (int i = 0; i < 128; i++) pt[i] = 0;
  
@@ -79,7 +83,7 @@ index bb79f372b..b6a5628a5 100644
      //    no init in MKL PARDISO
  #else
  
-@@ -649,9 +614,9 @@ namespace ngla
+@@ -654,9 +615,9 @@ namespace ngla
      F77_FUNC(pardiso) ( pt, &maxfct, &mnum, &matrixtype, &phase, &compressed_height, NULL,
  			rowstart.Data(), indices.Data(), NULL, &nrhs, params, &msglevel,
  			NULL, NULL, &error );
@@ -91,7 +95,7 @@ index bb79f372b..b6a5628a5 100644
      GetMemoryTracer().Free(memory_allocated_in_pardiso_lib);
      memory_allocated_in_pardiso_lib = 0;
      if (task_manager) task_manager -> StartWorkers();
-@@ -817,3 +782,6 @@ namespace ngla
+@@ -823,3 +784,6 @@ namespace ngla
  
  }
  
@@ -111,10 +115,10 @@ index bfafc3f1a..ad1fd862c 100644
  
    /*
 diff --git a/linalg/sparsematrix.cpp b/linalg/sparsematrix.cpp
-index a2eb76b81..c3060a0c4 100644
+index 8932b1d52..59b54575d 100644
 --- a/linalg/sparsematrix.cpp
 +++ b/linalg/sparsematrix.cpp
-@@ -1920,10 +1920,11 @@ namespace ngla
+@@ -1925,10 +1925,11 @@ namespace ngla
        }
      else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
        {
@@ -128,7 +132,7 @@ index a2eb76b81..c3060a0c4 100644
        }
      else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
        {
-@@ -1961,10 +1962,11 @@ namespace ngla
+@@ -1966,10 +1967,11 @@ namespace ngla
        }
      else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
        {
@@ -143,10 +147,10 @@ index a2eb76b81..c3060a0c4 100644
      else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
        {
 diff --git a/linalg/sparsematrix_impl.hpp b/linalg/sparsematrix_impl.hpp
-index 121c56897..4d36df417 100644
+index dd9b04835..49dd80903 100644
 --- a/linalg/sparsematrix_impl.hpp
 +++ b/linalg/sparsematrix_impl.hpp
-@@ -326,10 +326,11 @@ namespace ngla
+@@ -342,10 +342,11 @@ namespace ngla
  	}
        else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
  	{
@@ -160,7 +164,7 @@ index 121c56897..4d36df417 100644
  	}
        else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
  	{
-@@ -395,10 +396,11 @@ namespace ngla
+@@ -412,10 +413,11 @@ namespace ngla
  	}
        else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
  	{
@@ -175,10 +179,10 @@ index 121c56897..4d36df417 100644
        else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
  	{
 diff --git a/solve/ngsolve.cpp b/solve/ngsolve.cpp
-index 1fa63b62c..51d8d9470 100644
+index 389bc70d1..094f1a72e 100644
 --- a/solve/ngsolve.cpp
 +++ b/solve/ngsolve.cpp
-@@ -1257,8 +1257,9 @@ int NGSolve_Init (Tcl_Interp * interp)
+@@ -1281,8 +1281,9 @@ int NGSolve_Init (Tcl_Interp * interp)
  #endif
  
  
