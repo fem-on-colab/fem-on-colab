@@ -49,6 +49,13 @@ remove_java_packages () {
 }
 remove_java_packages ${BACKEND_INFO}/apt-list-clean.txt
 
+# Remove mkl packages to decrease the image size
+remove_mkl_packages () {
+    grep -v -e "^intel-mkl" -e "^libmkl" -h ${1} > ${1}.tmp
+    mv ${1}.tmp ${1}
+}
+remove_mkl_packages ${BACKEND_INFO}/apt-list-clean.txt
+
 # Install the remaining packages from backend info
 APT_PACKAGES=$(cat ${BACKEND_INFO}/apt-list-clean.txt | cut -f1 -d / | tr "\n" " ")
 apt install -y -qq ${APT_PACKAGES}
@@ -73,6 +80,7 @@ assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_packages_a
 assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_cuda_packages
 assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_R_packages
 assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_java_packages
+assert_removed_packages ${BACKEND_INFO}/apt-list-installed.txt remove_mkl_packages
 
 # Install additional packages that are required to compile from source
 apt install -y -qq autoconf autoconf-archive bison build-essential cmake curl flex git jq libtool libtool-bin ninja-build pkg-config rsync software-properties-common unzip wget
