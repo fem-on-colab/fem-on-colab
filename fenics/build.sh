@@ -90,7 +90,6 @@ PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip in
 apt install -y -qq libgmp3-dev libmpfr-dev
 git clone https://bitbucket.org/fenics-project/mshr.git /tmp/mshr-src
 cd /tmp/mshr-src/
-patch -p 1 < $REPODIR/fenics/patches/11-c++-14-in-mshr
 cat <<EOT > python/config.json.in
 {
     "pybind11" : {
