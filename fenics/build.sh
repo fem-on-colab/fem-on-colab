@@ -86,8 +86,26 @@ cd /tmp/dolfin-src/python
 export DOLFIN_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install -v . --user
 
-# mshr
+# CGAL (required by mshr)
 apt install -y -qq libgmp3-dev libmpfr-dev
+git clone https://github.com/CGAL/cgal.git /tmp/cgal-src
+cd /tmp/cgal-src
+git checkout 5.6.x-branch
+mkdir -p /tmp/cgal-src/build
+cd /tmp/cgal-src/build
+cmake \
+    -DCMAKE_C_COMPILER=$(which mpicc) \
+    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    -DCMAKE_CXX_FLAGS="$CPPFLAGS -std=c++14 -fPIC" \
+    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DCMAKE_BUILD_TYPE="Release" \
+    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    -DWITH_demos:BOOL=OFF -DWITH_examples:BOOL=OFF \
+    ..
+make -j $(nproc) install
+
+# mshr
 git clone https://bitbucket.org/fenics-project/mshr.git /tmp/mshr-src
 cd /tmp/mshr-src/
 cat <<EOT > python/config.json.in
@@ -119,7 +137,9 @@ cmake \
     -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
     -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DCMAKE_BUILD_TYPE="Release" \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    -DUSE_SYSTEM_CGAL:BOOL=ON \
     ..
 make -j $(nproc) install
 cd /tmp/mshr-src/python
