@@ -19,6 +19,10 @@ fi
 # Install boost, pybind11, slepc4py and vtk (and their dependencies)
 FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 
+# firedrake is not compatible yet with Cython 3.0+
+pip uninstall -y Cython
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "Cython<3.0"
+
 # islpy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --no-binary=islpy islpy
 
