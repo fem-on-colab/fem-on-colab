@@ -39,6 +39,8 @@ if [[ ! -f $FIREDRAKE_INSTALLED ]]; then
     FIREDRAKE_ARCHIVE_PATH=${FIREDRAKE_ARCHIVE_PATH:-"FIREDRAKE_ARCHIVE_PATH_IN"}
     [[ $FIREDRAKE_ARCHIVE_PATH == http* ]] && FIREDRAKE_ARCHIVE_DOWNLOAD=${FIREDRAKE_ARCHIVE_PATH} && FIREDRAKE_ARCHIVE_PATH=/tmp/firedrake-install.tar.gz && wget ${FIREDRAKE_ARCHIVE_DOWNLOAD} -O ${FIREDRAKE_ARCHIVE_PATH}
     if [[ $FIREDRAKE_ARCHIVE_PATH != skip ]]; then
+        rm -rf /usr/lib/python*/*-packages/Cython*
+        rm -rf $INSTALL_PREFIX/lib/python*/*-packages/Cython*
         rm -rf /usr/lib/python*/*-packages/netCDF4*
         rm -rf $INSTALL_PREFIX/lib/python*/*-packages/netCDF4*
         tar -xzf $FIREDRAKE_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
