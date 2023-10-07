@@ -1,6 +1,11 @@
 build/
-pybind11_sum.cpp
-pybind11_sum.*.so
-setup.py
+CMake*
+cmake*
+Makefile
+libnanobind-static.a
+*_CMakeLists.txt
+*_sum.cpp
+*_sum.*.so
+*_setup.py
 sum.cpp
 sum.hpp
