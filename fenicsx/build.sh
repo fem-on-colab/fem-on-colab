@@ -22,8 +22,6 @@ FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 # Basix
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
 mkdir -p /tmp/basix-src/build
-cd /tmp/basix-src
-patch -p 1 < $REPODIR/fenicsx/patches/05-basix-require-cmake
 cd /tmp/basix-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
