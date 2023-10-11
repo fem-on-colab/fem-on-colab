@@ -129,7 +129,7 @@ jobs:
           popd
         shell: bash
       - name: Fetch updated package list
-        run: apt update -qq
+        run: apt update -y -q
       - name: Manually install gcc before building if libstdc++.so replacement is required
         if: (inputs || github.event.inputs).task != 'test'
         run: |
