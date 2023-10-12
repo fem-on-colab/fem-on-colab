@@ -103,6 +103,11 @@ cd && rm -rf /tmp/ngsxfem-src
 # Remove temporary symbolic link
 rm $INSTALL_PREFIX/lib/python3
 
+# ngsPETSc
+git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
+cd /tmp/ngspetsc-src/
+NGSPETSC_NO_INSTALL_REQUIRED=ON PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+
 # Install a further ngsolve.webgui dependency
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user webgui_jupyter_widgets
 
