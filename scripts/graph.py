@@ -18,7 +18,7 @@ dependencies = {
     "h5py": ["mpi4py"],
     "mock": ["base"],
     "mpi4py": ["gcc"],
-    "ngsolve": ["occ", "pybind11", "petsc4py"],
+    "ngsolve": ["occ", "pybind11", "slepc4py"],
     "occ": ["gcc"],
     "petsc4py": ["h5py"],
     "pybind11": ["mpi4py"],
