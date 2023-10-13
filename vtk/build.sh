@@ -58,7 +58,7 @@ cmake \
     -DPython_EXECUTABLE=$(which python3) \
     ..
 make -j $(nproc) install
-cd -
+cd && rm -rf /tmp/adios2-src
 
 # Install xvfbwrapper too
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
@@ -74,7 +74,7 @@ echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
 patch -p 1 < $REPODIR/vtk/patches/01-start-xvfb
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install .[jupyter] --user
-cd -
+cd && rm -rf /tmp/pyvista-src
 
 # Automatically enable widgets
 ENABLE_WIDGETS_SCRIPT="/usr/bin/enable_widgets.py"

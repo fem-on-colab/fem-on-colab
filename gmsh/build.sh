@@ -23,6 +23,7 @@ cmake \
     -DENABLE_BUILD_DYNAMIC=1 \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/gmsh-src
 
 # Move gmsh into the site target folder
 if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then

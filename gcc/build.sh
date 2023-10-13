@@ -66,6 +66,7 @@ fi
     --without-included-gettext
 make -j $(nproc)
 make install
+cd && rm -rf /tmp/gcc-src
 
 # Add symbolic links to programs without version suffix
 cd ${INSTALL_PREFIX}/bin

@@ -35,11 +35,13 @@ make -j $(nproc) install
 cd /tmp/basix-src/python
 export Basix_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+cd && rm -rf /tmp/basix-src
 
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/ufl-src
 
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
@@ -48,6 +50,7 @@ if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
     patch -p 1 < $REPODIR/fenicsx/patches/01-ffcx-cffi-static-libstdc++
 fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/ffcx-src
 
 # cppimport
 git clone https://github.com/tbenthompson/cppimport /tmp/cppimport-src
@@ -57,6 +60,7 @@ if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
 fi
 patch -p 1 < $REPODIR/fenicsx/patches/03-cppimport-distutils-imports
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/cppimport-src/
 
 # pugixml
 git clone https://github.com/zeux/pugixml.git /tmp/pugixml-src
@@ -70,14 +74,15 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/pugixml-src/build
 
 # dolfinx
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
-mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src
 patch -p 1 < $REPODIR/fenicsx/patches/06-do-not-fiddle-with-dlopenflags-in-dolfinx
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/07-pkg-config-path-in-dolfinx
 patch -p 1 < $REPODIR/fenicsx/patches/07-pkg-config-path-in-dolfinx
+mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src/build
 export UFC_DIR=$INSTALL_PREFIX
 export HDF5_ROOT=$INSTALL_PREFIX
@@ -109,3 +114,4 @@ while [[ $IMPORT_SUCCESS -ne 0 ]]; do
     [[ $IMPORT_SUCCESS -ne 0 && $IMPORT_SUCCESS -ne 139 ]] && echo "Import failed due to another error: giving up" && exit 1
     COUNTER=$((COUNTER+1))
 done
+cd && rm -rf /tmp/dolfinx-src

@@ -21,6 +21,7 @@ cmake \
 make -j $(nproc)
 make install
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/pybind11-src
 
 # Install nanobind
 git clone https://github.com/wjakob/nanobind.git /tmp/nanobind-src
@@ -31,3 +32,4 @@ cmake \
     -D NB_TEST=off \
     .
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/nanobind-src

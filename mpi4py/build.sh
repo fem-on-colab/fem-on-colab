@@ -32,6 +32,7 @@ else
 fi
 make -j $(nproc) LDFLAGS=${LDFLAGS_WITH_WC}
 make install LDFLAGS=${LDFLAGS_WITH_WC}
+cd && rm -rf /tmp/openmpi-src
 
 # Install mpi4py
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user git+https://github.com/mpi4py/mpi4py.git

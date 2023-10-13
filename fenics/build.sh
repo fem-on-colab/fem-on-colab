@@ -23,6 +23,7 @@ git clone https://github.com/FEniCS/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
 patch -p 1 < $REPODIR/fenics/patches/06-pkg-resources-to-importlib-in-fiat
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/fiat-src
 
 # dijitso
 git clone https://bitbucket.org/fenics-project/dijitso.git /tmp/dijitso-src
@@ -33,6 +34,7 @@ fi
 patch -p 1 < $REPODIR/fenics/patches/08-pkg-resources-to-importlib-in-dijitso
 patch -p 1 < $REPODIR/fenics/patches/09-c++-14-in-dijitso
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/dijitso-src
 
 # UFL (legacy)
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
@@ -40,6 +42,7 @@ cd /tmp/ufl-src
 git checkout ufl_legacy
 patch -p 1 < $REPODIR/fenics/patches/13-pkg-resources-to-importlib-in-ufl-legacy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/ufl-src
 
 # Add an error about ufl to ufl_legacy transition
 if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
@@ -55,6 +58,7 @@ git clone https://bitbucket.org/fenics-project/ffc.git /tmp/ffc-src
 cd /tmp/ffc-src
 patch -p 1 < $REPODIR/fenics/patches/14-pkg-resources-to-importlib-in-ffc
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/ffc-src
 
 # dolfin
 git clone https://bitbucket.org/fenics-project/dolfin.git /tmp/dolfin-src
@@ -85,6 +89,7 @@ make -j $(nproc) install
 cd /tmp/dolfin-src/python
 export DOLFIN_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install -v . --user
+cd && rm -rf /tmp/dolfin-src/
 
 # CGAL (required by mshr)
 apt install -y -qq libgmp3-dev libmpfr-dev
@@ -104,6 +109,7 @@ cmake \
     -DWITH_demos:BOOL=OFF -DWITH_examples:BOOL=OFF \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/cgal-src
 
 # mshr
 git clone https://bitbucket.org/fenics-project/mshr.git /tmp/mshr-src
@@ -144,3 +150,4 @@ cmake \
 make -j $(nproc) install
 cd /tmp/mshr-src/python
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install -v . --user
+cd && rm -rf /tmp/mshr-src/

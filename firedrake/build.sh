@@ -30,38 +30,45 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --no-binary=islpy i
 git clone https://github.com/coneoproject/COFFEE.git /tmp/coffee-src
 cd /tmp/coffee-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/coffee-src
 
 # loopy
 git clone https://github.com/firedrakeproject/loopy.git /tmp/loopy-src
 cd /tmp/loopy-src
 git submodule update --init --recursive
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/loopy-src
 
 # netCDF4-python
 git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --no-build-isolation --user
+cd && rm -rf /tmp/netcdf4-python-src
 
 # FIAT
 git clone https://github.com/firedrakeproject/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
 patch -p 1 < $REPODIR/firedrake/patches/05-pkg-resources-to-importlib-in-fiat
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/fiat-src
 
 # FInAT
 git clone https://github.com/FInAT/FInAT.git /tmp/finat-src
 cd /tmp/finat-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/finat-src
 
 # UFL
 git clone https://github.com/firedrakeproject/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/ufl-src
 
 # TSFC
 git clone https://github.com/firedrakeproject/tsfc.git /tmp/tsfc-src
 cd /tmp/tsfc-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/tsfc-src
 
 # PyOP2
 git clone https://github.com/OP2/PyOP2.git /tmp/pyop2-src
@@ -71,11 +78,13 @@ if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
 fi
 export PETSC_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/pyop2-src
 
 # pyadjoint
 git clone https://github.com/dolfin-adjoint/pyadjoint /tmp/pyadjoint-src
 cd /tmp/pyadjoint-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/pyadjoint-src
 
 # libsupermesh
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
@@ -93,6 +102,7 @@ cmake \
     -DBUILD_SHARED_LIBS:BOOL=ON \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/libsupermesh-src
 
 # TinyASM
 git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
@@ -101,6 +111,7 @@ patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
 patch -p 1 < $REPODIR/firedrake/patches/07-use-cxxflags-and-ldflags-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+cd && rm -rf /tmp/tinyasm-src
 
 # libspatialindex
 git clone https://github.com/firedrakeproject/libspatialindex.git /tmp/libspatialindex-src
@@ -115,6 +126,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/libspatialindex-src
 
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
@@ -127,6 +139,7 @@ fi
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/firedrake-src
 
 # Write out configuration file
 mkdir -p tmp_for_global_import && cd tmp_for_global_import
@@ -159,6 +172,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     cd /tmp/roltrilinos-src
     patch -p 1 < $REPODIR/firedrake/patches/09-add-cstdint-include-in-roltrilinos
     PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+    cd && rm -rf /tmp/roltrilinos-src
 
     # Move roltrilinos already to the final site target (which normally would be done at a later CI step),
     # so that patchelf will set the correct path
@@ -176,6 +190,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
     export PYBIND11_DIR=$INSTALL_PREFIX
     PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+    cd && rm -rf /tmp/rol-src
 
     # wurlitzer (only used in notebooks to redirect the C++ output to the notebook cell ouput)
     PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user wurlitzer

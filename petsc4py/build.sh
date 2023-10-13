@@ -26,6 +26,7 @@ cd /tmp/slibtool-src
 ./configure
 make all
 make install
+cd && rm -rf /tmp/slibtool-src
 
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
@@ -83,3 +84,4 @@ fi
 # Install petsc4py
 cd /tmp/petsc-src/src/binding/petsc4py/
 PETSC_DIR=$INSTALL_PREFIX PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+cd && rm -rf /tmp/petsc-src

@@ -35,3 +35,4 @@ cmake \
     -DBUILD_MODULE_Visualization=0 \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/occt-src

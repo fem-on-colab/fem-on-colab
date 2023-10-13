@@ -95,5 +95,4 @@ git checkout ${TAGS[0]}
 ./configure --prefix=/usr
 make
 make install
-cd -
-rm -rf /tmp/patchelf-src
+cd && rm -rf /tmp/patchelf-src

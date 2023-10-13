@@ -26,3 +26,4 @@ export CPATH=$(python3 -c "from sysconfig import get_paths; print(get_paths()['i
 ./bootstrap.sh --with-toolset=$BOOST_TOOLSET --with-python=$BOOST_PYTHON_EXEC --without-icu --without-libraries="locale" --prefix="$INSTALL_PREFIX"
 ./b2 toolset=$BOOST_TOOLSET $BOOST_CXXFLAGS $BOOST_LDFLAGS --disable-icu --prefix="$INSTALL_PREFIX" -j $(nproc) stage release
 ./b2 install toolset=$BOOST_TOOLSET $BOOST_CXXFLAGS $BOOST_LDFLAGS --prefix="$INSTALL_PREFIX"
+cd && rm -rf /tmp/boost-src

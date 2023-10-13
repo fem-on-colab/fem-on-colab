@@ -27,7 +27,7 @@ ln -s $INSTALL_PREFIX/lib/$PYTHON_VERSION $INSTALL_PREFIX/lib/python3
 
 # netgen
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
-cd /tmp/netgen-src/
+cd /tmp/netgen-src
 git submodule update --init
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
@@ -50,6 +50,7 @@ cmake \
     -DMETIS_LIBRARY_DIR:PATH=$INSTALL_PREFIX/lib \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/netgen-src
 
 # ngsolve
 git clone https://github.com/NGSolve/ngsolve /tmp/ngsolve-src
@@ -78,10 +79,11 @@ cmake \
     -DUMFPACK_DIR:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/ngsolve-src
 
 # ngsxfem
 git clone https://github.com/ngsxfem/ngsxfem.git /tmp/ngsxfem-src
-cd /tmp/ngsxfem-src/
+cd /tmp/ngsxfem-src
 git checkout master
 git submodule update --init
 mkdir -p /tmp/ngsxfem-src/build
@@ -96,6 +98,7 @@ cmake \
     -DBUILD_NGSOLVE:BOOL=OFF \
     ..
 make -j $(nproc) install
+cd && rm -rf /tmp/ngsxfem-src
 
 # Remove temporary symbolic link
 rm $INSTALL_PREFIX/lib/python3
