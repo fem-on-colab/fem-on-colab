@@ -40,14 +40,14 @@ remove_packages_built_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove machine learning packages to decrease the image size
 remove_machine_learning_packages () {
-    grep -v -e "^chex" -e "^datascience" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^optax" -e "^orbax" -e "^tensorboard" -e "^tensorflow" -e "^torch" -e "^triton" -e "^xgboost" -h ${1} > ${1}.tmp
+    grep -v -e "^chex" -e "^datascience" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^malloy" -e "^optax" -e "^orbax" -e "^tensorboard" -e "^tensorflow" -e "^torch" -e "^triton" -e "^xgboost" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_machine_learning_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove cuda packages to decrease the image size
 remove_cuda_packages () {
-    grep -v -e "^albumentations" -e "^dopamine" -e "^imgaug" -e "^opencv" -e "^qudida" -h ${1} > ${1}.tmp
+    grep -v -e "^albumentations" -e "^cupy-" -e "^dopamine" -e "^imgaug" -e "^opencv" -e "^qudida" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_cuda_packages ${BACKEND_INFO}/pip-freeze-clean.txt
@@ -65,6 +65,13 @@ remove_mkl_packages () {
     mv ${1}.tmp ${1}
 }
 remove_mkl_packages ${BACKEND_INFO}/pip-freeze-clean.txt
+
+# Remove misc packages to decrease the image size
+remove_misc_packages () {
+    grep -v -e "^db-dtypes" -e "^music21" -e "^pandas-gbq" -e "^pyarrow" -h ${1} > ${1}.tmp
+    mv ${1}.tmp ${1}
+}
+remove_misc_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Install the remaining packages from backend info
 PYTHONUSERBASE=/usr python3 -m pip install --user -r ${BACKEND_INFO}/pip-freeze-clean.txt
@@ -95,6 +102,7 @@ assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_machine_
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_cuda_packages
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_R_packages
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_mkl_packages
+assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_misc_packages
 
 # Install cmake (for building)
 PYTHONUSERBASE=/usr python3 -m pip install --user cmake
