@@ -34,6 +34,7 @@ cd /tmp/petsc-src
 if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
     patch -p1 < $REPODIR/petsc4py/patches/01-force-static-libstdc++
 fi
+patch -p1 < $REPODIR/petsc4py/patches/02-disable-ssl-certificate-verification
 DOWNLOADS="\
     --download-metis \
     --download-parmetis \
