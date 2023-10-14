@@ -1,0 +1,19 @@
+diff --git a/config/BuildSystem/retrieval.py b/config/BuildSystem/retrieval.py
+index 6bd55538839..457a18669a4 100644
+--- a/config/BuildSystem/retrieval.py
++++ b/config/BuildSystem/retrieval.py
+@@ -195,12 +195,13 @@ Unable to download package %s from: %s
+       # fetch remote file
+       try:
+         from urllib.request import Request, urlopen
++        import ssl
+         sav_timeout = socket.getdefaulttimeout()
+         socket.setdefaulttimeout(30)
+         req = Request(url)
+         req.headers['User-Agent'] = 'PetscConfigure/'+self.ver
+         with open(localFile, 'wb') as f:
+-          f.write(urlopen(req).read())
++          f.write(urlopen(req, context=ssl._create_unverified_context()).read())
+         socket.setdefaulttimeout(sav_timeout)
+       except Exception as e:
+         socket.setdefaulttimeout(sav_timeout)

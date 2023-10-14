@@ -7,6 +7,8 @@
 set -e
 set -x
 
+REPODIR=$PWD
+
 # Expect one argument to set the scalar type
 : ${1?"Usage: $0 scalar_type"}
 SCALAR_TYPE="$1"
@@ -20,6 +22,7 @@ SLEPC4PY_ARCHIVE_PATH="skip" source slepc4py/install.sh
 # Install SLEPc
 git clone https://gitlab.com/slepc/slepc.git /tmp/slepc-src
 cd /tmp/slepc-src
+patch -p1 < $REPODIR/slepc4py/patches/01-disable-ssl-certificate-verification
 ./configure --prefix=$INSTALL_PREFIX
 make SLEPC_DIR=$PWD PETSC_DIR=$INSTALL_PREFIX
 make SLEPC_DIR=$PWD PETSC_DIR=$INSTALL_PREFIX install

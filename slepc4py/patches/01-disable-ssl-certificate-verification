@@ -1,0 +1,13 @@
+diff --git a/config/package.py b/config/package.py
+index 86c82d84b..41aaa8bfb 100644
+--- a/config/package.py
++++ b/config/package.py
+@@ -248,6 +248,8 @@ class Package:
+       try:
+         sav_timeout = socket.getdefaulttimeout()
+         socket.setdefaulttimeout(30)
++        import ssl
++        ssl._create_default_https_context = ssl._create_unverified_context
+         urlretrieve(url, localFile)
+         socket.setdefaulttimeout(sav_timeout)
+       except Exception as e:
