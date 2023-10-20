@@ -12,10 +12,6 @@ BOOST_ARCHIVE_PATH="skip" source boost/install.sh
 
 # Install boost
 git clone --recursive https://github.com/boostorg/boost.git /tmp/boost-src
-cd /tmp/boost-src/libs/stacktrace
-wget https://github.com/boostorg/stacktrace/commit/8b1699c9d3ad564607030f98a1f9599bc0d6256a.patch -O gcc-13-patch
-patch -p 1 < gcc-13-patch
-rm gcc-13-patch
 cd /tmp/boost-src
 TAGS=($(git tag -l --sort=-version:refname "boost-1.[0-9][0-9].[0-9]"))
 echo "Latest tag in the v1 series is ${TAGS[0]}"
