@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
-        run: pip3 -q install --upgrade flake8 nbqa
+        run: pip3 -q install --upgrade flake8 Flake8-pyproject nbqa
       - name: Run flake8 checks
         run: |
           flake8 .
