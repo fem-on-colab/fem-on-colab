@@ -22,18 +22,6 @@ echo "Latest tag in the v${GCC_VERSION} series is ${GCC_TAG}"
 git clone --depth 1 --branch ${GCC_TAG} ${GCC_REPO} /tmp/gcc-src
 cd /tmp/gcc-src
 ./contrib/download_prerequisites
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    sed -i 's|    \\\$(top_builddir)/../libstdc++-v3/src/libstdc++.la"|    "|g' config/libstdc++-raw-cxx.m4
-    sed -i 's|AC_DEFUN(\[_GCC_AUTOCONF_VERSION_CHECK\]|AC_DEFUN([_GCC_AUTOCONF_VERSION_CHECK_DISABLED]|g' config/override.m4
-    sed -i 's|_GCC_AUTOCONF_VERSION_CHECK||g' config/override.m4
-    sed -i 's|gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++|gcc/xg++ -B$$r/$(HOST_SUBDIR)/gcc/ -nostdinc++ -static-libstdc++|g' configure.ac
-    sed -i 's|gcc/xgcc -shared-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++|gcc/xg++ -static-libgcc -B$$r/$(HOST_SUBDIR)/gcc -nostdinc++ -static-libstdc++|g' configure.ac
-    for configure_ac in $(find ./ -type f -name 'configure.ac'); do
-        tac $configure_ac | sed '0,/AC_OUTPUT/I s/.*AC_OUTPUT.*/&\npostdeps_CXX=`echo " \$postdeps_CXX " | sed "s, \-lstdc++ ,,g"`/I' | tac > reversed_file
-        mv reversed_file $configure_ac
-    done
-    find ./ -name configure | while read f; do d=$( dirname "$f" ) && echo -n "$d:" && l=$d/regenerate.log && ( cd "$d"/ && if test -f Makefile.am; then autoreconf; else autoconf; fi ) > "$l" 2>&1; echo $?; if test -s "$l"; then echo "Review '$l'"; else rm "$l"; fi; done
-fi
 ./configure \
     --prefix=$INSTALL_PREFIX \
     \
@@ -83,4 +71,4 @@ SHARE_PREFIX="$INSTALL_PREFIX/share/$PROJECT_NAME"
 GCC_INSTALLED="$SHARE_PREFIX/gcc.installed"
 rm $GCC_INSTALLED
 cd $REPODIR
-GCC_ARCHIVE_PATH="skip" LIBSTDCXX_IGNORE_REPLACED="yes" LIBSTDCXX_FORCE_REPLACE_CHECK="yes" source gcc/install.sh
+GCC_ARCHIVE_PATH="skip" LIBSTDCXX_FORCE_CONSISTENCY_CHECK="yes" source gcc/install.sh

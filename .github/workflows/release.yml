@@ -130,26 +130,6 @@ jobs:
         shell: bash
       - name: Fetch updated package list
         run: apt update -y -q
-      - name: Manually install gcc before building if libstdc++.so replacement is required
-        if: (inputs || github.event.inputs).task != 'test'
-        run: |
-          LIBRARY=${{ (inputs || github.event.inputs).library }}
-          TASK=${{ (inputs || github.event.inputs).task }}
-          if [[ "${REQUIRE_LIBSTDCXX_REPLACEMENT}" == "yes" ]]; then
-            if [[ "${LIBRARY}" != "gcc" ]]; then
-              if [[ "${TASK}" != "test" ]]; then
-                GCC_INSTALL_FILE="$PWD/_build/html/releases/gcc-install.sh"
-              else
-                GCC_INSTALL_FILE="/tmp/gcc-install.sh"
-                wget "https://${PROJECT_NAME}.github.io/releases/gcc-install.sh" -O ${GCC_INSTALL_FILE}
-              fi
-              LIBSTDCXX_IGNORE_REPLACED="yes" bash ${GCC_INSTALL_FILE}
-              if [[ "${TASK}" == "test" ]]; then
-                rm ${GCC_INSTALL_FILE}
-              fi
-            fi
-          fi
-        shell: bash
       - name: Build library
         if: (inputs || github.event.inputs).task != 'test'
         run: |
@@ -166,28 +146,6 @@ jobs:
         env:
           VERBOSE: 1
           V: 1
-        shell: bash
-      - name: Look for libstdc++.so in ldd of generated libraries
-        if: (inputs || github.event.inputs).task != 'test'
-        run: |
-          if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-            EXTENSIONS=('*\.so' '*\.so\.*')
-            declare -a ERROR_LIBRARIES
-            for EXTENSION in "${EXTENSIONS[@]}"; do
-              ERROR_LIBRARIES=("${ERROR_LIBRARIES[@]}" $(find ${INSTALL_PREFIX} -name ${EXTENSION} -exec bash -c 'ldd $0 | grep libstdc++.so.6 1>/dev/null 2>/dev/null && echo $0' {} \;))
-            done
-            if [ ${#ERROR_LIBRARIES[@]} -eq 0 ]; then
-              echo "No reference to libstdc++.so was found"
-            else
-              for ERROR_LIBRARY in "${ERROR_LIBRARIES[@]}"; do
-                echo "Error: library ${ERROR_LIBRARY} depends on libstdc++.so"
-                ldd -v ${ERROR_LIBRARY}
-              done
-              false
-            fi
-          else
-            echo "Statically linking to libstdc++.so was not requested"
-          fi
         shell: bash
       - name: Package library
         if: (inputs || github.event.inputs).task != 'test'
@@ -219,25 +177,6 @@ jobs:
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/tests/
-      - name: Manually install gcc before testing if libstdc++.so replacement is required
-        run: |
-          LIBRARY=${{ (inputs || github.event.inputs).library }}
-          TASK=${{ (inputs || github.event.inputs).task }}
-          if [[ "${REQUIRE_LIBSTDCXX_REPLACEMENT}" == "yes" ]]; then
-            if [[ "${LIBRARY}" != "gcc" || ("${LIBRARY}" == "gcc" && "${TASK}" == "test") ]]; then
-              if [[ "${TASK}" != "test" ]]; then
-                GCC_INSTALL_FILE="$PWD/_build/html/releases/gcc-install.sh"
-              else
-                GCC_INSTALL_FILE="/tmp/gcc-install.sh"
-                wget "https://${PROJECT_NAME}.github.io/releases/gcc-install.sh" -O ${GCC_INSTALL_FILE}
-              fi
-              LIBSTDCXX_IGNORE_REPLACED="yes" bash ${GCC_INSTALL_FILE}
-              if [[ "${TASK}" == "test" ]]; then
-                rm ${GCC_INSTALL_FILE}
-              fi
-            fi
-          fi
-        shell: bash
       - name: Test library
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
@@ -256,12 +195,7 @@ jobs:
           else
             export PYTHONPATH="/usr/lib/${PYTHON_VERSION}/test-task/extra-site-packages:${PYTHONPATH}"
           fi
-          if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-            LD_PRELOAD_FOR_PYTEST="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
-          else
-            LD_PRELOAD_FOR_PYTEST=""
-          fi
-          CPPFLAGS="" LDFLAGS="" LD_LIBRARY_PATH="" LD_PRELOAD="${LD_PRELOAD_FOR_PYTEST}" ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
+          LD_LIBRARY_PATH="" ARGS="${ARGS}" pytest --nbval-cell-timeout=300 ${LIBRARY}/
         shell: bash
       - name: Check if a release is needed
         if: (inputs || github.event.inputs).task != 'test'

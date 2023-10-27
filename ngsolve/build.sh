@@ -30,8 +30,6 @@ cd /tmp/netgen-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -DUSE_MPI:BOOL=ON \
@@ -54,16 +52,11 @@ cd /tmp/ngsolve-src
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
 patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    patch -p 1 < $REPODIR/ngsolve/patches/03-ngscxx-ngsld-static-libstdc++
-fi
 mkdir -p /tmp/ngsolve-src/build
 cd /tmp/ngsolve-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -DUSE_MUMPS:BOOL=ON \
@@ -87,8 +80,6 @@ cd /tmp/ngsxfem-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -DBUILD_NGSOLVE:BOOL=OFF \
