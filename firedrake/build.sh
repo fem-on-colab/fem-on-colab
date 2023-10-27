@@ -73,9 +73,6 @@ cd && rm -rf /tmp/tsfc-src
 # PyOP2
 git clone https://github.com/OP2/PyOP2.git /tmp/pyop2-src
 cd /tmp/pyop2-src
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    patch -p 1 < $REPODIR/firedrake/patches/01-pyop2-static-libstdc++
-fi
 export PETSC_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 cd && rm -rf /tmp/pyop2-src
@@ -88,15 +85,11 @@ cd && rm -rf /tmp/pyadjoint-src
 
 # libsupermesh
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
-cd /tmp/libsupermesh-src
-patch -p 1 < $REPODIR/firedrake/patches/08-use-cxxflags-in-supermesh
 mkdir -p /tmp/libsupermesh-src/build
 cd /tmp/libsupermesh-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -DBUILD_SHARED_LIBS:BOOL=ON \
@@ -108,9 +101,8 @@ cd && rm -rf /tmp/libsupermesh-src
 git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
 cd /tmp/tinyasm-src
 patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
-patch -p 1 < $REPODIR/firedrake/patches/07-use-cxxflags-and-ldflags-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install . --user
 cd && rm -rf /tmp/tinyasm-src
 
 # libspatialindex
@@ -120,8 +112,6 @@ cd /tmp/libspatialindex-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
@@ -171,7 +161,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     git clone https://bitbucket.org/pyrol/trilinos/src/pyrol/ /tmp/roltrilinos-src
     cd /tmp/roltrilinos-src
     patch -p 1 < $REPODIR/firedrake/patches/09-add-cstdint-include-in-roltrilinos
-    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install . --user
     cd && rm -rf /tmp/roltrilinos-src
 
     # Move roltrilinos already to the final site target (which normally would be done at a later CI step),
@@ -189,7 +179,7 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     cd /tmp/rol-src
     patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
     export PYBIND11_DIR=$INSTALL_PREFIX
-    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install . --user
     cd && rm -rf /tmp/rol-src
 
     # wurlitzer (only used in notebooks to redirect the C++ output to the notebook cell ouput)

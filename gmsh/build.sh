@@ -15,8 +15,6 @@ git clone https://gitlab.onelab.info/gmsh/gmsh.git /tmp/gmsh-src
 mkdir -p /tmp/gmsh-src/build
 cd /tmp/gmsh-src/build
 cmake \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -DCMAKE_BUILD_TYPE=Release \
