@@ -26,15 +26,13 @@ cd /tmp/basix-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
 cd /tmp/basix-src/python
 export Basix_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install . --user
 cd && rm -rf /tmp/basix-src
 
 # UFL
@@ -46,21 +44,8 @@ cd && rm -rf /tmp/ufl-src
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    patch -p 1 < $REPODIR/fenicsx/patches/01-ffcx-cffi-static-libstdc++
-fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
 cd && rm -rf /tmp/ffcx-src
-
-# cppimport
-git clone https://github.com/tbenthompson/cppimport /tmp/cppimport-src
-cd /tmp/cppimport-src/
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    patch -p 1 < $REPODIR/fenicsx/patches/02-cppimport-static-libstdc++
-fi
-patch -p 1 < $REPODIR/fenicsx/patches/03-cppimport-distutils-imports
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
-cd && rm -rf /tmp/cppimport-src/
 
 # pugixml
 git clone https://github.com/zeux/pugixml.git /tmp/pugixml-src
@@ -69,8 +54,6 @@ cd /tmp/pugixml-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
@@ -93,8 +76,6 @@ cmake \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
     -DMPI_C_COMPILER=$(which mpicc) \
     -DMPI_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ../cpp
@@ -107,7 +88,7 @@ while [[ $IMPORT_SUCCESS -ne 0 ]]; do
     cd /tmp/dolfinx-src/python
     rm -rf build
     export DOLFINX_DIR=$INSTALL_PREFIX
-    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install -v . --user
+    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install -v . --user
     IMPORT_SUCCESS=$(cd; python3 -c "import dolfinx"; echo $?)
     [[ $IMPORT_SUCCESS -ne 0 && $COUNTER -eq 10 ]] && echo "Giving up on dolfinx pybind11 wrappers" && exit 1
     [[ $IMPORT_SUCCESS -ne 0 && $IMPORT_SUCCESS -eq 139 ]] && echo "Import failed due to segfault: trying again"

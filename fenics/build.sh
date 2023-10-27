@@ -28,9 +28,6 @@ cd && rm -rf /tmp/fiat-src
 # dijitso
 git clone https://bitbucket.org/fenics-project/dijitso.git /tmp/dijitso-src
 cd /tmp/dijitso-src
-if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-    patch -p 1 < $REPODIR/fenics/patches/01-dijitso-static-libstdc++
-fi
 patch -p 1 < $REPODIR/fenics/patches/08-pkg-resources-to-importlib-in-dijitso
 patch -p 1 < $REPODIR/fenics/patches/09-c++-14-in-dijitso
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
@@ -80,15 +77,13 @@ export BOOST_DIR=$INSTALL_PREFIX
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
 cd /tmp/dolfin-src/python
 export DOLFIN_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install -v . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install -v . --user
 cd && rm -rf /tmp/dolfin-src/
 
 # CGAL (required by mshr)
@@ -101,8 +96,7 @@ cd /tmp/cgal-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS -std=c++14 -fPIC" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
+    -DCMAKE_CXX_FLAGS="-std=c++14 -fPIC" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_BUILD_TYPE="Release" \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
@@ -140,8 +134,6 @@ cd /tmp/mshr-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_BUILD_TYPE="Release" \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
@@ -149,5 +141,5 @@ cmake \
     ..
 make -j $(nproc) install
 cd /tmp/mshr-src/python
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" CXXFLAGS=$CPPFLAGS python3 -m pip install -v . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install -v . --user
 cd && rm -rf /tmp/mshr-src/

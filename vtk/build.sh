@@ -13,19 +13,7 @@ REPODIR=$PWD
 VTK_ARCHIVE_PATH="skip" source vtk/install.sh
 
 # Install vtk from wheels and patch it
-TEMPORARY_INSTALL_PREFIX="/tmp/vtk-install"
-PYTHONUSERBASE=$TEMPORARY_INSTALL_PREFIX python3 -m pip install --user --pre vtk
-if [ -d "$TEMPORARY_INSTALL_PREFIX" ]; then
-    # Since we do not compile vtk ourselves, we cannot honor any request about libstdc++ being statically linked.
-    # The simplest workaround is to replace the system-wide libstdc++.so with the one installed in INSTALL_PREFIX
-    # in the library dependencies.
-    if [[ "$LDFLAGS" == *"-static-libstdc++"* ]]; then
-        find $TEMPORARY_INSTALL_PREFIX -name "*\.so" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
-        find $TEMPORARY_INSTALL_PREFIX -name "*\.so.*" -exec patchelf --replace-needed libstdc++.so.6 $INSTALL_PREFIX/lib/libstdc++.so {} \;
-    fi
-    rsync -avh --remove-source-files $TEMPORARY_INSTALL_PREFIX/ $INSTALL_PREFIX/
-    rm -rf $TEMPORARY_INSTALL_PREFIX
-fi
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user vtk
 
 # Determine site target folder, as it will be passed to ADIOS2 configuration
 if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
@@ -45,8 +33,6 @@ cd /tmp/adios2-src/build
 cmake \
     -DCMAKE_C_COMPILER=$(which mpicc) \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_CXX_FLAGS="$CPPFLAGS" \
-    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -DCMAKE_INSTALL_PYTHONDIR:PATH=lib/$PYTHON_VERSION/$SITE_TARGET \
     -DADIOS2_USE_HDF5=on \

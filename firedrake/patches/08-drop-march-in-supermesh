@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75f7a26..7d17b46 100644
+index 75f7a26..bbcb133 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -84,7 +84,7 @@ if(LIBSUPERMESH_AUTO_COMPILER_FLAGS)
@@ -25,7 +25,7 @@ index 75f7a26..7d17b46 100644
      endif()
      set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall")
 -    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -ftree-vectorize -DNDEBUG")
-+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ftree-vectorize -DNDEBUG $ENV{CXXFLAGS} $ENV{CPPFLAGS}")
++    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ftree-vectorize -DNDEBUG")
    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Cray")
      set(CMAKE_CXX_FLAGS "-fpic")
      set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
