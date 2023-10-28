@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 479d8cf..976d33e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,9 +14,9 @@ endif()
+ project(_tinyasm)
+ 
+ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
+-set(CMAKE_CXX_FLAGS "-O3 -march=native -DLINUX -DNDEBUG")
++set(CMAKE_CXX_FLAGS "-O3 -DLINUX -DNDEBUG")
+ 
+-set(CMAKE_EXE_LINKER_FLAGS "-mtune=native")
++set(CMAKE_EXE_LINKER_FLAGS "")
+ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ 
+ add_subdirectory(pybind11)

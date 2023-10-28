@@ -85,6 +85,8 @@ cd && rm -rf /tmp/pyadjoint-src
 
 # libsupermesh
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
+cd /tmp/libsupermesh-src
+patch -p 1 < $REPODIR/firedrake/patches/08-drop-march-in-supermesh
 mkdir -p /tmp/libsupermesh-src/build
 cd /tmp/libsupermesh-src/build
 cmake \
@@ -101,6 +103,7 @@ cd && rm -rf /tmp/libsupermesh-src
 git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
 cd /tmp/tinyasm-src
 patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
+patch -p 1 < $REPODIR/firedrake/patches/07-drop-march-mtune-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install . --user
 cd && rm -rf /tmp/tinyasm-src
