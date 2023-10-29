@@ -79,19 +79,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ../cpp
 make -j $(nproc) install
-# The C++ wrappers compiled with pybind11 sometimes work, sometimes give random segfault,
-# even when compiled with the same options.
-COUNTER=0
-IMPORT_SUCCESS=1
-while [[ $IMPORT_SUCCESS -ne 0 ]]; do
-    cd /tmp/dolfinx-src/python
-    rm -rf build
-    export DOLFINX_DIR=$INSTALL_PREFIX
-    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install -v . --user
-    IMPORT_SUCCESS=$(cd; python3 -c "import dolfinx"; echo $?)
-    [[ $IMPORT_SUCCESS -ne 0 && $COUNTER -eq 10 ]] && echo "Giving up on dolfinx pybind11 wrappers" && exit 1
-    [[ $IMPORT_SUCCESS -ne 0 && $IMPORT_SUCCESS -eq 139 ]] && echo "Import failed due to segfault: trying again"
-    [[ $IMPORT_SUCCESS -ne 0 && $IMPORT_SUCCESS -ne 139 ]] && echo "Import failed due to another error: giving up" && exit 1
-    COUNTER=$((COUNTER+1))
-done
+cd /tmp/dolfinx-src/python
+export DOLFINX_DIR=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install -v . --user
 cd && rm -rf /tmp/dolfinx-src
