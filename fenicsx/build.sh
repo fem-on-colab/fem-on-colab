@@ -41,13 +41,13 @@ cd && rm -rf /tmp/basix-src
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/ufl-src
 
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/ffcx-src
 
 # pugixml
