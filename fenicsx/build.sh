@@ -19,6 +19,9 @@ fi
 # Install boost, pybind11, slepc4py (and their dependencies), as well as vtk
 FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 
+# scikit-build-core, required for building Basix and DOLFINx
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user scikit-build-core[pyproject]
+
 # Basix
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
 mkdir -p /tmp/basix-src/build
@@ -32,7 +35,7 @@ cmake \
 make -j $(nproc) install
 cd /tmp/basix-src/python
 export Basix_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/basix-src
 
 # UFL
@@ -59,7 +62,7 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/pugixml-src/build
 
-# dolfinx
+# DOLFINx
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
@@ -81,5 +84,5 @@ cmake \
 make -j $(nproc) install
 cd /tmp/dolfinx-src/python
 export DOLFINX_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install -v . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/dolfinx-src
