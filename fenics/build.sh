@@ -22,7 +22,7 @@ FENICS_ARCHIVE_PATH="skip" source fenics/install.sh
 git clone https://github.com/FEniCS/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
 patch -p 1 < $REPODIR/fenics/patches/06-pkg-resources-to-importlib-in-fiat
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/fiat-src
 
 # dijitso
@@ -30,7 +30,7 @@ git clone https://bitbucket.org/fenics-project/dijitso.git /tmp/dijitso-src
 cd /tmp/dijitso-src
 patch -p 1 < $REPODIR/fenics/patches/08-pkg-resources-to-importlib-in-dijitso
 patch -p 1 < $REPODIR/fenics/patches/09-c++-14-in-dijitso
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/dijitso-src
 
 # UFL (legacy)
@@ -38,7 +38,7 @@ git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
 git checkout ufl_legacy
 patch -p 1 < $REPODIR/fenics/patches/13-pkg-resources-to-importlib-in-ufl-legacy
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/ufl-src
 
 # Add an error about ufl to ufl_legacy transition
@@ -54,7 +54,7 @@ echo 'raise RuntimeError("Please import ufl_legacy rather than ufl, see https://
 git clone https://bitbucket.org/fenics-project/ffc.git /tmp/ffc-src
 cd /tmp/ffc-src
 patch -p 1 < $REPODIR/fenics/patches/14-pkg-resources-to-importlib-in-ffc
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/ffc-src
 
 # dolfin
@@ -83,7 +83,7 @@ cmake \
 make -j $(nproc) install
 cd /tmp/dolfin-src/python
 export DOLFIN_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install -v . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --user .
 cd && rm -rf /tmp/dolfin-src/
 
 # CGAL (required by mshr)
@@ -141,5 +141,5 @@ cmake \
     ..
 make -j $(nproc) install
 cd /tmp/mshr-src/python
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install -v . --user
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --user .
 cd && rm -rf /tmp/mshr-src/

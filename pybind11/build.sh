@@ -20,7 +20,7 @@ cmake \
     .
 make -j $(nproc)
 make install
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/pybind11-src
 
 # Install nanobind
@@ -31,5 +31,5 @@ cmake \
     -D CMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -D NB_TEST=off \
     .
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install . --user
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/nanobind-src
