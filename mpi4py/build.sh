@@ -13,15 +13,16 @@ MPI4PY_ARCHIVE_PATH="skip" source mpi4py/install.sh
 # Install MPI
 git clone https://github.com/open-mpi/ompi.git /tmp/openmpi-src
 cd /tmp/openmpi-src
-TAGS=($(git tag -l --sort=-version:refname "v4.[0-9].[0-9]"))
-echo "Latest tag in the v4 series is ${TAGS[0]}"
+git submodule update --init --recursive
+TAGS=($(git tag -l --sort=-version:refname "v5.[0-9].[0-9]"))
+echo "Latest tag in the v5 series is ${TAGS[0]}"
 git checkout ${TAGS[0]}
 ./autogen.pl --force
 ./configure \
     --build=x86_64-linux-gnu \
     --prefix=$INSTALL_PREFIX \
     --disable-silent-rules --disable-maintainer-mode --disable-dependency-tracking --disable-wrapper-runpath \
-    --enable-mpi-cxx
+    --disable-sphinx
 make -j $(nproc)
 make install
 cd && rm -rf /tmp/openmpi-src
