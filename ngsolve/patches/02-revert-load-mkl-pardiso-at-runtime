@@ -13,7 +13,7 @@ index dc5377bda..6b005b601 100644
  // #include "superluinverse.hpp"
  // #include "mumpsinverse.hpp"
 diff --git a/linalg/pardisoinverse.cpp b/linalg/pardisoinverse.cpp
-index c0c7ea64f..62e68f0d4 100644
+index f66b62060..6b110c9d9 100644
 --- a/linalg/pardisoinverse.cpp
 +++ b/linalg/pardisoinverse.cpp
 @@ -48,20 +48,10 @@ extern  integer F77_FUNC(pardisoinit)
@@ -114,11 +114,26 @@ index bfafc3f1a..ad1fd862c 100644
  
  
    /*
+diff --git a/linalg/python_linalg.cpp b/linalg/python_linalg.cpp
+index bd7895948..05068f78b 100644
+--- a/linalg/python_linalg.cpp
++++ b/linalg/python_linalg.cpp
+@@ -1783,8 +1783,9 @@ shift : object
+ 
+   m.def("GetAvailableSolvers", []() {
+     py::list solvers;
+-    if(is_pardiso_available)
++#ifdef USE_PARDISO
+       solvers.append(GetInverseName(PARDISO));
++#endif
+ #ifdef USE_MUMPS
+     solvers.append(GetInverseName(MUMPS));
+ #endif // USE_MUMPS
 diff --git a/linalg/sparsematrix.cpp b/linalg/sparsematrix.cpp
-index 8932b1d52..59b54575d 100644
+index 3943460cb..a90da1986 100644
 --- a/linalg/sparsematrix.cpp
 +++ b/linalg/sparsematrix.cpp
-@@ -1925,10 +1925,11 @@ namespace ngla
+@@ -1923,10 +1923,11 @@ namespace ngla
        }
      else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
        {
@@ -132,7 +147,7 @@ index 8932b1d52..59b54575d 100644
        }
      else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
        {
-@@ -1966,10 +1967,11 @@ namespace ngla
+@@ -1964,10 +1965,11 @@ namespace ngla
        }
      else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
        {
@@ -147,10 +162,10 @@ index 8932b1d52..59b54575d 100644
      else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
        {
 diff --git a/linalg/sparsematrix_impl.hpp b/linalg/sparsematrix_impl.hpp
-index dd9b04835..49dd80903 100644
+index b6f5e09fc..0074104e7 100644
 --- a/linalg/sparsematrix_impl.hpp
 +++ b/linalg/sparsematrix_impl.hpp
-@@ -342,10 +342,11 @@ namespace ngla
+@@ -358,10 +358,11 @@ namespace ngla
  	}
        else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
  	{
@@ -164,7 +179,7 @@ index dd9b04835..49dd80903 100644
  	}
        else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
  	{
-@@ -412,10 +413,11 @@ namespace ngla
+@@ -428,10 +429,11 @@ namespace ngla
  	}
        else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
  	{
@@ -179,10 +194,10 @@ index dd9b04835..49dd80903 100644
        else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
  	{
 diff --git a/solve/ngsolve.cpp b/solve/ngsolve.cpp
-index 389bc70d1..094f1a72e 100644
+index 88437ccf1..da0c04f2a 100644
 --- a/solve/ngsolve.cpp
 +++ b/solve/ngsolve.cpp
-@@ -1281,8 +1281,9 @@ int NGSolve_Init (Tcl_Interp * interp)
+@@ -703,8 +703,9 @@ int NGSolve_Init (Tcl_Interp * interp)
  #endif
  
  
