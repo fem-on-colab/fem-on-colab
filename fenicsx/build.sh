@@ -31,7 +31,7 @@ cmake \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
-    ..
+    ../cpp
 make -j $(nproc) install
 cd /tmp/basix-src/python
 export Basix_DIR=$INSTALL_PREFIX
