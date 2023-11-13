@@ -34,12 +34,11 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/dijitso-src
 
 # UFL (legacy)
-git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
-cd /tmp/ufl-src
-git checkout ufl_legacy
+git clone https://github.com/FEniCS/ufl-legacy.git /tmp/ufl-legacy-src
+cd /tmp/ufl-legacy-src
 patch -p 1 < $REPODIR/fenics/patches/13-pkg-resources-to-importlib-in-ufl-legacy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/ufl-src
+cd && rm -rf /tmp/ufl-legacy-src
 
 # Add an error about ufl to ufl_legacy transition
 if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
