@@ -42,7 +42,7 @@ jobs:
       - name: Mark workspace as safe
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           set-safe-directory: false
       - name: Compute short SHA of the commit
@@ -69,7 +69,7 @@ jobs:
           git config --global --add safe.directory _build/html
       - name: Clone website repository
         if: (inputs || github.event.inputs).task != 'test'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: fem-on-colab/fem-on-colab.github.io
           token: ${{ steps.token_website.outputs.token }}

@@ -25,7 +25,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Determine whether to push the released image to docker registry
         id: push
         run: |
