@@ -7,6 +7,16 @@ on:
     inputs:
       library:
         description: "Library to build and test."
+  workflow_call:
+    inputs:
+      library:
+        description: "Library to build and test"
+        type: string
+    secrets:
+      REPO_ACCESS_TOKEN:
+        description: "Token that enables adding a tag to this repository"
+      WEBSITE_ACCESS_TOKEN:
+        description: "Token that enables writing to the website repository"
 
 jobs:
   # base build
@@ -43,6 +53,7 @@ jobs:
       strip-args-when-packaging: "true"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_gcc:
     needs: [build_gcc]
@@ -82,6 +93,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_boost:
     needs: [build_boost]
@@ -121,6 +133,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_mpi4py:
     needs: [build_mpi4py]
@@ -160,6 +173,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_occ:
     needs: [build_occ]
@@ -199,6 +213,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_h5py:
     needs: [build_h5py]
@@ -238,6 +253,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_pybind11:
     needs: [build_pybind11]
@@ -277,6 +293,7 @@ jobs:
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_petsc4py_real:
     needs: [build_petsc4py_real]
@@ -316,6 +333,7 @@ jobs:
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_petsc4py_complex:
     needs: [build_petsc4py_complex]
@@ -355,6 +373,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_vtk:
     needs: [build_vtk]
@@ -394,6 +413,7 @@ jobs:
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_slepc4py_real:
     needs: [build_slepc4py_real]
@@ -433,6 +453,7 @@ jobs:
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_slepc4py_complex:
     needs: [build_slepc4py_complex]

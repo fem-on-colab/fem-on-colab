@@ -14,6 +14,8 @@ on:
         type: string
     secrets:
       REPO_ACCESS_TOKEN:
+        description: "Token that enables adding a tag to this repository"
+      WEBSITE_ACCESS_TOKEN:
         description: "Token that enables writing to the website repository"
 
 jobs:
@@ -28,6 +30,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_mock:
     needs: [build_mock]
@@ -49,6 +52,7 @@ jobs:
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_fenicsx_real:
     needs: [build_fenicsx_real]
@@ -70,6 +74,7 @@ jobs:
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_fenicsx_complex:
     needs: [build_fenicsx_complex]
@@ -91,6 +96,7 @@ jobs:
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_firedrake_real:
     needs: [build_firedrake_real]
@@ -112,6 +118,7 @@ jobs:
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_firedrake_complex:
     needs: [build_firedrake_complex]
@@ -133,6 +140,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_gmsh:
     needs: [build_gmsh]
@@ -154,6 +162,7 @@ jobs:
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
   test_ngsolve:
     needs: [build_ngsolve]

@@ -27,6 +27,8 @@ on:
         type: string
     secrets:
       REPO_ACCESS_TOKEN:
+        description: "Token that enables adding a tag to this repository"
+      WEBSITE_ACCESS_TOKEN:
         description: "Token that enables writing to the website repository"
 
 jobs:
@@ -56,7 +58,7 @@ jobs:
         id: token_website
         run: |
           if [[ "${GITHUB_REPOSITORY}" == "${PROJECT_NAME}/${PROJECT_NAME}" ]]; then
-            echo "token=${{ secrets.REPO_ACCESS_TOKEN }}" >> ${GITHUB_OUTPUT}
+            echo "token=${{ secrets.WEBSITE_ACCESS_TOKEN }}" >> ${GITHUB_OUTPUT}
           else
             echo "token=${{ github.token }}" >> ${GITHUB_OUTPUT}
           fi
@@ -239,6 +241,16 @@ jobs:
           RELEASE_TAG=${{ steps.check_release.outputs.release_tag }}
           git tag ${RELEASE_TAG} ${SHA_SHORT}
           git push origin ${RELEASE_TAG}
+      - name: Determine which token to use when adding release to repository
+        if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
+        id: token_tag
+        run: |
+          if [[ "${GITHUB_REPOSITORY}" == "${PROJECT_NAME}/${PROJECT_NAME}" ]]; then
+            echo "token=${{ secrets.REPO_ACCESS_TOKEN }}" >> ${GITHUB_OUTPUT}
+          else
+            echo "token=${{ github.token }}" >> ${GITHUB_OUTPUT}
+          fi
+        shell: bash
       - name: Add release to repository
         if: (inputs || github.event.inputs).task != 'test' && steps.check_release.outputs.needs_release_archive == 'yes'
         timeout-minutes: 5
@@ -246,7 +258,7 @@ jobs:
         with:
           action: ncipollo/release-action@v1
           with: |
-            token: ${{ secrets.REPO_ACCESS_TOKEN }}
+            token: ${{ steps.token_tag.outputs.token }}
             tag: ${{ steps.check_release.outputs.release_tag }}
             name: "${{ steps.check_release.outputs.release_title }}"
             prerelease: true
