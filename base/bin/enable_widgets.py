@@ -19,7 +19,9 @@ try:
 except ImportError:
     pass
 else:
-    google.colab.output.enable_custom_widget_manager()
+    import IPython
+    if IPython.get_ipython() is not None:
+        google.colab.output.enable_custom_widget_manager()
 """
     assert package_name in ("pyvista", "webgui_jupyter_widgets")
     if package_name == "pyvista":
