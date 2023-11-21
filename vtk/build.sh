@@ -59,6 +59,7 @@ TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9]*.[0-9]"))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
 patch -p 1 < $REPODIR/vtk/patches/01-start-xvfb
+patch -p 1 < $REPODIR/vtk/patches/02-pyvista-PR-5168
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .[jupyter]
 cd && rm -rf /tmp/pyvista-src
 
