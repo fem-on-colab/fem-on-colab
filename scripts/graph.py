@@ -3,6 +3,7 @@
 # This file is part of FEM on Colab.
 #
 # SPDX-License-Identifier: MIT
+"""Script to generate the dependency graph."""
 
 import os
 import igraph

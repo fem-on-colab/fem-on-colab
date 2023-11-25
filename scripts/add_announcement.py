@@ -10,8 +10,7 @@ import typing
 
 
 class TextBox(object):
-    """
-    A class to draw a box of text surrounded by a fill character.
+    """A class to draw a box of text surrounded by a fill character.
 
     Parameters
     ----------
@@ -47,8 +46,7 @@ class TextBox(object):
 def add_announcement(
     package_name: str, install_file: str, announcement_file: str, announcement_placeholder: str
 ) -> None:
-    """
-    Add an announcement at the beginning or end of the installation script.
+    """Add an announcement at the beginning or end of the installation script.
 
     Parameters
     ----------
@@ -61,7 +59,6 @@ def add_announcement(
     announcement_placeholder
         Placeholder instructions to be replaced with the actual announcement.
     """
-
     with open(install_file, "r") as f:
         install_file_content = f.read().strip("\n")
     with open(announcement_file, "r") as f:

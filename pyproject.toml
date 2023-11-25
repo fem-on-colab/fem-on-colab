@@ -1,13 +1,18 @@
-[tool.flake8]
-max-line-length = 120
-show-source = true
-ignore = "W503"
-per-file-ignores = [
-    "**/*test*.py: E402, F811",
-    "fenics/test-multiphenics*.py: E402, F403, F405",
-    "fenics/test-rbnics*.py: E402, F403, F405",
-    "firedrake/test-irksome*.py: E402, F403, F405",
-    "ngsolve/test-ngsolve*.py: E402, F403, F405",
-    "ngsolve/test-ngspetsc*.py: E402, F403, F405",
-    "ngsolve/test-ngsxfem*.py: E402, F403, F405"
-]
+[tool.ruff]
+line-length = 120
+select = ["E", "F", "ICN", "Q", "RUF", "W"]
+
+[tool.ruff.per-file-ignores]
+"**/*test*.py" = ["E402", "F811"]
+"fenics/test-multiphenics*.py" = ["E402", "F403", "F405"]
+"fenics/test-rbnics*.py" = ["E402", "F403", "F405"]
+"firedrake/test-irksome*.py" = ["E402", "F403", "F405"]
+"ngsolve/test-ngsolve*.py" = ["E402", "F403", "F405"]
+"ngsolve/test-ngspetsc*.py" = ["E402", "F403", "F405"]
+"ngsolve/test-ngsxfem*.py" = ["E402", "F403", "F405"]
+
+[tool.ruff.pycodestyle]
+max-doc-length = 120
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
