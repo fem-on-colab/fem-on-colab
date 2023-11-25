@@ -14,13 +14,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
-        run: python3 -m pip -q install --upgrade flake8 Flake8-pyproject nbqa
+        run: python3 -m pip -q install --upgrade flake8 Flake8-pyproject nbqa yamllint
       - name: Run flake8 on python files
         run: |
           python3 -m flake8 .
       - name: Run flake8 on notebooks test files
         run: |
           python3 -m nbqa flake8 .
+      - name: Run yamllint
+        run: |
+          python3 -m yamllint -d "{extends: default, rules: {document-start: {present: false}, line-length: disable, truthy: {check-keys: false}}}" .
       - name: Check for stray outputs, counts and metadata in ipynb files
         uses: RBniCS/check-jupyter-metadata-action@main
         with:
