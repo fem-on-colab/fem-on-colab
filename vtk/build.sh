@@ -9,7 +9,7 @@ set -x
 
 REPODIR=$PWD
 
-# Install gcc
+# Install h5py (and its dependencies, most notably gcc and mpi4py)
 VTK_ARCHIVE_PATH="skip" source vtk/install.sh
 
 # Install vtk from wheels and patch it
