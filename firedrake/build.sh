@@ -26,12 +26,6 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "Cython<3.0"
 # islpy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --no-binary=islpy islpy
 
-# COFFEE
-git clone https://github.com/coneoproject/COFFEE.git /tmp/coffee-src
-cd /tmp/coffee-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/coffee-src
-
 # loopy
 git clone https://github.com/firedrakeproject/loopy.git /tmp/loopy-src
 cd /tmp/loopy-src
