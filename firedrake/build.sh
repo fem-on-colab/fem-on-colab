@@ -42,6 +42,7 @@ cd && rm -rf /tmp/loopy-src
 # netCDF4-python
 git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
+git submodule update --init --recursive
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --no-build-isolation --user .
 cd && rm -rf /tmp/netcdf4-python-src
 
