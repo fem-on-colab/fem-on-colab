@@ -1,3 +1,5 @@
+[tool.pytest.ini_options]
+
 [tool.ruff]
 line-length = 120
 select = ["E", "F", "ICN", "Q", "RUF", "W"]
