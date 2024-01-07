@@ -164,8 +164,9 @@ jobs:
       - name: Prepare pytest configuration file
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
-          PYTHONUSERBASE=/usr pip3 install --no-dependencies git+https://github.com/multiphenics/nbvalx.git
-          wget https://github.com/multiphenics/nbvalx/raw/main/tests/notebooks/conftest.py -O ${LIBRARY}/conftest.py
+          PYTHONUSERBASE=/usr pip3 install --no-dependencies nbvalx
+          NBVALX_VERSION=$(python3 -c 'import importlib.metadata; print(importlib.metadata.version("nbvalx"))')
+          wget https://github.com/multiphenics/nbvalx/raw/v${NBVALX_VERSION}/tests/notebooks/conftest.py -O ${LIBRARY}/conftest.py
       - name: Prepare notebook files for testing
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
