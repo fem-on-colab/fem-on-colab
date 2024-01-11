@@ -16,9 +16,7 @@ apt install -y -qq libfontconfig1-dev libfreetype6-dev libx11-dev libxi-dev libx
 # Install OCC
 git clone https://github.com/Open-Cascade-SAS/OCCT.git /tmp/occt-src
 cd /tmp/occt-src
-TAGS=($(git tag -l --sort=-version:refname))
-echo "Latest tag is ${TAGS[0]}"
-git checkout ${TAGS[0]}
+git checkout V7_7_2
 mkdir -p /tmp/occt-src/build
 cd /tmp/occt-src/build
 cmake \
