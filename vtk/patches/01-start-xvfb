@@ -1,8 +1,16 @@
 diff --git a/pyvista/plotting/plotter.py b/pyvista/plotting/plotter.py
-index 4b48f987..061cce35 100644
+index c436a1cc..0742f2b5 100644
 --- a/pyvista/plotting/plotter.py
 +++ b/pyvista/plotting/plotter.py
-@@ -142,13 +142,8 @@ def _warn_xserver():  # pragma: no cover
+@@ -140,7 +140,6 @@ def _warn_xserver():  # pragma: no cover
+         # finally, check if using a backend that doesn't require an xserver
+         if pyvista.global_theme.jupyter_backend in [
+             'client',
+-            'html',
+         ]:
+             return
+ 
+@@ -148,13 +147,8 @@ def _warn_xserver():  # pragma: no cover
          if uses_egl():
              return
  
