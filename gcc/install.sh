@@ -90,7 +90,17 @@ if [[ ! -f $GCC_INSTALLED ]]; then
             PYTHON_RPATH="/usr/lib/x86_64-linux-gnu"
         fi
         INSTALL_PREFIX_RPATH="${INSTALL_PREFIX}/lib"
-        LIBSTDCXX_SYSTEM_VERSION=$(basename ${PYTHON_RPATH}/libstdc++.so.6.*)
+        if [[ -L "${PYTHON_RPATH}/libstdc++.so" ]]; then
+            # Prefer using symbolic link, since in case there are multiple libstdc++.so.6.* files the link
+            # will point to the actual one currently being used
+            LIBSTDCXX_SYSTEM_VERSION=$(basename $(readlink -f ${PYTHON_RPATH}/libstdc++.so))
+        else
+            # Get the version out of libstdc++.so.6.*: note that this may be unreliable if there are
+            # multiple files matching the pattern libstdc++.so.6.*
+            LIBSTDCXX_SYSTEM_VERSION=$(basename ${PYTHON_RPATH}/libstdc++.so.6.*)
+        fi
+        # It is safe to use the pattern libstdc++.so.6.* for INSTALL_PREFIX, because there will always be
+        # only one file matching the pattern
         LIBSTDCXX_INSTALL_PREFIX_VERSION=$(basename ${INSTALL_PREFIX_RPATH}/libstdc++.so.6.*)
         if [[ "${LIBSTDCXX_SYSTEM_VERSION}" != "${LIBSTDCXX_INSTALL_PREFIX_VERSION}" ]]; then
             # Kill kernel on inconsistent libstdc++ version
