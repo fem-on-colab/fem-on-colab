@@ -9,9 +9,11 @@ set -x
 
 REPODIR=$PWD
 
-# Do not expect any argument to set the scalar type: only real is supported
-if [ $# -ne 0 ]; then
-    echo "Usage: $0"
+# Expect one argument to set the scalar type
+: ${1?"Usage: $0 scalar_type"}
+SCALAR_TYPE="$1"
+if [[ "$SCALAR_TYPE" != "complex" && "$SCALAR_TYPE" != "real" ]]; then
+    echo "Expecting first input argument to be either real or complex, but got $SCALAR_TYPE"
     exit 1
 fi
 
