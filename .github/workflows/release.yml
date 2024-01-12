@@ -100,9 +100,6 @@ jobs:
           for RELEASE_FILE in "${RELEASE_FILES_ALL[@]}"; do
             if [[ "${RELEASE_FILE}" == *-install.sh ]]; then
               RELEASED_LIBRARY=$(echo ${RELEASE_FILE} | sed "s|-install.sh||")
-              if [[ -L "releases/${RELEASE_FILE}" ]]; then
-                RELEASE_FILE=$(readlink releases/${RELEASE_FILE})
-              fi
               ANY_ARGS_RELEASE_FILES=($(find releases -name "${RELEASED_LIBRARY}-install-*.sh"))
               if [[ -z "${ARGS_JOINED}" || (-n "${ARGS_JOINED}" && -z "${ANY_ARGS_RELEASE_FILES[*]}") ]]; then
                 RELEASED_LIBRARIES+=(${RELEASED_LIBRARY})
