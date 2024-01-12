@@ -173,26 +173,48 @@ jobs:
       args: ""
       strip-args-when-packaging: ""
 
-  # NGSolve build & test
-  build_ngsolve:
+  # NGSolve/real build & test
+  build_ngsolve_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'ngsolve')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "ngsolve"
       task: "build"
-      args: ""
-      strip-args-when-packaging: ""
+      args: "real"
+      strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
-  test_ngsolve:
-    needs: [build_ngsolve]
+  test_ngsolve_real:
+    needs: [build_ngsolve_real]
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "ngsolve"
       task: "test"
-      args: ""
+      args: "real"
+      strip-args-when-packaging: ""
+
+  # NGSolve/complex build & test
+  build_ngsolve_complex:
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'ngsolve')
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "ngsolve"
+      task: "build"
+      args: "complex"
+      strip-args-when-packaging: "false"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
+
+  test_ngsolve_complex:
+    needs: [build_ngsolve_complex]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "ngsolve"
+      task: "test"
+      args: "complex"
       strip-args-when-packaging: ""
 
   # Warn if scheduled workflow is about to be disabled
