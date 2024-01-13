@@ -20,7 +20,7 @@ fi
 # Install OCC dependencies
 apt install -y -qq libfontconfig1-dev libfreetype6-dev libx11-dev libxi-dev libxmu-dev libgl1-mesa-dev mesa-common-dev
 
-# Install OCC, petsc4py and pybind11 (and their dependencies)
+# Install OCC, pybind11 and slepc4py (and their dependencies)
 NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 
 # netgen
