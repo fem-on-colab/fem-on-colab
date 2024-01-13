@@ -41,8 +41,8 @@ jobs:
       args: ""
       strip-args-when-packaging: ""
 
-  # FEniCS build & test
-  build_fenics:
+  # FEniCS/real build & test
+  build_fenics_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenics')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
@@ -54,8 +54,8 @@ jobs:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
-  test_fenics:
-    needs: [build_fenics]
+  test_fenics_real:
+    needs: [build_fenics_real]
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "fenics"
