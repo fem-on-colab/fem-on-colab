@@ -25,7 +25,7 @@ else:
 """
     assert package_name in ("pyvista", "webgui_jupyter_widgets")
     if package_name == "pyvista":
-        with open(package_init_file, "r") as f:
+        with open(package_init_file) as f:
             package_init_file_content = f.read().strip("\n")
         with open(package_init_file, "w") as f:
             f.write(package_init_file_content + "\n" + enable_widgets_code)

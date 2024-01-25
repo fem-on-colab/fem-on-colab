@@ -6,10 +6,9 @@
 """Add announcement to installation scripts."""
 
 import sys
-import typing
 
 
-class TextBox(object):
+class TextBox:
     """A class to draw a box of text surrounded by a fill character.
 
     Parameters
@@ -29,7 +28,7 @@ class TextBox(object):
 
     def __init__(self, text: str, fill: str) -> None:
         self._cols = 80
-        self._text: typing.List[str] = text.split("\n")
+        self._text: list[str] = text.split("\n")
         assert all(len(t) < self._cols for t in self._text)
         self._fill: str = fill
 
@@ -59,9 +58,9 @@ def add_announcement(
     announcement_placeholder
         Placeholder instructions to be replaced with the actual announcement.
     """
-    with open(install_file, "r") as f:
+    with open(install_file) as f:
         install_file_content = f.read().strip("\n")
-    with open(announcement_file, "r") as f:
+    with open(announcement_file) as f:
         announcement_file_content = f.read().strip("\n")
     announcement_box = str(TextBox(announcement_file_content, "#"))
     announcement_number_of_blank_lines = (60 - announcement_box.count("\n")) // 2
