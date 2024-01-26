@@ -79,10 +79,29 @@ cd /tmp/pyadjoint-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/pyadjoint-src
 
+# libspatialindex
+git clone https://github.com/firedrakeproject/libspatialindex.git /tmp/libspatialindex-src
+mkdir -p /tmp/libspatialindex-src/build
+cd /tmp/libspatialindex-src/build
+cmake \
+    -DCMAKE_C_COMPILER=$(which mpicc) \
+    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
+    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    ..
+make -j $(nproc) install
+cd && rm -rf /tmp/libspatialindex-src
+
+# rtree
+git clone https://github.com/Toblerity/rtree.git /tmp/rtree-src
+cd /tmp/rtree-src
+sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/firedrake/patches/08-install-prefix-in-rtree
+patch -p 1 < $REPODIR/firedrake/patches/08-install-prefix-in-rtree
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
+cd && rm -rf /tmp/rtree-src
+
 # libsupermesh
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
-cd /tmp/libsupermesh-src
-patch -p 1 < $REPODIR/firedrake/patches/08-drop-march-in-supermesh
 mkdir -p /tmp/libsupermesh-src/build
 cd /tmp/libsupermesh-src/build
 cmake \
@@ -103,19 +122,6 @@ patch -p 1 < $REPODIR/firedrake/patches/07-drop-march-mtune-in-tinyasm
 export PYBIND11_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --user .
 cd && rm -rf /tmp/tinyasm-src
-
-# libspatialindex
-git clone https://github.com/firedrakeproject/libspatialindex.git /tmp/libspatialindex-src
-mkdir -p /tmp/libspatialindex-src/build
-cd /tmp/libspatialindex-src/build
-cmake \
-    -DCMAKE_C_COMPILER=$(which mpicc) \
-    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_SKIP_RPATH:BOOL=ON \
-    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
-    ..
-make -j $(nproc) install
-cd && rm -rf /tmp/libspatialindex-src
 
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src

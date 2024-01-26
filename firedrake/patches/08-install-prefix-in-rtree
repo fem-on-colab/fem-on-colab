@@ -1,0 +1,13 @@
+diff --git a/rtree/finder.py b/rtree/finder.py
+index 59b74e4..71f7353 100644
+--- a/rtree/finder.py
++++ b/rtree/finder.py
+@@ -19,7 +19,7 @@ _sys_prefix = Path(sys.prefix)
+ _candidates = []
+ if "SPATIALINDEX_C_LIBRARY" in os.environ:
+     _candidates.append(Path(os.environ["SPATIALINDEX_C_LIBRARY"]))
+-_candidates += [_cwd / "lib", _cwd, Path("")]
++_candidates += [_cwd / "lib", _cwd, Path(""), Path("INSTALL_PREFIX_IN/lib")]
+ 
+ 
+ def load() -> ctypes.CDLL:
