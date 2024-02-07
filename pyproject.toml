@@ -3,9 +3,11 @@
 [tool.ruff]
 line-length = 120
 target-version = "py310" # since PYTHON_VERSION=python3.10 in base/Dockerfile
+
+[tool.ruff.lint]
 select = ["E", "F", "FLY", "ICN", "Q", "RUF", "UP", "W"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "**/*test*.py" = ["E402", "F811"]
 "fenics/test-multiphenics*.py" = ["E402", "F403", "F405"]
 "fenics/test-rbnics*.py" = ["E402", "F403", "F405"]
@@ -14,8 +16,8 @@ select = ["E", "F", "FLY", "ICN", "Q", "RUF", "UP", "W"]
 "ngsolve/test-ngspetsc*.py" = ["E402", "F403", "F405"]
 "ngsolve/test-ngsxfem*.py" = ["E402", "F403", "F405"]
 
-[tool.ruff.pycodestyle]
+[tool.ruff.lint.pycodestyle]
 max-doc-length = 120
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "numpy"
