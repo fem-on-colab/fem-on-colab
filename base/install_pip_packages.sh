@@ -19,7 +19,7 @@ remove_packages_error_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove packages which are already installed by apt
 remove_packages_already_installed_by_apt () {
-    grep -v -e "^python-apt==" -e "^PyGObject==" -h ${1} > ${1}.tmp
+    grep -v -e "^python-apt==" -e "^python-apt @ file:///" -e "^PyGObject==" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_packages_already_installed_by_apt ${BACKEND_INFO}/pip-freeze-clean.txt
