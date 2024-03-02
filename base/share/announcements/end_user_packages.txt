@@ -1,6 +1,6 @@
 This installation is offered by FEM on Colab, an open-source project
 developed and maintained at Università Cattolica del Sacro Cuore
-by Dr. Francesco Ballarin. Please see https://fem-on-colab.github.io/
+by Prof. Francesco Ballarin. Please see https://fem-on-colab.github.io/
 for more details, including a list of further available packages
 and how to sponsor the development or contribute to the project.
 
