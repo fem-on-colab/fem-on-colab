@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4fb7c7dc..a3b74f00 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -375,25 +375,20 @@ if (USE_OCC)
+       TKGeomAlgo
+       TKGeomBase
+       TKHLR
+-      TKIGES
+       TKLCAF
+       TKMath
+       TKMesh
+       TKOffset
+       TKPrim
+-      TKSTEP
+-      TKSTEP209
+-      TKSTEPAttr
+-      TKSTEPBase
+-      TKSTL
++      TKDESTL
+       TKService
+       TKShHealing
+       TKTopAlgo
+       TKV3d
+       TKVCAF
+       TKXCAF
+-      TKXDEIGES
+-      TKXDESTEP
++      TKDEIGES
++      TKDESTEP
+       TKXSBase
+       TKernel
+     )
+diff --git a/libsrc/occ/Partition_Loop3d.hxx b/libsrc/occ/Partition_Loop3d.hxx
+index e1716691..3b2c6395 100644
+--- a/libsrc/occ/Partition_Loop3d.hxx
++++ b/libsrc/occ/Partition_Loop3d.hxx
+@@ -28,8 +28,6 @@
+ 
+ #if OCC_VERSION_HEX < 0x070000
+ #else
+-   #include <TopTools_ShapeMapHasher.hxx>
+-   #include <TopTools_OrientedShapeMapHasher.hxx>
+    #include <TopTools_MapOfOrientedShape.hxx>
+ #endif
+ 
