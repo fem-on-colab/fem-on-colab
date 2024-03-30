@@ -27,7 +27,6 @@ NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
 git submodule update --init
-patch -p 1 < $REPODIR/ngsolve/patches/03-netgen-occ-780-compat
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
 cmake \
