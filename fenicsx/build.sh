@@ -25,6 +25,11 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user scikit-build-core[p
 
 # Basix
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
+cd /tmp/basix-src
+for COMMIT in 7be351a538645a2c3d2970d03f465eefc3445d0f; do
+    wget https://github.com/FEniCS/basix/commit/$COMMIT.diff
+    patch -p 1 < $COMMIT.diff
+done
 mkdir -p /tmp/basix-src/build
 cd /tmp/basix-src/build
 cmake \
@@ -68,8 +73,10 @@ git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
 patch -p 1 < $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
-wget https://github.com/FEniCS/dolfinx/commit/5db591d14df0c82bf87902eddb1c4cbb6126e977.diff
-patch -p 1 < 5db591d14df0c82bf87902eddb1c4cbb6126e977.diff
+for COMMIT in 13c73b287aa4b46e15aa92be24acb327ff6b2f59 b71e5ec860cfa247b01cf28006721165660d04d5; do
+    wget https://github.com/FEniCS/dolfinx/commit/$COMMIT.diff
+    patch -p 1 < $COMMIT.diff
+done
 mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src/build
 export UFC_DIR=$INSTALL_PREFIX
