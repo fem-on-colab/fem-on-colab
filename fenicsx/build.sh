@@ -25,11 +25,6 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user scikit-build-core[p
 
 # Basix
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
-cd /tmp/basix-src
-for COMMIT in 7be351a538645a2c3d2970d03f465eefc3445d0f; do
-    wget https://github.com/FEniCS/basix/commit/$COMMIT.diff
-    patch -p 1 < $COMMIT.diff
-done
 mkdir -p /tmp/basix-src/build
 cd /tmp/basix-src/build
 cmake \
