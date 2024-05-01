@@ -68,5 +68,5 @@ make PETSC_DIR=$PWD PETSC_ARCH=$PETSC_ARCH install
 
 # Install petsc4py
 cd /tmp/petsc-src/src/binding/petsc4py/
-PETSC_DIR=$INSTALL_PREFIX PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
+PETSC_DIR=$INSTALL_PREFIX PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/petsc-src
