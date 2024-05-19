@@ -80,7 +80,7 @@ git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
 patch -p 1 < $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
-for COMMIT in 13c73b287aa4b46e15aa92be24acb327ff6b2f59 b71e5ec860cfa247b01cf28006721165660d04d5; do
+for COMMIT in 3d16df983ab034eeb14748d22181102e5a2cb444 abd2bbf44a06a491086f68ecfc8f605b391aebbb; do
     wget https://github.com/FEniCS/dolfinx/commit/$COMMIT.diff
     patch -p 1 < $COMMIT.diff
 done
