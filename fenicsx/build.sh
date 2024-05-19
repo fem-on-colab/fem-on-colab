@@ -51,7 +51,19 @@ cd /tmp/ffcx-src
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/ffcx-src
 
-# pugixml
+# spdlog, required for building DOLFINx
+git clone https://github.com/gabime/spdlog.git /tmp/spdlog-src
+mkdir -p /tmp/spdlog-src/build
+cd /tmp/spdlog-src/build
+cmake \
+    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    -DSPDLOG_BUILD_SHARED=ON \
+    ..
+make -j $(nproc) install
+cd && rm -rf /tmp/spdlog-src
+
+# pugixml, required for building DOLFINx
 git clone https://github.com/zeux/pugixml.git /tmp/pugixml-src
 mkdir -p /tmp/pugixml-src/build
 cd /tmp/pugixml-src/build
@@ -61,7 +73,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     ..
 make -j $(nproc) install
-cd && rm -rf /tmp/pugixml-src/build
+cd && rm -rf /tmp/pugixml-src
 
 # DOLFINx
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
