@@ -59,7 +59,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/ffc-src
 
 # dolfin
-git clone https://bitbucket.org/fenics-project/dolfin.git /tmp/dolfin-src
+GIT_CLONE_PROTECTION_ACTIVE=false git clone https://bitbucket.org/fenics-project/dolfin.git /tmp/dolfin-src
 cd /tmp/dolfin-src/
 patch -p 1 < $REPODIR/fenics/patches/02-xdmf-checkpoint-fix
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenics/patches/03-add-pkg-config-path
