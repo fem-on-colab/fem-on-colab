@@ -24,8 +24,20 @@ FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 pip uninstall -y Cython
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "Cython<3.0"
 
+# islpy is not compatible yet with nanobind 2.0+
+pip uninstall -y nanobind
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "nanobind<2.0"
+
+# islpy build dependencies
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja pcpp scikit-build
+
 # islpy
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --no-binary=islpy islpy
+git clone https://github.com/inducer/islpy.git /tmp/islpy-src
+cd /tmp/islpy-src
+git submodule update --init --recursive
+patch -p 1 < $REPODIR/firedrake/patches/01-unpin-setuptools-in-islpy
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
+cd && rm -rf /tmp/islpy-src
 
 # loopy
 git clone https://github.com/firedrakeproject/loopy.git /tmp/loopy-src
