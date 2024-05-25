@@ -24,8 +24,12 @@ FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 pip uninstall -y Cython
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "Cython<3.0"
 
+# islpy is not compatible yet with nanobind 2.0+
+pip uninstall -y nanobind
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "nanobind<2.0"
+
 # islpy
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user --no-binary=islpy islpy
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user --no-binary=islpy islpy
 
 # loopy
 git clone https://github.com/firedrakeproject/loopy.git /tmp/loopy-src
