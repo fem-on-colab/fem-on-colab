@@ -54,6 +54,7 @@ cd /tmp/ngsolve-src
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
 patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
+patch -p 1 < $REPODIR/ngsolve/patches/03-enable-fortran
 mkdir -p /tmp/ngsolve-src/build
 cd /tmp/ngsolve-src/build
 cmake \
@@ -61,7 +62,7 @@ cmake \
     -DCMAKE_CXX_COMPILER=$(which mpicxx) \
     -DCMAKE_SKIP_RPATH:BOOL=ON \
     -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
-    -DUSE_MUMPS:BOOL=OFF \
+    -DUSE_MUMPS:BOOL=ON \
     -DUSE_UMFPACK:BOOL=ON \
     -DUSE_SUPERBUILD:BOOL=OFF \
     -DUSE_NATIVE_ARCH:BOOL=OFF \
