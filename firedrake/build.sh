@@ -80,7 +80,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/pyadjoint-src
 
 # libspatialindex
-git clone https://github.com/firedrakeproject/libspatialindex.git /tmp/libspatialindex-src
+git clone https://github.com/libspatialindex/libspatialindex.git /tmp/libspatialindex-src
 mkdir -p /tmp/libspatialindex-src/build
 cd /tmp/libspatialindex-src/build
 cmake \
