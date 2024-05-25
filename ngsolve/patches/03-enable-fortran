@@ -1,0 +1,12 @@
+diff --git a/linalg/CMakeLists.txt b/linalg/CMakeLists.txt
+index a0ca34cf0..0feca1937 100644
+--- a/linalg/CMakeLists.txt
++++ b/linalg/CMakeLists.txt
+@@ -30,6 +30,7 @@ install( TARGETS ngla ${ngs_install_dir} )
+ if(USE_MUMPS)
+     # Create dummy fortran lib
+     # This forces cmake to link fortran runtime libraries to ngla
++    enable_language(Fortran)
+     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/dummy.f "")
+     add_library(dummy_fortran ${CMAKE_CURRENT_BINARY_DIR}/dummy.f)
+     target_link_libraries(ngla PUBLIC dummy_fortran )
