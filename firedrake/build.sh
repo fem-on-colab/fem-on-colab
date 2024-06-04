@@ -24,10 +24,6 @@ FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 pip uninstall -y Cython
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "Cython<3.0"
 
-# islpy is not compatible yet with nanobind 2.0+
-pip uninstall -y nanobind
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "nanobind<2.0"
-
 # islpy build dependencies
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja pcpp scikit-build
 
