@@ -27,8 +27,6 @@ cd && rm -rf /tmp/pybind11-src
 git clone https://github.com/wjakob/nanobind.git /tmp/nanobind-src
 cd /tmp/nanobind-src
 git submodule update --init --recursive
-wget https://github.com/wjakob/nanobind/commit/20b06573995495c528d4acd75bda7f0430789dd8.diff
-patch -p1 < 20b06573995495c528d4acd75bda7f0430789dd8.diff
 cmake \
     -D CMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -D NB_TEST=off \
