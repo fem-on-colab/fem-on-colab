@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ad95d48f7..c36586fe8 100644
+index 4c4da71d3..669a7eaff 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -347,10 +347,12 @@ if(USE_UMFPACK)
+@@ -335,10 +335,12 @@ if(USE_UMFPACK)
      # UMFPACK was not built with Superbuild, look for it manually
      find_library(UMFPACK_LIB REQUIRED NAMES umfpack HINTS ${UMFPACK_DIR}/lib ${UMFPACK_DIR}/lib64)
      find_library(CHOLMOD_LIB REQUIRED NAMES cholmod HINTS ${UMFPACK_DIR}/lib ${UMFPACK_DIR}/lib64)
