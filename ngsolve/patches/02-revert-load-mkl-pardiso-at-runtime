@@ -13,7 +13,7 @@ index 9cbf01e98..decdb489b 100644
  // #include "superluinverse.hpp"
  // #include "mumpsinverse.hpp"
 diff --git a/linalg/pardisoinverse.cpp b/linalg/pardisoinverse.cpp
-index 46d59901f..b0104b4e2 100644
+index 46d59901f..6b110c9d9 100644
 --- a/linalg/pardisoinverse.cpp
 +++ b/linalg/pardisoinverse.cpp
 @@ -48,20 +48,10 @@ extern  integer F77_FUNC(pardisoinit)
@@ -115,10 +115,10 @@ index bfafc3f1a..ad1fd862c 100644
  
    /*
 diff --git a/linalg/python_linalg.cpp b/linalg/python_linalg.cpp
-index a7e7476a6..1402696dd 100644
+index 8ecf63ea9..379dcf42d 100644
 --- a/linalg/python_linalg.cpp
 +++ b/linalg/python_linalg.cpp
-@@ -1791,8 +1791,9 @@ shift : object
+@@ -1792,8 +1792,9 @@ shift : object
  
    m.def("GetAvailableSolvers", []() {
      py::list solvers;
@@ -130,9 +130,1214 @@ index a7e7476a6..1402696dd 100644
      solvers.append(GetInverseName(MUMPS));
  #endif // USE_MUMPS
 diff --git a/linalg/sparsematrix.cpp b/linalg/sparsematrix.cpp
-index a7792a5fa..962b07292 100644
+index 3d611e28c..6f90081e0 100644
 --- a/linalg/sparsematrix.cpp
 +++ b/linalg/sparsematrix.cpp
+@@ -29,15 +29,15 @@ namespace ngla
+       }
+     return cnt;
+   }
+-  
+-  
++
++
+   auto Split (size_t i, int bits)
+   {
+     auto hi = i >> bits;
+     auto lo = i & ((1 << bits) -1);
+     return make_pair(hi,lo);
+-  }  
+-  
++  }
++
+ 
+   MatrixGraph :: MatrixGraph (FlatArray<int> elsperrow, size_t awidth)
+   {
+@@ -53,7 +53,7 @@ namespace ngla
+ 	nze += elsperrow[i];
+       }
+     firsti[size] = nze;
+-    
++
+     // colnr.SetSize (nze+1);
+     colnr = NumaDistributedArray<int> (nze);   // nze+1
+ 
+@@ -61,7 +61,7 @@ namespace ngla
+     for (size_t i = 0; i < nze; i++)
+       colnr[i] = -1;
+     */
+-    
++
+     FlatArray<ColIdx> hcolnr = colnr;
+     ParallelForRange (nze,
+ 		      [hcolnr] (auto myrange)
+@@ -71,8 +71,8 @@ namespace ngla
+ 
+     CalcBalancing ();
+   }
+-                                                                                                                                                                                                                  
+-  MatrixGraph :: MatrixGraph (size_t as, int max_elsperrow) 
++
++  MatrixGraph :: MatrixGraph (size_t as, int max_elsperrow)
+   {
+     size = as;
+     width = as;
+@@ -82,19 +82,19 @@ namespace ngla
+     colnr = NumaDistributedArray<int> (as*max_elsperrow+1);
+     firsti.SetSize (as+1);
+     owner = true;
+-    
++
+     for (int i = 0; i < as*max_elsperrow; i++)
+       colnr[i] = -1;
+     colnr[as*max_elsperrow] = 0;
+-    
++
+     for (int i = 0; i < as+1; i++)
+       firsti[i] = i*max_elsperrow;
+ 
+     CalcBalancing ();
+   }
+-  
+ 
+-  
++
++
+   MatrixGraph :: MatrixGraph (const MatrixGraph & agraph) // , bool stealgraph)
+     : BaseMatrix(agraph)
+   {
+@@ -115,7 +115,7 @@ namespace ngla
+ 	firsti.SetSize (size+1);
+ 	// colnr.SetSize (nze);
+         colnr = NumaDistributedArray<int> (nze);
+-        
++
+ 	for (int i = 0; i < size+1; i++)
+ 	  firsti[i] = graph.firsti[i];
+ 	for (size_t i = 0; i < nze; i++)
+@@ -126,7 +126,7 @@ namespace ngla
+   }
+ 
+   MatrixGraph :: MatrixGraph (MatrixGraph && graph)
+-    : BaseMatrix(graph)    
++    : BaseMatrix(graph)
+   {
+     if (!graph.owner) {
+       throw Exception("Matrix-Graph Move-constructor with graph that is now owner ... is that valid?");
+@@ -150,7 +150,7 @@ namespace ngla
+     int nactive = 0;
+     for (auto s : sizes)
+       if (s) nactive++;
+-    
++
+     while (nactive)
+       {
+         int minval = numeric_limits<int>::max();
+@@ -171,7 +171,7 @@ namespace ngla
+                   }
+             }
+       }
+-  }  
++  }
+   */
+ 
+ 
+@@ -184,21 +184,21 @@ namespace ngla
+     STACK_ARRAY(int, minvals, sizes.Size());
+     int nactive = 0;
+     for (auto i : sizes.Range())
+-      if (sizes[i]) 
++      if (sizes[i])
+         {
+           nactive++;
+           minvals[i] = *ptrs[i];
+         }
+       else
+         minvals[i] = numeric_limits<int>::max();
+-    
++
+     while (nactive)
+       {
+         int minval = minvals[0];
+         for (int i = 1; i < sizes.Size(); i++)
+           minval = min2(minval, minvals[i]);
+ 
+-        
++
+         f(minval);
+ 
+         for (int i : sizes.Range())
+@@ -215,7 +215,7 @@ namespace ngla
+                 minvals[i] = *ptrs[i];
+             }
+       }
+-  }  
++  }
+ 
+ 
+   template <typename T, typename FUNC>
+@@ -229,10 +229,10 @@ namespace ngla
+         return;
+       }
+     // static Timer tall("merge arrays"); RegionTimer reg(tall);
+-    
++
+     struct valsrc { int val, src; };
+     struct trange { int idx, val;  };
+-    
++
+     int nactive = 0;
+     int nrange = 0;
+     /*
+@@ -241,16 +241,16 @@ namespace ngla
+     */
+     ArrayMem<valsrc,1024> minvals(sizes.Size());
+     ArrayMem<trange,1024> ranges(sizes.Size()+1);
+-    
++
+     constexpr int nhash = 1024; // power of 2
+     int hashes[nhash];
+ 
+     for (int i = 0; i < nhash; i++)
+       hashes[i] = -1;
+-  
++
+     // take first value from every array ...
+     for (auto i : sizes.Range())
+-      while (sizes[i]) 
++      while (sizes[i])
+         {
+           auto val = *ptrs[i];
+           sizes[i]--;
+@@ -276,7 +276,7 @@ namespace ngla
+ 
+         // cout << "start quicksort in range [" << lower << ", " << nactive-1 << "]" << endl;
+         while (true)
+-          {          
++          {
+             int firstval = minvals[lower].val;
+             int otherval = firstval;
+ 
+@@ -310,19 +310,19 @@ namespace ngla
+                 if (l < r)
+                   Swap (minvals[l++], minvals[r--]);
+               }
+-          
++
+             // elements from l up are <= midval
+             ranges[nrange].idx = l;
+             ranges[nrange].val = midval;
+             nrange++;
+-          
++
+             lower = l;
+           }
+ 
+         nrange--;
+-        int last = ranges[nrange].idx; 
++        int last = ranges[nrange].idx;
+         f(minvals[last].val);
+-      
++
+         // insert new values
+         FlatArray<valsrc> tmp(nactive-last, &minvals[last]);
+         nactive = last;
+@@ -349,7 +349,7 @@ namespace ngla
+                 }
+ 
+               minvals[prevpos] = vs;
+-              hashes[vs.val&(nhash-1)] = vs.val;            
++              hashes[vs.val&(nhash-1)] = vs.val;
+               nactive++;
+               break;
+             }
+@@ -376,46 +376,46 @@ namespace ngla
+           newel = in1[i1++];
+         else
+           newel = in2[i2++];
+-        out[io++] = newel; 
++        out[io++] = newel;
+       }
+-    
++
+     while (i1 < in1.Size())
+       out[io++] = in1[i1++];
+     while (i2 < in2.Size())
+       out[io++] = in2[i2++];
+-                      
++
+     out.SetSize(io);
+   }
+ 
+ 
+-  MatrixGraph :: MatrixGraph (size_t asize, size_t awidth, FlatTable<int> rowelements, 
+-                              FlatTable<int> colelements, 
++  MatrixGraph :: MatrixGraph (size_t asize, size_t awidth, FlatTable<int> rowelements,
++                              FlatTable<int> colelements,
+                               bool symmetric)
+   {
+     // make sure that taskmanager is up ...
+     /*
+-    RunWithTaskManager 
+-      ([&]() 
++    RunWithTaskManager
++      ([&]()
+        {
+     */
+ 
+     static Timer timer("MatrixGraph");
+     static Timer timer_dof2el("MatrixGraph - build dof2el table");
+-    static Timer timer_prefix("MatrixGraph - prefix");    
++    static Timer timer_prefix("MatrixGraph - prefix");
+     RegionTimer reg (timer);
+ 
+     bool includediag = (&rowelements == &colelements);
+-     
++
+     int ndof = asize;
+     TableCreator<int> creator(ndof);
+ 
+ 
+-    ParallelFor (Range(colelements.Size()), 
++    ParallelFor (Range(colelements.Size()),
+                  [&] (int i) { QuickSort (colelements[i]); });
+-    
++
+     timer_dof2el.Start();
+     for ( ; !creator.Done(); creator++)
+-      {    
++      {
+         ParallelFor (Range(rowelements.Size()),
+                      [&] (int i)
+                      {
+@@ -436,7 +436,7 @@ namespace ngla
+     static Timer timer_newdof2el_1("MatrixGraph - new build dof2el table 1");
+     static Timer timer_newdof2el_2("MatrixGraph - new build dof2el table 2");
+ 
+-            
++
+     // atomic-free dof2element via COO format
+     timer_newdof2elb.Start();
+     int rowbits = UsedBits (rowelements.Size());
+@@ -445,12 +445,12 @@ namespace ngla
+     int rows_hi = 1 << rowbits_hi;
+     int rows_lo = 1 << rowbits_lo;
+     int nrows_hi = (rowelements.Size()+rows_lo-1) / rows_lo;
+-    
++
+     int dofbits = UsedBits (ndof);
+     int dofbits_hi = dofbits/2;
+     int dofbits_lo = dofbits - dofbits_hi;
+     int dofs_hi = 1 << dofbits_hi;
+-    int dofs_lo = 1 << dofbits_lo;    
++    int dofs_lo = 1 << dofbits_lo;
+     int ndofs_hi = (ndof+dofs_lo-1)/dofs_lo;
+ 
+     { // build a global table
+@@ -527,7 +527,7 @@ namespace ngla
+                   if (first >= ndof) return;
+                   auto next = min ( (dof_hi+1) << dofbits_lo, ndof);
+                   newcnt.Range(first, next) = 0;
+-                  
++
+                   // for (int row_hi = 0; row_hi < rows_hi; row_hi++)
+                   for (int row_hi : Range(nrows_hi))
+                     for (auto p : dof2element_coo[dof_hi+row_hi*ndofs_hi])
+@@ -539,7 +539,7 @@ namespace ngla
+                       }
+ 		 }, ndofs_hi);
+ 		  // }, TasksPerThread(4));
+-    
++
+     Table<int> newdof2element(newcnt);
+     // ParallelFor (ndofs_hi, [&] (int dof_hi)
+     ParallelJob ([&] (TaskInfo &ti)
+@@ -549,10 +549,10 @@ namespace ngla
+                    if (first >= ndof) return;
+                    auto next = min ( (dof_hi+1) << dofbits_lo, ndof);
+                    newcnt.Range(first, next) = 0;
+-                   
++
+                    // for (int row_hi = 0; row_hi < rows_hi; row_hi++)
+                    for (int row_hi : Range(nrows_hi))
+-                     for (auto p : dof2element_coo[dof_hi+row_hi*ndofs_hi])                     
++                     for (auto p : dof2element_coo[dof_hi+row_hi*ndofs_hi])
+                        {
+                          int dof_lo, row_lo;
+                          tie(row_lo, dof_lo) = Split (p, dofbits_lo);
+@@ -569,9 +569,9 @@ namespace ngla
+         cout << "newdof2el = " << newdof2element << endl;
+       }
+     }
+-    
++
+     timer_newdof2el.Start();
+-    
++
+     Array<Table<int>> entries(nrows_hi);
+     ParallelFor (nrows_hi, [&] (int row_hi)
+                  {
+@@ -579,7 +579,7 @@ namespace ngla
+                    {
+                    RegionTracer reg(TaskManager::GetThreadId(), timer_newdof2el_1);
+                    cnt_entries = 0;
+-                   
++
+                    for (int row_lo = 0; row_lo < rows_lo; row_lo++)
+                      {
+                        int row = (row_hi << rowbits_lo)+row_lo;
+@@ -616,8 +616,8 @@ namespace ngla
+                    entries[row_hi] = std::move(loctable);
+                  },
+                  TasksPerThread(4));
+-    
+-    
++
++
+     Array<int> newcnt(ndof);
+     ParallelFor(ndofs_hi, [&] (int dof_hi)
+                 {
+@@ -625,7 +625,7 @@ namespace ngla
+                   if (first >= ndof) return;
+                   auto next = min ( (dof_hi+1) << dofbits_lo, ndof);
+                   newcnt.Range(first, next) = 0;
+-                  
++
+                   // for (int row_hi = 0; row_hi < rows_hi; row_hi++)
+                   for (int row_hi : Range(entries))
+                     for (auto p : entries[row_hi][dof_hi])
+@@ -636,7 +636,7 @@ namespace ngla
+                         newcnt[dof]++;
+                       }
+                 }, TasksPerThread(4));
+-    
++
+     Table<int> newdof2element(newcnt);
+     ParallelFor (ndofs_hi, [&] (int dof_hi)
+                  {
+@@ -644,10 +644,10 @@ namespace ngla
+                    if (first >= ndof) return;
+                    auto next = min ( (dof_hi+1) << dofbits_lo, ndof);
+                    newcnt.Range(first, next) = 0;
+-                   
++
+                    // for (int row_hi = 0; row_hi < rows_hi; row_hi++)
+-                   for (int row_hi : Range(entries))                     
+-                     for (auto p : entries[row_hi][dof_hi])                         
++                   for (int row_hi : Range(entries))
++                     for (auto p : entries[row_hi][dof_hi])
+                        {
+                          int dof_lo, row_lo;
+                          tie(row_lo, dof_lo) = Split (p, dofbits_lo);
+@@ -655,7 +655,7 @@ namespace ngla
+                          newdof2element[dof][newcnt[dof]++] = row_hi*rows_lo+row_lo;
+                        }
+                  }, TasksPerThread(4));
+-    timer_newdof2el.Stop();    
++    timer_newdof2el.Stop();
+ 
+     if (dof2element.Size() < 100)
+       {
+@@ -665,17 +665,17 @@ namespace ngla
+ 
+     // delete table-memory on same thread as it was created
+     ParallelFor (nrows_hi, [&] (int row_hi)
+-                 { 
++                 {
+                    entries[row_hi] = Table<int>();
+                  });
+-    
++
+ 
+     // just for testing: with numa local array:
+     ParallelFor (nrows_hi, [&] (int row_hi)
+                  {
+                    Array<int> cnt_entries(ndofs_hi);
+                    cnt_entries = 0;
+-                   
++
+                    for (int row_lo = 0; row_lo < rows_lo; row_lo++)
+                      {
+                        int row = (row_hi << rowbits_lo)+row_lo;
+@@ -695,7 +695,7 @@ namespace ngla
+                  {
+                    NumaLocalArray<int> cnt_entries(ndofs_hi);
+                    cnt_entries = 0;
+-                   
++
+                    for (int row_lo = 0; row_lo < rows_lo; row_lo++)
+                      {
+                        int row = (row_hi << rowbits_lo)+row_lo;
+@@ -710,12 +710,12 @@ namespace ngla
+                          }
+                      }
+                  });
+-                 
++
+     }
+ 
+-    
++
+ #endif
+-    
++
+     Array<int> cnt(ndof);
+     // cnt = 0;
+     ParallelJob ([&] (TaskInfo ti)
+@@ -733,15 +733,15 @@ namespace ngla
+     };
+     Array<ProfileData> prof(ndof);
+     */
+-    
++
+ 
+ 
+     for (int loop = 1; loop <= 2; loop++)
+       {
+         if (!symmetric)
+           {
+-            ParallelForRange 
+-              (Range(ndof), [&](IntRange myr) 
++            ParallelForRange
++              (Range(ndof), [&](IntRange myr)
+                {
+                  ArrayMem<int, 50> sizes;
+                  ArrayMem<int*, 50> ptrs;
+@@ -756,7 +756,7 @@ namespace ngla
+                          sizes[j] = colelements[dof2element[i][j]].Size();
+                          ptrs[j] = colelements[dof2element[i][j]].Addr(0);
+                        }
+-                     
++
+                      if (loop == 1)
+                        {
+                          int cnti = 0;
+@@ -766,7 +766,7 @@ namespace ngla
+                      else
+                        {
+                          auto ptr = colnr.Data()+firsti[i];
+-                         MergeArrays(ptrs, sizes, [&ptr] (int col) 
++                         MergeArrays(ptrs, sizes, [&ptr] (int col)
+                                      {
+                                        *ptr = col;
+                                        ptr++;
+@@ -779,25 +779,25 @@ namespace ngla
+           }
+         else
+           {
+-            ParallelForRange 
++            ParallelForRange
+               (Range(ndof),[&](IntRange myr)
+                {
+                  Array<int> rowdofs;
+                  Array<int> rowdofs1;
+-                 
++
+                  // for (int i : sl)
+                  for (int i : myr)
+                    {
+                      rowdofs.SetSize0();
+                      if (includediag) rowdofs += i;
+-                     
++
+                      for (auto elnr : dof2element[i])
+                        {
+                          rowdofs.Swap (rowdofs1);
+                          auto row = colelements[elnr];
+-                         
++
+                          rowdofs.SetSize(rowdofs1.Size()+row.Size());
+-                         
++
+                          int i1 = 0, i2 = 0, i3 = 0;
+                          while (i1 < rowdofs1.Size() && i2 < row.Size() && row[i2] <= i)
+                            {
+@@ -810,34 +810,34 @@ namespace ngla
+                                newel = rowdofs1[i1++];
+                              else
+                                newel = row[i2++];
+-                             rowdofs[i3++] = newel; 
++                             rowdofs[i3++] = newel;
+                            }
+-                         
++
+                          while (i1 < rowdofs1.Size())
+                            rowdofs[i3++] = rowdofs1[i1++];
+                          while (i2 < row.Size() && row[i2] <= i)
+                            rowdofs[i3++] = row[i2++];
+-                         
++
+                          rowdofs.SetSize(i3);
+                        }
+-                  
+-                  
++
++
+                      if (loop == 1)
+                        cnt[i] = rowdofs.Size();
+                      else
+                        colnr.Range(firsti[i], firsti[i+1]) = rowdofs;
+                    }
+                }, TasksPerThread(5));
+-            
++
+           }
+-        
+-        
++
++
+         if (loop == 1)
+           {
+             size = ndof;
+             width = awidth;
+             owner = true;
+-            
++
+             firsti.SetSize (size+1);
+             /*
+             nze = 0;
+@@ -848,7 +848,7 @@ namespace ngla
+               }
+             firsti[size] = nze;
+             */
+-            
++
+             timer_prefix.Start();
+             Array<size_t> partial_sums(TaskManager::GetNumThreads()+1);
+             partial_sums[0] = 0;
+@@ -879,13 +879,13 @@ namespace ngla
+             nze = partial_sums[partial_sums.Size()-1];
+             firsti[size] = nze;
+             timer_prefix.Stop();
+-            
++
+             colnr = NumaDistributedArray<int> (nze);  // nze+1
+ 
+ 	    CalcBalancing ();
+ 
+             // first touch memory (numa!)
+-            ParallelFor (balance, [&](int row) 
++            ParallelFor (balance, [&](int row)
+                          {
+                            colnr.Range(firsti[row], firsti[row+1]) = 0;
+                          });
+@@ -912,9 +912,9 @@ namespace ngla
+     // });
+   }
+ 
+-  
++
+   /*
+-  MatrixGraph :: MatrixGraph (const Table<int> & dof2dof, 
++  MatrixGraph :: MatrixGraph (const Table<int> & dof2dof,
+ 			      bool symmetric)
+   {
+     static Timer timer ("MatrixGraph");
+@@ -934,7 +934,7 @@ namespace ngla
+ 
+     size = ndof;
+     owner = true;
+-    
++
+     firsti.Alloc (size+1);
+     firsti.SetName ("matrix graph, table 1");
+ 
+@@ -945,10 +945,10 @@ namespace ngla
+ 	nze += cnt[i];
+       }
+     firsti[size] = nze;
+-    
++
+     colnr.Alloc (nze+1);
+     colnr.SetName ("matrix graph");
+-    
++
+     Array<int> mark(ndof);
+ 
+ //     cnt = 0;
+@@ -962,7 +962,7 @@ namespace ngla
+           int cnti = firsti[i];
+           mark[i] = i;
+           colnr[cnti++] = i;
+-          
++
+               for (int k = 0; k < dof2dof[i].Size(); k++)
+                 {
+                   int d2 = dof2dof[i][k];
+@@ -973,14 +973,14 @@ namespace ngla
+ 		    }
+                 }
+         }
+-    
++
+     else
+       for (int i = 0; i < ndof; i++)
+         {
+           int cnti = firsti[i];
+           mark[i] = i;
+           colnr[cnti++] = i;
+-          
++
+ 	  for (int k = 0; k < dof2dof[i].Size(); k++)
+ 	    {
+ 	      int d2 = dof2dof[i][k];
+@@ -992,22 +992,22 @@ namespace ngla
+ 		  }
+ 	    }
+         }
+-    
++
+     for (int i = 0; i < ndof; i++)
+       QuickSort (GetRowIndices(i));
+-    
++
+     colnr[nze] = 0;
+   }
+   */
+ 
+-  
+-  MatrixGraph :: ~MatrixGraph () { } 
+-  
++
++  MatrixGraph :: ~MatrixGraph () { }
++
+   void MatrixGraph :: Compress()
+   {
+-    cout << "compress not implemented" << endl; 
++    cout << "compress not implemented" << endl;
+   }
+-  
++
+ 
+   /// returns position of Element (i, j), exception for unused
+   size_t MatrixGraph :: GetPosition (size_t i, size_t j) const
+@@ -1016,7 +1016,7 @@ namespace ngla
+       for (int k = firsti[i]; k < firsti[i+1]; k++)
+       if (colnr[k] == j) return k;
+     */
+-    
++
+     size_t first = firsti[i];
+     size_t last = firsti[i+1];
+     while (last > first + 5)
+@@ -1032,13 +1032,13 @@ namespace ngla
+       }
+     for (size_t k = first; k < last; k++)
+       if (colnr[k] == j) return k;
+-    
++
+     stringstream err;
+     err << "illegal position: " << i << ", " << j << endl;
+     throw Exception (err.str());
+   }
+-  
+-  
++
++
+   /// returns position of Element (i, j), -1 for unused
+   size_t MatrixGraph :: GetPositionTest (size_t i, size_t j) const
+   {
+@@ -1046,7 +1046,7 @@ namespace ngla
+       for (int k = firsti[i]; k < firsti[i+1]; k++)
+       if (colnr[k] == j) return k;
+     */
+-    
++
+     size_t first = firsti[i];
+     size_t last = firsti[i+1];
+     while (last > first + 5)
+@@ -1066,10 +1066,10 @@ namespace ngla
+ 
+     return numeric_limits<size_t>::max();
+   }
+-  
++
+   size_t MatrixGraph :: CreatePosition (size_t i, size_t j)
+   {
+-    size_t first = firsti[i]; 
++    size_t first = firsti[i];
+     size_t last = firsti[i+1];
+     /*
+       (*testout) << "row = " << i << ", col = " << j << endl;
+@@ -1100,14 +1100,14 @@ namespace ngla
+ 	    colnr[k] = j;
+ 	    return k;
+ 	  }
+-	
++
+ 	if (colnr[k] == j) return k;
+-	
++
+ 	if (colnr[k] > j)
+ 	  {
+ 	    if (colnr[firsti[i+1]-1] != -1)
+ 	      throw Exception ("sparse matrix row full 1 !");
+-	    
++
+ 	    for (size_t l = firsti[i+1]-1; l > k; l--)
+ 	      colnr[l] = colnr[l-1];
+ 
+@@ -1125,14 +1125,14 @@ namespace ngla
+       colnr[k] = j;
+       return k;
+       }
+-	
++
+       if (colnr[k] == j) return k;
+-	
++
+       if (colnr[k] > j)
+       {
+       if (colnr[firsti[i+1]-1] != -1)
+       throw Exception ("sparse matrix row full 1 !");
+-	    
++
+       for (int l = firsti[i+1]-1; l > k; l--)
+       colnr[l] = colnr[l-1];
+ 
+@@ -1143,10 +1143,10 @@ namespace ngla
+     */
+     throw Exception ("sparse matrix row full 2 !");
+   }
+-  
+ 
+ 
+-  void MatrixGraph :: 
++
++  void MatrixGraph ::
+   GetPositionsSorted (size_t row, size_t n, int * pos) const
+   {
+     if (n == 1)
+@@ -1154,7 +1154,7 @@ namespace ngla
+ 	pos[0] = GetPosition (row, pos[0]);
+ 	return;
+       }
+-    
++
+     int i = 0;
+     int posi = pos[i];
+     size_t endk = firsti[row+1];
+@@ -1172,13 +1172,13 @@ namespace ngla
+     throw Exception ("GetPositionSorted: not matching");
+   }
+ 
+-  
+-  
++
++
+   template <typename Tarray>
+   int BinSearch(const Tarray & v, size_t i) {
+     int n = v.Size();
+     if (n == 0) return 0;
+-    
++
+     int first = 0;
+     int last = n-1;
+     if(v[0]>i) return 0;
+@@ -1192,7 +1192,7 @@ namespace ngla
+     }
+     return first;
+   }
+-  
++
+ 
+   void MatrixGraph :: CalcBalancing ()
+   {
+@@ -1201,7 +1201,7 @@ namespace ngla
+ 
+     balance.Calc (size, [&] (int row) { return 1 + GetRowIndices(row).Size(); });
+   }
+-  
++
+   void MatrixGraph :: FindSameNZE()
+   {
+     return;
+@@ -1222,13 +1222,13 @@ namespace ngla
+       if (same_nze[i] != i) sum++;
+     cout << "same_nze = " << sum << "out of " << size << endl;
+   }
+-  
++
+   ostream & MatrixGraph :: Print (ostream & ost) const
+   {
+     for (int i = 0; i < size; i++)
+       {
+ 	ost << "Row " << i << ":";
+-	
++
+ 	for (size_t j = firsti[i]; j < firsti[i+1]; j++)
+ 	  ost << " " << colnr[j];
+ 	ost << "\n";
+@@ -1251,7 +1251,7 @@ namespace ngla
+ 
+ 
+   BaseSparseMatrix :: ~BaseSparseMatrix () { }
+-  
++
+ 
+   INVERSETYPE BaseSparseMatrix ::
+   SetInverseType (string ainversetype) const
+@@ -1308,7 +1308,7 @@ namespace ngla
+     else if (dynamic_cast<const SparseMatrix<double,Complex,Complex>*>(&mat))
+       trans = make_shared<SparseMatrix<double,Complex,Complex>>(cnt, mat.Height());
+     else
+-      throw Exception(string("SparseMatrix-Transpose, not available for type")+typeid(mat).name()); 
++      throw Exception(string("SparseMatrix-Transpose, not available for type")+typeid(mat).name());
+ 
+     cnt = 0;
+     ParallelFor (mat.Height(), [&] (int i)
+@@ -1334,7 +1334,7 @@ namespace ngla
+     */
+   }
+   // #endif
+-  
++
+   shared_ptr<SparseMatrix<double,double>>
+   MakeFullMatrix (const SparseMatrix<double, double> & mat)
+   {
+@@ -1346,7 +1346,7 @@ namespace ngla
+         for (int c : mat.GetRowIndices(i))
+           if (c < i) cnt[c]++;
+       }
+-    
++
+     auto full = make_shared<SparseMatrix<double>>(cnt);
+     cnt = 0;
+ 
+@@ -1359,7 +1359,7 @@ namespace ngla
+                        cnt[i] ++;
+                      }
+                  });
+-    
++
+     for (int i = 0; i < mat.Height(); i++)
+       for (int ci : Range(mat.GetRowIndices(i)))
+         {
+@@ -1369,7 +1369,7 @@ namespace ngla
+           full -> GetRowValues(c)[cnt[c]] = mat.GetRowValues(i)[ci];
+           cnt[c] ++;
+         }
+-    return full;    
++    return full;
+   }
+ 
+   shared_ptr<SparseMatrixSymmetric<double,double>>
+@@ -1391,7 +1391,7 @@ namespace ngla
+             symm -> GetRowValues(i)[ci] = mat.GetRowValues(i)[ci];
+         }
+ 
+-    return symm;    
++    return symm;
+   }
+ 
+ 
+@@ -1403,7 +1403,7 @@ namespace ngla
+     static Timer t1a ("sparse matrix multiplication - setup a");
+     static Timer t1b ("sparse matrix multiplication - setup b");
+     static Timer t1b1 ("sparse matrix multiplication - setup b1");
+-    static Timer t2 ("sparse matrix multiplication - mult"); 
++    static Timer t2 ("sparse matrix multiplication - mult");
+     RegionTimer reg(t);
+ 
+     t1a.Start();
+@@ -1439,7 +1439,7 @@ namespace ngla
+     t1b1.Start();
+     // auto prod = make_shared<SparseMatrix<TM_Res>>(cnt, matb.Width());
+     shared_ptr<SparseMatrixTM<TM_Res>> prod;
+-    
++
+     if constexpr (is_same<TM_Res,double>()) {
+         if (dynamic_cast<const SparseMatrix<double,double,double>*>(&mata) &&
+             dynamic_cast<const SparseMatrix<double,double,double>*>(&matb))
+@@ -1451,10 +1451,10 @@ namespace ngla
+           prod = make_shared<SparseMatrix<TM_Res>>(cnt, matb.Width());  // as it was, no complex supported
+       }
+     else
+-      prod = make_shared<SparseMatrix<TM_Res>>(cnt, matb.Width());  // as it was, no complex supported      
+-                      
+-        
+-        
++      prod = make_shared<SparseMatrix<TM_Res>>(cnt, matb.Width());  // as it was, no complex supported
++
++
++
+     prod->AsVector() = 0.0;
+     t1b1.Stop();
+     // fill col-indices
+@@ -1486,7 +1486,7 @@ namespace ngla
+ 
+     t1b.Stop();
+     t2.Start();
+-    
++
+     ParallelForRange
+       (mata.Height(), [&] (IntRange r)
+        {
+@@ -1507,25 +1507,25 @@ namespace ngla
+          size_t nhash = 16384;
+          thash hash[nhash];
+          */
+-         
++
+          for (auto i : r)
+            {
+              auto mata_ci = mata.GetRowIndices(i);
+              auto matc_ci = prod->GetRowIndices(i);
+              auto matc_vals = prod->GetRowValues(i);
+-             
++
+              for (int k = 0; k < matc_ci.Size(); k++)
+                {
+                  size_t hashval = size_t(matc_ci[k]) & nhashm1; // % nhash;
+                  hash[hashval].pos = k;
+                  hash[hashval].idx = matc_ci[k];
+                }
+-             
++
+              for (int j : Range(mata_ci))
+                {
+                  auto vala = mata.GetRowValues(i)[j];
+                  int rowb = mata.GetRowIndices(i)[j];
+-                 
++
+                  auto matb_ci = matb.GetRowIndices(rowb);
+                  auto matb_vals = matb.GetRowValues(rowb);
+                  for (int k = 0; k < matb_ci.Size(); k++)
+@@ -1534,7 +1534,7 @@ namespace ngla
+                      unsigned hashval = unsigned(colb) & nhashm1; // % nhash;
+                      if (hash[hashval].idx == colb)
+                        { // lucky fast branch
+-                        matc_vals[hash[hashval].pos] += vala * matb_vals[k]; 
++                        matc_vals[hash[hashval].pos] += vala * matb_vals[k];
+                        }
+                      else
+                       { // do the binary search
+@@ -1570,11 +1570,11 @@ namespace ngla
+     static Timer tbuild ("sparsematrix - restrict, build matrix");
+     static Timer tcomp ("sparsematrix - restrict, compute matrix");
+     RegionTimer reg(t);
+-    
++
+     int n = this->Height();
+ 
+     auto cmat = dynamic_pointer_cast<SparseMatrixSymmetric<TM,TV>>(acmat);
+- 
++
+     // if no coarse matrix, build up matrix-graph!
+     if ( !cmat )
+       {
+@@ -1594,7 +1594,7 @@ namespace ngla
+ 		  {
+ 		    int kk = prol_rowind[k];
+ 		    int ll = prol_colind[l];
+-		    
++
+ 		    if (kk >= ll) swap (kk,ll);
+ 		    e2v.Append (IVec<2> (kk,ll));
+ 		  }
+@@ -1606,7 +1606,7 @@ namespace ngla
+ 	nc++;
+ 
+ 	// *testout << "e2v = " << endl << e2v << endl;
+-        
++
+         // count all entries in row with multiplicity
+ 	Array<int> cnt(nc);
+ 	cnt = 0;
+@@ -1620,7 +1620,7 @@ namespace ngla
+ 	    int v1 = e2v[i][1];
+ 	    v2e[v1][cnt[v1]++] = i;
+ 	  }
+-	
++
+ 	cnt = 0;
+ 	marks = -1;
+ 
+@@ -1630,7 +1630,7 @@ namespace ngla
+ 	    {
+ 	      int jj = v2e[i][j];
+ 	      int v0 = e2v[jj][0];
+-	      if (marks[v0] != i) 
++	      if (marks[v0] != i)
+ 		{
+ 		  cnt[i]++;
+ 		  marks[v0] = i;
+@@ -1645,7 +1645,7 @@ namespace ngla
+ 	    {
+ 	      int jj = v2e[i][j];
+ 	      int v0 = e2v[jj][0];
+-	      if (marks[v0] != i) 
++	      if (marks[v0] != i)
+ 		{
+ 		  marks[v0] = i;
+ 		  cmat -> CreatePosition (i, v0);
+@@ -1655,7 +1655,7 @@ namespace ngla
+ 
+     *cmat = 0.;
+     RegionTimer reg2(tcomp);
+-	  
++
+     for (int i = 0; i < n; i++)
+       {
+         FlatArray mat_ri = this->GetRowIndices(i);
+@@ -1664,7 +1664,7 @@ namespace ngla
+         for (int j = 0; j < mat_ri.Size(); j++)
+           {
+             int col = mat_ri[j];
+-            TM mat_val = mat_rval[j]; 
++            TM mat_val = mat_rval[j];
+ 
+             FlatArray prol_ri_i = prol.GetRowIndices(i);
+             FlatArray prol_ri_col = prol.GetRowIndices(col);
+@@ -1676,25 +1676,25 @@ namespace ngla
+                 {
+                   int kk = prol_ri_i[k];
+                   int ll = prol_ri_col[l];
+-                  
++
+                   if ( kk>=ll && kk < cmat->Height() )
+                     {
+-                      (*cmat)(kk,ll) += 
+-                        prol_rval_i[k] * prol_rval_col[l] * mat_val; 
++                      (*cmat)(kk,ll) +=
++                        prol_rval_i[k] * prol_rval_col[l] * mat_val;
+                     }
+-                  
++
+                   if (ll >= kk && i != col && ll < cmat->Height() )
+                     {
+-                      (*cmat)(ll,kk) += 
+-                        prol_rval_col[l] * prol_rval_i[k] * Trans(mat_val); 
++                      (*cmat)(ll,kk) +=
++                        prol_rval_col[l] * prol_rval_i[k] * Trans(mat_val);
+                     }
+-                  
++
+                 }
+           }
+       }
+     return cmat;
+   }
+-  
++
+ 
+ 
+ 
+@@ -1722,7 +1722,7 @@ namespace ngla
+     // new version
+     // auto prolT = TransposeMatrix(prol);
+     auto prolT = dynamic_pointer_cast<SparseMatrixTM<double>> (prol.CreateTranspose());
+-    
++
+     auto prod1 = MatMult<std::complex<double>, std::complex<double>, double>(*this, prol);
+     auto prod = MatMult<std::complex<double>, double, std::complex<double>>(*prolT, *prod1);
+     return prod;
+@@ -1740,7 +1740,7 @@ namespace ngla
+     RegionTimer reg(t);
+     // new version
+     // auto prolT = TransposeMatrix(prol);
+-    auto prolT = dynamic_pointer_cast<SparseMatrixTM<double>> (prol.CreateTranspose());    
++    auto prolT = dynamic_pointer_cast<SparseMatrixTM<double>> (prol.CreateTranspose());
+     auto full = MakeFullMatrix(*this);
+ 
+     auto prod1 = MatMult<double, double, double>(*full, prol);
+@@ -1760,12 +1760,12 @@ namespace ngla
+     static Timer tbuild4 ("sparsematrix - restrict, build matrix4");
+     static Timer tcomp ("sparsematrix - restrict, compute matrix");
+     RegionTimer reg(t);
+-    
++
+     int n = this->Height();
+ 
+-    SparseMatrixSymmetric<double,double>* cmat = 
++    SparseMatrixSymmetric<double,double>* cmat =
+       dynamic_cast< SparseMatrixSymmetric<double,double>* > ( acmat );
+- 
++
+     // if no coarse matrix, build up matrix-graph!
+     if ( !cmat )
+       {
+@@ -1813,7 +1813,7 @@ namespace ngla
+ 
+         tbuild2.Stop();
+         tbuild3.Start();
+-	
++
+ 	cnt = 0;
+ 	Array<int> marks(n);
+ 	marks = -1;
+@@ -1824,7 +1824,7 @@ namespace ngla
+ 	    {
+ 	      int jj = v2e[i][j];
+ 	      int v0 = e2v[jj][0];
+-	      if (marks[v0] != i) 
++	      if (marks[v0] != i)
+ 		{
+ 		  cnt[i]++;
+ 		  marks[v0] = i;
+@@ -1842,7 +1842,7 @@ namespace ngla
+ 	    {
+ 	      int jj = v2e[i][j];
+ 	      int v0 = e2v[jj][0];
+-	      if (marks[v0] != i) 
++	      if (marks[v0] != i)
+ 		{
+ 		  marks[v0] = i;
+ 		  cmat -> CreatePosition (i, v0);
+@@ -1855,7 +1855,7 @@ namespace ngla
+     *cmat = 0.;
+     RegionTimer reg2(tcomp);
+ 
+-    // #pragma omp parallel for	  
++    // #pragma omp parallel for
+     for (int i = 0; i < n; i++)
+       {
+         FlatArray<int> mat_ri = this->GetRowIndices(i);
+@@ -1864,7 +1864,7 @@ namespace ngla
+         for (int j = 0; j < mat_ri.Size(); j++)
+           {
+             int col = mat_ri[j];
+-            double mat_val = mat_rval[j]; 
++            double mat_val = mat_rval[j];
+ 
+             FlatArray<int> prol_rowind = prol.GetRowIndices(i);
+             FlatArray<int> prol_colind = prol.GetRowIndices(col);
+@@ -1876,21 +1876,21 @@ namespace ngla
+                 {
+                   int kk = prol_rowind[k];
+                   int ll = prol_colind[l];
+-                  
++
+                   if ( kk>=ll && kk < cmat->Height() )
+                     {
+                       auto val = prol_rowval[k] * prol_colval[l] * mat_val;
+-                      // #pragma omp atomic                      
++                      // #pragma omp atomic
+                       (*cmat)(kk,ll) += val;
+                     }
+-                  
++
+                   if (ll >= kk && i != col && ll < cmat->Height() )
+                     {
+                       auto val = prol_colval[l] * prol_rowval[k] * Trans(mat_val);
+-                      // #pragma omp atomic                      
++                      // #pragma omp atomic
+                       (*cmat)(ll,kk) += val;
+                     }
+-                  
++
+                 }
+           }
+       }
+@@ -1905,7 +1905,7 @@ namespace ngla
+ 
+ 
+ 
+-  
++
+ 
+   template <class TM, class TV>
+   shared_ptr<BaseMatrix> SparseMatrixSymmetric<TM,TV> :: InverseMatrix (shared_ptr<BitArray> subset) const
 @@ -1923,10 +1923,11 @@ namespace ngla
        }
      else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
@@ -161,38 +1366,117 @@ index a7792a5fa..962b07292 100644
        }
      else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
        {
-diff --git a/linalg/sparsematrix_impl.hpp b/linalg/sparsematrix_impl.hpp
-index ac2061b19..fd12535a6 100644
---- a/linalg/sparsematrix_impl.hpp
-+++ b/linalg/sparsematrix_impl.hpp
-@@ -358,10 +358,11 @@ namespace ngla
- 	}
-       else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
- 	{
--	  if(is_pardiso_available)
+@@ -2094,13 +2096,12 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM,T
+     case(PARDISO):
+     case(PARDISOSPD):
+     {
+-      if(is_pardiso_available)
 +#ifdef USE_PARDISO
- 	    return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (dynamic_pointer_cast<const SparseMatrix<TM, TV_ROW, TV_COL>>(this->shared_from_this()), subset);
--	  else
+         return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>>(A, subset, clusters);
+-      else
+-      {
 +#else
- 	    throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
+         throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
+         return nullptr;
+-      }
 +#endif
- 	}
-       else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
- 	{
-@@ -428,10 +429,11 @@ namespace ngla
- 	}
-       else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
- 	{
--	  if(is_pardiso_available)
-+#ifdef USE_PARDISO
- 	    return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (dynamic_pointer_cast<const SparseMatrix<TM,TV_ROW,TV_COL>>(this->shared_from_this()), nullptr, clusters);
--	  else
-+#else
- 	    throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
-+#endif
- 	}
-       else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
- 	{
+       break;
+     }
+     case(UMFPACK):
+@@ -2215,7 +2216,7 @@ shared_ptr<BaseMatrix> CreateSparseMatrixInverse(shared_ptr<const BaseSparseMatr
+   template class SparseMatrixSymmetric<Mat<1, 1, double>>;	\
+   template class SparseMatrixSymmetric<Mat<1, 1, Complex>>;
+ 
+-  
++
+ #if MAX_SYS_DIM >= 2
+   INST_SPMS(2);
+ #endif
+@@ -2397,7 +2398,7 @@ shared_ptr<BaseMatrix> CreateSparseMatrixInverse(shared_ptr<const BaseSparseMatr
+ #ifdef CACHEBLOCKSIZE
+   template class SparseMatrixSymmetric<double, Vec<CACHEBLOCKSIZE> >;
+ #endif
+-  
++
+ #if MAX_CACHEBLOCKS >= 2
+   template class SparseMatrixSymmetric<double, Vec<2> >;
+ #ifdef GOLD
+@@ -2533,8 +2534,8 @@ shared_ptr<BaseMatrix> CreateSparseMatrixInverse(shared_ptr<const BaseSparseMatr
+ 
+   template <typename TSCAL>
+   void SparseBlockMatrix<TSCAL> ::
+-  AddElementMatrix(FlatArray<int> dnums1, 
+-                   FlatArray<int> dnums2, 
++  AddElementMatrix(FlatArray<int> dnums1,
++                   FlatArray<int> dnums2,
+                    BareSliceMatrix<TSCAL> elmat,
+                    bool use_atomic)
+   {
+@@ -2557,24 +2558,24 @@ shared_ptr<BaseMatrix> CreateSparseMatrixInverse(shared_ptr<const BaseSparseMatr
+     for (int i = 0; i < size; i++)
+       {
+ 	ost << "Row " << i << ":";
+-	
++
+ 	for (size_t j = firsti[i]; j < firsti[i+1]; j++)
+           ost << " " << colnr[j] << ":" << endl
+               << FlatMatrix<TSCAL>(bheight, bwidth, (TSCAL*)data.Addr(j*bheight*bwidth)) << endl;
+-                            
++
+ 	ost << "\n";
+       }
+-    
++
+     return ost;
+   }
+ 
+-  
++
+   template <typename TSCAL>
+   void SparseBlockMatrix<TSCAL> ::
+   MultAdd (double s, const BaseVector & x, BaseVector & y) const
+   {
+     static Timer tblockmat("SparseBlockMatrix::MultAdd");
+-     
++
+     auto fx = x.FV<TSCAL>();
+     auto fy = y.FV<TSCAL>();
+ 
+@@ -2586,28 +2587,28 @@ shared_ptr<BaseMatrix> CreateSparseMatrixInverse(shared_ptr<const BaseSparseMatr
+     size_t bw = bwidth;
+     size_t bh = bheight;
+     size_t bsize = bw*bh;
+-    
++
+     tblockmat.Start();
+-    
++
+     for (auto i : Range(this->Height()))
+       {
+         // sum = 0;
+-        auto sum = fy.Range(i*bh, i*bh+bh);        
++        auto sum = fy.Range(i*bh, i*bh+bh);
+         for (auto j : Range(index[i], index[i+1]))
+           {
+-            auto mat = FlatMatrix<TSCAL>(bh, bw, (TSCAL*)values.Addr(j*bsize)); 
++            auto mat = FlatMatrix<TSCAL>(bh, bw, (TSCAL*)values.Addr(j*bsize));
+             auto vx = fx.Range(bw*cols[j], bw*cols[j]+bw);
+             sum += s*mat*vx;
+           }
+         // auto vy = fy.Range(i*bh, i*bh+bh);
+         // vy += s*sum;
+       }
+-    
++
+     tblockmat.Stop();
+     tblockmat.AddFlops (bheight*bwidth*this->NZE());
+   }
+ 
+   template class SparseBlockMatrix<double>;
+   template class SparseBlockMatrix<Complex>;
+-  
++
+ }
 diff --git a/solve/ngsolve.cpp b/solve/ngsolve.cpp
 index 06fabf5de..699b2d061 100644
 --- a/solve/ngsolve.cpp
