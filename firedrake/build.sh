@@ -118,15 +118,6 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/libsupermesh-src
 
-# TinyASM
-git clone https://github.com/florianwechsung/TinyASM.git /tmp/tinyasm-src
-cd /tmp/tinyasm-src
-patch -p 1 < $REPODIR/firedrake/patches/02-use-system-pybind11-in-tinyasm
-patch -p 1 < $REPODIR/firedrake/patches/07-drop-march-mtune-in-tinyasm
-export PYBIND11_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --user .
-cd && rm -rf /tmp/tinyasm-src
-
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
