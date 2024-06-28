@@ -17,7 +17,7 @@ jobs:
         run: python3 -m pip -q install --upgrade nbqa ruff yamllint
       - name: Run ruff on python files
         run: |
-          python3 -m ruff .
+          python3 -m ruff check .
       - name: Run ruff on notebooks test files
         run: |
           python3 -m nbqa ruff .
