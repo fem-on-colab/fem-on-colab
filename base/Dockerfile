@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: MIT
 
 FROM ubuntu:22.04
-MAINTAINER Francesco Ballarin <francesco.ballarin@unicatt.it>
 
 ENV INSTALL_PREFIX=/usr/local \
     PROJECT_NAME=fem-on-colab \
