@@ -68,7 +68,7 @@ remove_mkl_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove misc packages to decrease the image size
 remove_misc_packages () {
-    grep -v -e "^bigframes" -e "^db-dtypes" -e "^ibis-framework" -e "^music21" -e "^pandas-gbq" -e "^pyarrow" -h ${1} > ${1}.tmp
+    grep -v -e "^bigframes" -e "^bigquery-magics" -e "^db-dtypes" -e "^ibis-framework" -e "^music21" -e "^pandas-gbq" -e "^pyarrow" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_misc_packages ${BACKEND_INFO}/pip-freeze-clean.txt
