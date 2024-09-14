@@ -17,6 +17,11 @@ git submodule update --init --recursive
 TAGS=($(git tag -l --sort=-version:refname "v5.[0-9].[0-9]"))
 echo "Latest tag in the v5 series is ${TAGS[0]}"
 git checkout ${TAGS[0]}
+# Apply https://github.com/openpmix/prrte/pull/1976 for GCC 14 compatibility till it gets included in the openmpi fork
+cd 3rd-party/prrte
+wget https://patch-diff.githubusercontent.com/raw/openpmix/prrte/pull/1976.patch
+patch -p1 < 1976.patch
+cd -
 ./autogen.pl --force
 ./configure \
     --build=x86_64-linux-gnu \
