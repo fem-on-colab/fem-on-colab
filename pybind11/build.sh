@@ -12,8 +12,9 @@ set -x
 PYBIND11_ARCHIVE_PATH="skip" source pybind11/install.sh
 
 # Install pybind11
-git clone https://github.com/pybind/pybind11.git /tmp/pybind11-src
+git clone https://github.com/francesco-ballarin/pybind11.git /tmp/pybind11-src
 cd /tmp/pybind11-src
+git checkout regression-5381
 cmake \
     -D CMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
     -D PYBIND11_TEST=off \
