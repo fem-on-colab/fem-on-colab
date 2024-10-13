@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
-        run: python3 -m pip -q install --upgrade nbqa ruff yamllint
+        run: python3 -m pip -q install --break-system-packages --upgrade nbqa ruff yamllint
       - name: Run ruff on python files
         run: |
           python3 -m ruff check .
