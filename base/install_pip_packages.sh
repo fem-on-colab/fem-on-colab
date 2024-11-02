@@ -31,23 +31,23 @@ remove_outdated_packages () {
 }
 remove_outdated_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
-# Remove packages (and their dependents) which we are going to compile from source anyway
+# Remove packages which we are going to compile from source anyway
 remove_packages_built_from_source () {
-    grep -v -e "^arviz==" -e "^h5py==" -e "^h5netcdf==" -e "^pymc==" -h ${1} > ${1}.tmp
+    grep -v -e "^h5py==" -e "^h5netcdf==" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_packages_built_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove machine learning packages to decrease the image size
 remove_machine_learning_packages () {
-    grep -v -e "^accelerate" -e "^chex" -e "^datascience" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^malloy" -e "^optax" -e "^orbax" -e "^tensorboard" -e "^tensorflow" -e "^tf_" -e "^torch" -e "^triton" -e "^xgboost" -h ${1} > ${1}.tmp
+    grep -v -e "^accelerate" -e "^arviz==" -e "^chex" -e "^datascience" -e "^dlib" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^malloy" -e "^openai" -e "^optax" -e "^orbax" -e "^peft" -e "^pymc==" -e "^sentence-transformers" -e "^tensorboard" -e "^tensorflow" -e "^tf_" -e "^timm" -e "^torch" -e "^triton" -e "^xgboost" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_machine_learning_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove cuda packages to decrease the image size
 remove_cuda_packages () {
-    grep -v -e "^albucore" -e "^albumentations" -e "^cudf-" -e "^cupy-" -e "^dopamine" -e "^imgaug" -e "^opencv" -e "^qudida" -h ${1} > ${1}.tmp
+    grep -v -e "^albucore" -e "^albumentations" -e "^cuda-" -e "^cudf-" -e "^cupy-" -e "^dopamine" -e "^imgaug" -e "^libcudf-" -e "^nvidia-" -e "^nx-" -e "^opencv" -e "^pylibcudf" -e "^pylibcugraph" -e "^pylibraft" -e "^pynvjitlink" -e "^qudida" -e "^rmm-" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_cuda_packages ${BACKEND_INFO}/pip-freeze-clean.txt
@@ -68,7 +68,7 @@ remove_mkl_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove misc packages to decrease the image size
 remove_misc_packages () {
-    grep -v -e "^bigframes" -e "^bigquery-magics" -e "^db-dtypes" -e "^ibis-framework" -e "^music21" -e "^pandas-gbq" -e "^pyarrow" -h ${1} > ${1}.tmp
+    grep -v -e "^bigframes" -e "^bigquery-magics" -e "^db-dtypes" -e"^earthengine" -e "^eerepr" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^google" -e "^grpc" -e "^gspread" -e "^ibis-framework" -e "^music21" -e "^pandas-gbq" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pyspark" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_misc_packages ${BACKEND_INFO}/pip-freeze-clean.txt
