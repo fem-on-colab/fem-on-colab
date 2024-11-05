@@ -23,6 +23,12 @@ FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 # scikit-build-core, required for building Basix and DOLFINx
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user scikit-build-core[pyproject]
 
+# UFL
+git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
+cd /tmp/ufl-src
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
+cd && rm -rf /tmp/ufl-src
+
 # Basix
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
 mkdir -p /tmp/basix-src/build
@@ -38,12 +44,6 @@ cd /tmp/basix-src/python
 export Basix_DIR=$INSTALL_PREFIX
 PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/basix-src
-
-# UFL
-git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
-cd /tmp/ufl-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/ufl-src
 
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
