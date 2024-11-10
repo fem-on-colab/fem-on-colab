@@ -1,5 +1,5 @@
 diff --git a/pyvista/plotting/plotter.py b/pyvista/plotting/plotter.py
-index 7877b5ee..2c9d4875 100644
+index 7877b5ee..0e79fc7c 100644
 --- a/pyvista/plotting/plotter.py
 +++ b/pyvista/plotting/plotter.py
 @@ -148,7 +148,6 @@ def _warn_xserver():  # pragma: no cover
@@ -10,10 +10,17 @@ index 7877b5ee..2c9d4875 100644
          ]:
              return
  
-@@ -163,6 +162,8 @@ def _warn_xserver():  # pragma: no cover
-             'Try starting a virtual frame buffer with xvfb, or using\n '
-             ' ``pyvista.start_xvfb()``\n',
-         )
+@@ -156,13 +155,8 @@ def _warn_xserver():  # pragma: no cover
+         if uses_egl():
+             return
+ 
+-        warnings.warn(
+-            '\n'
+-            'This system does not appear to be running an xserver.\n'
+-            'PyVista will likely segfault when rendering.\n\n'
+-            'Try starting a virtual frame buffer with xvfb, or using\n '
+-            ' ``pyvista.start_xvfb()``\n',
+-        )
 +        if "DISPLAY" not in os.environ:
 +            pyvista.start_xvfb()
  
