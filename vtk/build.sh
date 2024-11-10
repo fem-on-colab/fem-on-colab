@@ -49,6 +49,9 @@ cd && rm -rf /tmp/adios2-src
 # Install xvfbwrapper too
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
 
+# Install jupyter_bokeh
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user jupyter_bokeh
+
 # Install panel
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user panel
 
