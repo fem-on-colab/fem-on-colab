@@ -31,57 +31,6 @@ patch -p 1 < $REPODIR/firedrake/patches/01-unpin-setuptools-in-islpy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/islpy-src
 
-# loopy
-git clone https://github.com/firedrakeproject/loopy.git /tmp/loopy-src
-cd /tmp/loopy-src
-git submodule update --init --recursive
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/loopy-src
-
-# netCDF4-python
-git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
-cd /tmp/netcdf4-python-src
-git submodule update --init --recursive
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --no-build-isolation --user .
-cd && rm -rf /tmp/netcdf4-python-src
-
-# FIAT
-git clone https://github.com/firedrakeproject/fiat.git /tmp/fiat-src
-cd /tmp/fiat-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/fiat-src
-
-# FInAT
-git clone https://github.com/FInAT/FInAT.git /tmp/finat-src
-cd /tmp/finat-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/finat-src
-
-# UFL
-git clone https://github.com/firedrakeproject/ufl.git /tmp/ufl-src
-cd /tmp/ufl-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/ufl-src
-
-# TSFC
-git clone https://github.com/firedrakeproject/tsfc.git /tmp/tsfc-src
-cd /tmp/tsfc-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/tsfc-src
-
-# PyOP2
-git clone https://github.com/OP2/PyOP2.git /tmp/pyop2-src
-cd /tmp/pyop2-src
-export PETSC_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/pyop2-src
-
-# pyadjoint
-git clone https://github.com/dolfin-adjoint/pyadjoint /tmp/pyadjoint-src
-cd /tmp/pyadjoint-src
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
-cd && rm -rf /tmp/pyadjoint-src
-
 # libspatialindex
 git clone https://github.com/libspatialindex/libspatialindex.git /tmp/libspatialindex-src
 mkdir -p /tmp/libspatialindex-src/build
@@ -117,41 +66,16 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/libsupermesh-src
 
+# firedrake build dependencies
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pkgconfig
+
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
-if [[ "$SCALAR_TYPE" == "complex" ]]; then
-    patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-complex-mode-in-firedrake
-else
-    patch -p 1 < $REPODIR/firedrake/patches/03-hardcode-real-mode-in-firedrake
-fi
-sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
-patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-petsc-dir-omp-num-threads-in-firedrake
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
+git checkout JDBetteridge/merge_pyop2_tsfc
+patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-omp-num-threads-in-firedrake
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --no-build-isolation --user .
 cd && rm -rf /tmp/firedrake-src
-
-# Write out configuration file
-mkdir -p tmp_for_global_import && cd tmp_for_global_import
-CONFIGURATION_FILE=$(python3 -c 'import firedrake_configuration, os; print(os.path.join(os.path.dirname(firedrake_configuration.__file__), "configuration.json"))')
-cd .. && rm -rf tmp_for_global_import
-if [[ "$SCALAR_TYPE" == "complex" ]]; then
-    IS_COMPLEX="true"
-else
-    IS_COMPLEX="false"
-fi
-cat <<EOT > $CONFIGURATION_FILE
-{
-  "options": {
-    "cache_dir": "/root/.cache/firedrake",
-    "complex": $IS_COMPLEX,
-    "honour_petsc_dir": true,
-    "petsc_int_type": "int32"
-  }
-}
-EOT
-
-# firedrake run dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user cachetools progress
 
 # fireshape dependencies (real mode only)
 # We package them for simplicity with firedrake so that fireshape may be pip installed.
@@ -184,3 +108,11 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     # wurlitzer (only used in notebooks to redirect the C++ output to the notebook cell ouput)
     PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user wurlitzer
 fi
+
+# gusto and icepack depend on netCDF4-python
+# We package it for simplicity with firedrake so that gusto and icepack may be pip installed.
+git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
+cd /tmp/netcdf4-python-src
+git submodule update --init --recursive
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --no-build-isolation --user .
+cd && rm -rf /tmp/netcdf4-python-src

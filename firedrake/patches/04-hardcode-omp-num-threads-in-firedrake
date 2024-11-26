@@ -1,0 +1,12 @@
+diff --git a/firedrake/__init__.py b/firedrake/__init__.py
+index 3c89e6142..dfde9c857 100644
+--- a/firedrake/__init__.py
++++ b/firedrake/__init__.py
+@@ -156,6 +156,7 @@ except TypeError:
+     info("Cannot set number of threads in BLAS library because the library could not be found")
+ 
+ # OMP_NUM_THREADS can be set to a comma-separated list of positive integers
++os.environ["OMP_NUM_THREADS"] = "1"
+ try:
+     _omp_num_threads = int(os.environ.get('OMP_NUM_THREADS'))
+ except (ValueError, TypeError):
