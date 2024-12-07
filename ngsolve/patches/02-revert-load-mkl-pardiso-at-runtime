@@ -1,19 +1,18 @@
 diff --git a/linalg/la.hpp b/linalg/la.hpp
-index 9cbf01e98..decdb489b 100644
+index 426b843d9..7b8a4ca67 100644
 --- a/linalg/la.hpp
 +++ b/linalg/la.hpp
-@@ -32,8 +32,8 @@ namespace ngla
+@@ -23,7 +23,7 @@ namespace ngla
  #include "sparsematrix_dyn.hpp"
  #include "order.hpp"
  #include "sparsecholesky.hpp"
 -#include "pardisoinverse.hpp"
- // include these only from c++-files
 +// #include "pardisoinverse.hpp"
- // #include "umfpackinverse.hpp"
- // #include "superluinverse.hpp"
- // #include "mumpsinverse.hpp"
+ #include "jacobi.hpp"
+ #include "blockjacobi.hpp"
+ #include "commutingAMG.hpp"
 diff --git a/linalg/pardisoinverse.cpp b/linalg/pardisoinverse.cpp
-index 46d59901f..6b110c9d9 100644
+index 881843067..5c3e26099 100644
 --- a/linalg/pardisoinverse.cpp
 +++ b/linalg/pardisoinverse.cpp
 @@ -48,20 +48,10 @@ extern  integer F77_FUNC(pardisoinit)
@@ -103,10 +102,10 @@ index 46d59901f..6b110c9d9 100644
 +
 +#endif
 diff --git a/linalg/pardisoinverse.hpp b/linalg/pardisoinverse.hpp
-index bfafc3f1a..ad1fd862c 100644
+index 3ee46464a..7fe4b3fc5 100644
 --- a/linalg/pardisoinverse.hpp
 +++ b/linalg/pardisoinverse.hpp
-@@ -19,7 +19,6 @@
+@@ -20,7 +20,6 @@
  namespace ngla
  {
    using ngbla::integer;
@@ -115,10 +114,10 @@ index bfafc3f1a..ad1fd862c 100644
  
    /*
 diff --git a/linalg/python_linalg.cpp b/linalg/python_linalg.cpp
-index 8ecf63ea9..379dcf42d 100644
+index 5745be1de..c32209343 100644
 --- a/linalg/python_linalg.cpp
 +++ b/linalg/python_linalg.cpp
-@@ -1792,8 +1792,9 @@ shift : object
+@@ -1818,8 +1818,9 @@ shift : object
  
    m.def("GetAvailableSolvers", []() {
      py::list solvers;
@@ -130,10 +129,10 @@ index 8ecf63ea9..379dcf42d 100644
      solvers.append(GetInverseName(MUMPS));
  #endif // USE_MUMPS
 diff --git a/linalg/sparsematrix.cpp b/linalg/sparsematrix.cpp
-index 3d611e28c..6f90081e0 100644
+index 8b114847b..47e001222 100644
 --- a/linalg/sparsematrix.cpp
 +++ b/linalg/sparsematrix.cpp
-@@ -1923,10 +1923,11 @@ namespace ngla
+@@ -2006,10 +2006,11 @@ namespace ngla
        }
      else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
        {
@@ -147,7 +146,7 @@ index 3d611e28c..6f90081e0 100644
        }
      else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
        {
-@@ -1964,10 +1965,11 @@ namespace ngla
+@@ -2047,10 +2048,11 @@ namespace ngla
        }
      else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
        {
@@ -161,7 +160,7 @@ index 3d611e28c..6f90081e0 100644
        }
      else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
        {
-@@ -2094,13 +2096,12 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM,T
+@@ -2177,13 +2179,12 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM,T
      case(PARDISO):
      case(PARDISOSPD):
      {
@@ -179,10 +178,10 @@ index 3d611e28c..6f90081e0 100644
      }
      case(UMFPACK):
 diff --git a/solve/ngsolve.cpp b/solve/ngsolve.cpp
-index 06fabf5de..699b2d061 100644
+index c742c0433..d2e7018ac 100644
 --- a/solve/ngsolve.cpp
 +++ b/solve/ngsolve.cpp
-@@ -703,8 +703,9 @@ int NGSolve_Init (Tcl_Interp * interp)
+@@ -695,8 +695,9 @@ int NGSolve_Init (Tcl_Interp * interp)
  #endif
  
  
