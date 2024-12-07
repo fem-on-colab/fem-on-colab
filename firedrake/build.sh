@@ -67,7 +67,7 @@ make -j $(nproc) install
 cd && rm -rf /tmp/libsupermesh-src
 
 # firedrake build dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pkgconfig
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling pkgconfig
 
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
