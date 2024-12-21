@@ -1,0 +1,15 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 11f0f55..369120c 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -28,9 +28,8 @@ classifiers = [
+ [tool.poetry.dependencies]
+ python = "^3.9"
+ netgen-mesher = "^6.2"
+-netgen-occt = "^7.8"
+ petsc4py =  "^3.22.1"
+-numpy = "^2"
++numpy = "^1"
+ scipy = "^1"
+ 
+ [tool.poetry.group.dev.dependencies]

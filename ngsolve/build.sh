@@ -88,10 +88,14 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/ngsxfem-src
 
+# poetry-core, required for building ngsPETSc
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user poetry-core
+
 # ngsPETSc
 git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
-NGSPETSC_NO_INSTALL_REQUIRED=ON PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
+patch -p 1 < $REPODIR/ngsolve/patches/03-ngspetsc-drop-dependencies
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 
 # Install a further ngsolve.webgui dependency
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user webgui_jupyter_widgets
