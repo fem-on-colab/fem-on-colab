@@ -52,18 +52,13 @@ patch -p 1 < $REPODIR/firedrake/patches/08-install-prefix-in-rtree
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/rtree-src
 
+# libsupermesh build dependencies
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja scikit-build-core
+
 # libsupermesh
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
-mkdir -p /tmp/libsupermesh-src/build
-cd /tmp/libsupermesh-src/build
-cmake \
-    -DCMAKE_C_COMPILER=$(which mpicc) \
-    -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-    -DCMAKE_SKIP_RPATH:BOOL=ON \
-    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
-    ..
-make -j $(nproc) install
+cd /tmp/libsupermesh-src
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/libsupermesh-src
 
 # firedrake build dependencies
@@ -73,7 +68,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling pkgconfig
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-omp-num-threads-in-firedrake
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --no-build-isolation --user .
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/firedrake-src
 
 # fireshape dependencies (real mode only)
@@ -113,5 +108,5 @@ fi
 git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
 git submodule update --init --recursive
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --no-build-isolation --user .
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/netcdf4-python-src
