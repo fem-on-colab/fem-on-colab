@@ -108,5 +108,6 @@ fi
 git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
 git submodule update --init --recursive
+patch -p 1 < $REPODIR/firedrake/patches/02-unpin-numpy-setuptools-in-netcdf4-python
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/netcdf4-python-src
