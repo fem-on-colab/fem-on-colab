@@ -12,9 +12,6 @@ REPODIR=$PWD
 # Install h5py (and its dependencies, most notably gcc and mpi4py)
 VTK_ARCHIVE_PATH="skip" source vtk/install.sh
 
-# Install vtk from wheels and patch it
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user vtk
-
 # Determine site target folder, as it will be passed to ADIOS2 configuration
 if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
     SITE_TARGET="dist-packages"
@@ -49,7 +46,7 @@ cd && rm -rf /tmp/adios2-src
 # Install xvfbwrapper too
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
 
-# Install pyvista
+# Install pyvista: note that this will also install vtk
 git clone https://github.com/pyvista/pyvista.git /tmp/pyvista-src
 cd /tmp/pyvista-src
 TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9]*.[0-9]"))
