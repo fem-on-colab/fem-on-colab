@@ -2,7 +2,7 @@
 
 [tool.ruff]
 line-length = 120
-target-version = "py310" # since PYTHON_VERSION=python3.10 in base/Dockerfile
+target-version = "py311" # since PYTHON_VERSION=python3.11 in base/Dockerfile
 
 [tool.ruff.lint]
 select = ["E", "F", "FLY", "ICN", "Q", "RUF", "UP", "W"]
