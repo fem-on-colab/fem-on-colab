@@ -10,7 +10,7 @@ set -x
 # Install gcc
 MPI4PY_ARCHIVE_PATH="skip" source mpi4py/install.sh
 
-# Install MPI
+# Install OpenMPI
 git clone https://github.com/open-mpi/ompi.git /tmp/openmpi-src
 cd /tmp/openmpi-src
 git submodule update --init --recursive
@@ -19,7 +19,6 @@ echo "Latest tag in the v5 series is ${TAGS[0]}"
 git checkout ${TAGS[0]}
 ./autogen.pl --force
 ./configure \
-    --build=x86_64-linux-gnu \
     --prefix=$INSTALL_PREFIX \
     --disable-silent-rules --disable-maintainer-mode --disable-dependency-tracking --disable-wrapper-runpath \
     --disable-sphinx
