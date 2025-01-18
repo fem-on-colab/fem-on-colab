@@ -22,7 +22,7 @@ fi
 # Install ADIOS2
 git clone https://github.com/ornladios/ADIOS2.git /tmp/adios2-src
 cd /tmp/adios2-src
-TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9].[0-9]"))
+TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9]*.[0-9]"))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
 mkdir -p /tmp/adios2-src/build
