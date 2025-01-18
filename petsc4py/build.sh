@@ -55,7 +55,7 @@ fi
     --with-debugging=0 \
     --with-hdf5-dir=$INSTALL_PREFIX \
     --with-zlib-include=/usr/include \
-    --with-zlib-lib=/usr/lib/x86_64-linux-gnu/libz.so \
+    --with-zlib-lib=$(find /usr/lib -name libz.so -print -quit) \
     $DOWNLOADS \
     --prefix=$INSTALL_PREFIX \
     CPPFLAGS="-fPIC" \
