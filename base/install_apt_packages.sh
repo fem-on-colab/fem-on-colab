@@ -12,7 +12,7 @@ grep -v -e "^#" -e "^Listing..." -h ${BACKEND_INFO}/apt-list.txt > ${BACKEND_INF
 
 # Remove packages (and their dependents) which we are going to compile from source anyway
 remove_packages_built_from_source () {
-    grep -v -e "^gdal" -e "^libarmadillo" -e "^libgdal" -e "^libhdf" -e "^libhwloc" -e "^libkml" -e "^libnetcdf" -e "^libopenmpi" -e "^libpmix" -e "^libvtk" -e "^mpi-default" -e "^openmpi" -e "^python-gdal" -e "^python3-gdal" -h ${1} > ${1}.tmp
+    grep -v -e "^coinor" -e "^gdal" -e "^libarmadillo" -e "^libgdal" -e "^libhdf" -e "^libhwloc" -e "^libkml" -e "^libmumps"  -e "^libnetcdf" -e "^libopenmpi" -e "^libpmix" -e "^libscalapack" -e "^libscotch" -e "^libvtk" -e "^mpi-default" -e "^openmpi" -e "^python-gdal" -e "^python3-gdal" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
     grep -v -P -e "^libboost(?!-(iostreams|thread))" ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
