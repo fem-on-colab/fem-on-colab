@@ -47,7 +47,7 @@ remove_machine_learning_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove cuda packages to decrease the image size
 remove_cuda_packages () {
-    grep -v -e "^albucore" -e "^albumentations" -e "^cuda-" -e "^cudf-" -e "^cupy-" -e "^dopamine" -e "^imgaug" -e "^libcudf-" -e "^nvidia-" -e "^nx-" -e "^opencv" -e "^pylibcudf" -e "^pylibcugraph" -e "^pylibraft" -e "^pynvjitlink" -e "^qudida" -e "^rmm-" -h ${1} > ${1}.tmp
+    grep -v -e "^albucore" -e "^albumentations" -e "^cuda-" -e "^cudf-" -e "^cupy-" -e "^dopamine" -e "^imgaug" -e "^libcudf-" -e "^libkvikio" -e "^nvidia-" -e "^nx-" -e "^opencv" -e "^pylibcudf" -e "^pylibcugraph" -e "^pylibraft" -e "^pynvjitlink" -e "^qudida" -e "^rmm-" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_cuda_packages ${BACKEND_INFO}/pip-freeze-clean.txt
