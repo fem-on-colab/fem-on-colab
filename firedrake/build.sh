@@ -24,9 +24,8 @@ FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja pcpp scikit-build
 
 # islpy
-git clone https://github.com/inducer/islpy.git /tmp/islpy-src
+git clone --recursive https://github.com/inducer/islpy.git /tmp/islpy-src
 cd /tmp/islpy-src
-git submodule update --init --recursive
 patch -p 1 < $REPODIR/firedrake/patches/01-unpin-setuptools-in-islpy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/islpy-src
@@ -105,9 +104,8 @@ fi
 
 # gusto and icepack depend on netCDF4-python
 # We package it for simplicity with firedrake so that gusto and icepack may be pip installed.
-git clone https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
+git clone --recursive https://github.com/Unidata/netcdf4-python.git /tmp/netcdf4-python-src
 cd /tmp/netcdf4-python-src
-git submodule update --init --recursive
 patch -p 1 < $REPODIR/firedrake/patches/02-unpin-numpy-setuptools-in-netcdf4-python
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/netcdf4-python-src

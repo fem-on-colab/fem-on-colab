@@ -11,12 +11,12 @@ set -x
 MPI4PY_ARCHIVE_PATH="skip" source mpi4py/install.sh
 
 # Install OpenMPI
-git clone https://github.com/open-mpi/ompi.git /tmp/openmpi-src
+git clone --recursive https://github.com/open-mpi/ompi.git /tmp/openmpi-src
 cd /tmp/openmpi-src
-git submodule update --init --recursive
 TAGS=($(git tag -l --sort=-version:refname "v5.[0-9].[0-9]"))
 echo "Latest tag in the v5 series is ${TAGS[0]}"
 git checkout ${TAGS[0]}
+git submodule update --recursive
 sed -i "s/typedef long opal_timer_t;//" opal/include/opal/sys/timer.h
 ./autogen.pl --force
 ./configure \

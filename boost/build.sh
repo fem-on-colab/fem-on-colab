@@ -16,6 +16,7 @@ cd /tmp/boost-src
 TAGS=($(git tag -l --sort=-version:refname "boost-1.[0-9][0-9].[0-9]"))
 echo "Latest tag in the v1 series is ${TAGS[0]}"
 git checkout ${TAGS[0]}
+git submodule update --recursive
 BOOST_TOOLSET="gcc"
 BOOST_CXXFLAGS="cxxflags=-std=c++17"
 BOOST_PYTHON_EXEC="$(which python3)"
