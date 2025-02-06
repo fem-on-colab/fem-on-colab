@@ -40,7 +40,7 @@ remove_packages_built_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove machine learning packages to decrease the image size
 remove_machine_learning_packages () {
-    grep -v -e "^accelerate" -e "^arviz==" -e "^chex" -e "^datascience" -e "^dlib" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^imbalanced-learn" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^librosa" -e "^malloy" -e "^mlxtend" -e "^openai" -e "^optax" -e "^orbax" -e "^peft" -e "^pymc==" -e "^scikit" -e "^sentence-transformers" -e "^shap" -e "^sklearn" -e "^tensorboard" -e "^tensorflow" -e "^tf_" -e "^timm" -e "^torch" -e "^transformers" -e "^triton" -e "^xgboost" -e "^woodwork" -e "^yellowbrick" -h ${1} > ${1}.tmp
+    grep -v -e "^accelerate" -e "^arviz==" -e "^chex" -e "^datascience" -e "^dlib" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^imbalanced-learn" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^langchain" -e "^librosa" -e "^malloy" -e "^mlxtend" -e "^openai" -e "^optax" -e "^orbax" -e "^peft" -e "^pymc==" -e "^scikit" -e "^sentence-transformers" -e "^shap" -e "^sklearn" -e "^tensorboard" -e "^tensorflow" -e "^tf_" -e "^timm" -e "^torch" -e "^transformers" -e "^triton" -e "^xgboost" -e "^woodwork" -e "^yellowbrick" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_machine_learning_packages ${BACKEND_INFO}/pip-freeze-clean.txt
