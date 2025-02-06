@@ -19,9 +19,6 @@ cd /tmp/occt-src
 TAGS=($(git tag -l --sort=-version:refname))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
-# Apply https://github.com/Open-Cascade-SAS/OCCT/commit/7236e83dcc1e7284e66dc61e612154617ef715d6 for GCC 14 compatibility till it gets included in a OCC release
-wget https://github.com/Open-Cascade-SAS/OCCT/commit/7236e83dcc1e7284e66dc61e612154617ef715d6.patch
-patch -p 1 < 7236e83dcc1e7284e66dc61e612154617ef715d6.patch
 mkdir -p /tmp/occt-src/build
 cd /tmp/occt-src/build
 cmake \
