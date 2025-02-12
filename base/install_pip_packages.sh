@@ -68,7 +68,7 @@ remove_mkl_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove misc packages to decrease the image size
 remove_misc_packages () {
-    grep -v -e "^bigframes" -e "^bigquery-magics" -e "^cyipopt" -e "^db-dtypes" -e"^earthengine" -e "^eerepr" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^geopandas" -e "^google" -e "^grpc" -e "^gspread" -e "^highspy" -e "^ibis-framework" -e "^music21" -e "^pandas-gbq" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pyspark" -e "^spanner" -h ${1} > ${1}.tmp
+    grep -v -e "^betterproto" -e "^bigframes" -e "^bigquery-magics" -e "^cyipopt" -e "^db-dtypes" -e"^earthengine" -e "^eerepr" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^geopandas" -e "^google" -e "^grpc" -e "^gspread" -e "^highspy" -e "^kaggle" -e "^ibis-framework" -e "^model-signing" -e "^music21" -e "^pandas-gbq" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pyspark" -e "^sigstore" -e "^spanner" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_misc_packages ${BACKEND_INFO}/pip-freeze-clean.txt
