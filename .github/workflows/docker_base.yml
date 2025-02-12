@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-  IMAGE_PREFIX: ghcr.io/fem-on-colab/base
+  IMAGE_PREFIX: ghcr.io/isosafrasaurus/fem-on-jupyter/base
 
 jobs:
   release:
@@ -35,16 +35,16 @@ jobs:
         run: |
           docker build --pull -t ${IMAGE_PREFIX}:latest -f base/Dockerfile .
       - name: Determine image tag
-        if: github.repository == 'fem-on-colab/fem-on-colab' && steps.push.outputs.push == 'yes'
+        if: github.repository == 'isosafrasaurus/fem-on-jupyter' && steps.push.outputs.push == 'yes'
         id: image_name
         run: |
           IMAGE_TAG=$(docker run -i ${IMAGE_PREFIX}:latest bash /usr/bin/compute_docker_tag.sh)
           echo "image_tag=${IMAGE_TAG}" >> ${GITHUB_OUTPUT}
       - name: Log into the docker registry
-        if: github.repository == 'fem-on-colab/fem-on-colab' && steps.push.outputs.push == 'yes'
+        if: github.repository == 'isosafrasaurus/fem-on-jupyter' && steps.push.outputs.push == 'yes'
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Push to the docker registry
-        if: github.repository == 'fem-on-colab/fem-on-colab' && steps.push.outputs.push == 'yes'
+        if: github.repository == 'isosafrasaurus/fem-on-jupyter' && steps.push.outputs.push == 'yes'
         run: |
           IMAGE_TAG="${{ steps.image_name.outputs.image_tag }}"
           docker tag ${IMAGE_PREFIX}:latest ${IMAGE_PREFIX}:${IMAGE_TAG}
