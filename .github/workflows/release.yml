@@ -34,7 +34,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    container: ghcr.io/fem-on-colab/base:latest
+    container: ghcr.io/isosafrasaurus/fem-on-jupyter/base:latest
     steps:
       - name: Store the current date and time
         id: date_time
