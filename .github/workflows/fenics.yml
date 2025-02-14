@@ -15,7 +15,7 @@ on:
         default: "no"
 
 env:
-  IMAGE_PREFIX: ghcr.io/fem-on-jupyter/fenics
+  IMAGE_PREFIX: ghcr.io/isosafrasaurus/fem-on-jupyter/fenics
 
 jobs:
   release:
