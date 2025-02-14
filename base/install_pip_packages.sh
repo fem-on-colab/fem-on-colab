@@ -74,10 +74,10 @@ remove_misc_packages () {
 remove_misc_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Install the remaining packages from backend info
-PYTHONUSERBASE=/usr python3 -m pip install --user -r ${BACKEND_INFO}/pip-freeze-clean.txt
+PYTHONUSERBASE=/usr python3 -m pip install --user -r ${BACKEND_INFO}/pip-freeze-clean.txt || true
 
 # Install pipdeptree to show dependency tree on failure of the next asserts
-PYTHONUSERBASE=/usr python3 -m pip install --user pipdeptree
+PYTHONUSERBASE=/usr python3 -m pip install --user pipdeptree || true
 
 # Check that removed packages do get installed as part of other dependencies
 PYTHONUSERBASE=/usr python3 -m pip freeze > ${BACKEND_INFO}/pip-freeze-installed.txt
@@ -105,10 +105,10 @@ assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_mkl_pack
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_misc_packages
 
 # Install cmake (for building)
-PYTHONUSERBASE=/usr python3 -m pip install --user cmake
+PYTHONUSERBASE=/usr python3 -m pip install --user cmake || true
 
 # Install pytest (for testing)
-PYTHONUSERBASE=/usr python3 -m pip install --user pytest
+PYTHONUSERBASE=/usr python3 -m pip install --user pytest || true
 
 # Install nbval (for testing)
-PYTHONUSERBASE=/usr python3 -m pip install --user nbval
+PYTHONUSERBASE=/usr python3 -m pip install --user nbval || true

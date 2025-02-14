@@ -38,7 +38,7 @@ jobs:
         if: github.repository == 'isosafrasaurus/fem-on-jupyter' && steps.push.outputs.push == 'yes'
         id: image_name
         run: |
-          IMAGE_TAG=$(docker run -i ${IMAGE_PREFIX}:latest bash /usr/bin/compute_docker_tag.sh)
+          IMAGE_TAG=$(git rev-parse --short HEAD)
           echo "image_tag=${IMAGE_TAG}" >> ${GITHUB_OUTPUT}
       - name: Log into the docker registry
         if: github.repository == 'isosafrasaurus/fem-on-jupyter' && steps.push.outputs.push == 'yes'

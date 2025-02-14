@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 	PYTHONUNBUFFERED=1 \
 	SHELL=/bin/bash \
 	INSTALL_PREFIX=/usr/local \
-	PROJECT_NAME=fem-on-colab \
+	PROJECT_NAME=fem-on-jupyter \
 	PYTHON_VERSION=python3.11
 
 ENV BACKEND_INFO=${INSTALL_PREFIX}/share/backend-info \
@@ -24,9 +24,11 @@ RUN apt-get update && apt-get install -y \
 	git \
 	nano \
 	locales \
+	libcurl4-openssl-dev \
 	build-essential \
+	wget \
 	&& rm -rf /var/lib/apt/lists/*
-
+	
 RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
 
 RUN ln -sf /usr/bin/python3 /usr/bin/python
@@ -46,8 +48,8 @@ RUN cd ${DOCKER_SCRIPTS} && \
 
 RUN cd ${DOCKER_SCRIPTS} && \
 	. scripts/docker_pre.sh && \
-	apt install -y -qq git && \
-	git clone https://github.com/googlecolab/backend-info.git ${BACKEND_INFO} && \
+	wget -P ${BACKEND_INFO} "https://raw.githubusercontent.com/isosafrasaurus/fem-on-jupyter/refs/heads/main/base/apt-list.txt" && \
+	wget -P ${BACKEND_INFO} "https://raw.githubusercontent.com/isosafrasaurus/fem-on-jupyter/refs/heads/main/base/pip-freeze.txt" && \
 	. scripts/docker_post.sh && \
 	cd -
 

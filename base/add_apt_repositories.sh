@@ -8,8 +8,7 @@ set -e
 set -x
 
 # Install add-apt-repository and wget
-apt update
-apt install -y -qq software-properties-common wget
+apt-get install -y -qq software-properties-common wget
 
 # Python (as on Colab)
 add-apt-repository -y ppa:deadsnakes/ppa
@@ -22,4 +21,4 @@ apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ jammy main'
 add-apt-repository -y ppa:git-core/ppa
 
 # Fetch updated package list
-apt update
+apt-get update
