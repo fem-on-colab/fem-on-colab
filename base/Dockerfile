@@ -76,14 +76,6 @@ RUN cd ${DOCKER_SCRIPTS} && \
 RUN pip install --no-cache-dir --upgrade pip && \
 	pip install --no-cache-dir \
 		jupyterlab \
-		notebook \
-		scipy \
-		numpy \
-		pandas \
-		matplotlib \
-		seaborn \
-		scikit-learn \
-		sympy \
 		jupyterlab-git \
 		jupyterlab_code_formatter \
 		jupyter_contrib_nbextensions \
