@@ -1,6 +1,8 @@
-name: Rebuild and Release All Packages
+name: Release package archives
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -55,38 +57,42 @@ jobs:
           INSTALL_DIR="${GITHUB_WORKSPACE}/install/${{ matrix.package }}"
           echo "INSTALL_PREFIX=${INSTALL_DIR}" >> $GITHUB_ENV
           mkdir -p "$INSTALL_DIR"
+          # Create the lib directory so that a later symlink for lib64 works correctly.
+          mkdir -p "$INSTALL_DIR/lib"
 
       - name: Build package ${{ matrix.package }}
         id: build
         shell: bash
         run: |
           set -eo pipefail
-          cd "${GITHUB_WORKSPACE}/${{ matrix.package }}"
-          # Determine the uppercase version of the package name.
+          # Determine the uppercase version of the package name (e.g. gcc -> GCC)
           PACKAGE_UPPER=$(echo "${{ matrix.package }}" | tr '[:lower:]' '[:upper:]')
-          # Force a build from source by setting the archive variable to "skip".
+          # Force a build from source by setting the archive variable to "skip"
           export ${PACKAGE_UPPER}_ARCHIVE_PATH=skip
           echo "Using ${PACKAGE_UPPER}_ARCHIVE_PATH=skip"
-          if [ -x build.sh ]; then
-            if [ -n "${{ matrix.version }}" ]; then
-              echo "Running build.sh with version '${{ matrix.version }}'"
-              if ! bash build.sh "${{ matrix.version }}"; then
-                echo "Build failed for package ${{ matrix.package }}"
-                echo "build_success=false" >> $GITHUB_OUTPUT
-                exit 0
+          # Run the build script from the repository root to ensure correct relative paths.
+          BUILD_SCRIPT="${GITHUB_WORKSPACE}/${{ matrix.package }}/build.sh"
+          if [ -f "${BUILD_SCRIPT}" ]; then
+              chmod +x "${BUILD_SCRIPT}"
+              if [ -n "${{ matrix.version }}" ]; then
+                  echo "Running build.sh with version '${{ matrix.version }}'"
+                  if ! bash "${BUILD_SCRIPT}" "${{ matrix.version }}"; then
+                      echo "Build failed for package ${{ matrix.package }}"
+                      echo "build_success=false" >> $GITHUB_OUTPUT
+                      exit 0
+                  fi
+              else
+                  echo "Running build.sh without version"
+                  if ! bash "${BUILD_SCRIPT}"; then
+                      echo "Build failed for package ${{ matrix.package }}"
+                      echo "build_success=false" >> $GITHUB_OUTPUT
+                      exit 0
+                  fi
               fi
-            else
-              echo "Running build.sh without version"
-              if ! bash build.sh; then
-                echo "Build failed for package ${{ matrix.package }}"
-                echo "build_success=false" >> $GITHUB_OUTPUT
-                exit 0
-              fi
-            fi
           else
-            echo "No build.sh found for package '${{ matrix.package }}'; skipping build."
-            echo "build_success=false" >> $GITHUB_OUTPUT
-            exit 0
+              echo "No build.sh found for package '${{ matrix.package }}'; skipping build."
+              echo "build_success=false" >> $GITHUB_OUTPUT
+              exit 0
           fi
           echo "build_success=true" >> $GITHUB_OUTPUT
 

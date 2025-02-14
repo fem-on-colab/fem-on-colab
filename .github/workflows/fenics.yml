@@ -1,0 +1,71 @@
+name: Release docker image of FEniCS environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      push:
+        description: "Push the released image to docker registry (yes or no, default no)"
+        required: false
+        default: "no"
+  workflow_call:
+    inputs:
+      push:
+        description: "Push the released image to docker registry (yes or no, default no)"
+        type: string
+        default: "no"
+
+env:
+  IMAGE_PREFIX: ghcr.io/fem-on-jupyter/fenics
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine whether to push the released image to docker registry
+        id: push
+        run: |
+          PUSH=${{ (inputs || github.event.inputs).push }}
+          if [[ "${PUSH}" == "yes" ]]; then
+            echo "push=yes" >> ${GITHUB_OUTPUT}
+          else
+            echo "push=no" >> ${GITHUB_OUTPUT}
+          fi
+        shell: bash
+
+      - name: Create Dockerfile for FEniCS
+        run: |
+          cat << 'EOF' > Dockerfile.fenics
+          FROM ghcr.io/isosafrasaurus/fem-on-jupyter/base:e38c998
+          # Update apt-get, install Fenics and clear apt cache
+          RUN apt-get update && \
+              wget "https://fem-on-colab.github.io/releases/fenics-install-real.sh" -O "/tmp/fenics-install.sh" && \
+              bash "/tmp/fenics-install.sh" && \
+              rm -rf /var/lib/apt/lists/*
+          EOF
+
+      - name: Build docker image
+        run: |
+          docker build --pull -t ${IMAGE_PREFIX}:latest -f Dockerfile.fenics .
+
+      - name: Determine image tag
+        if: github.repository == 'isosafrasaurus/fem-on-jupyter' && steps.push.outputs.push == 'yes'
+        id: image_name
+        run: |
+          IMAGE_TAG=$(git rev-parse --short HEAD)
+          echo "image_tag=${IMAGE_TAG}" >> ${GITHUB_OUTPUT}
+        shell: bash
+
+      - name: Log into the docker registry
+        if: github.repository == 'isosafrasaurus/fem-on-jupyter' && steps.push.outputs.push == 'yes'
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push to the docker registry
+        if: github.repository == 'isosafrasaurus/fem-on-jupyter' && steps.push.outputs.push == 'yes'
+        run: |
+          IMAGE_TAG="${{ steps.image_name.outputs.image_tag }}"
+          docker tag ${IMAGE_PREFIX}:latest ${IMAGE_PREFIX}:${IMAGE_TAG}
+          docker push ${IMAGE_PREFIX}:latest
+          docker push ${IMAGE_PREFIX}:${IMAGE_TAG}

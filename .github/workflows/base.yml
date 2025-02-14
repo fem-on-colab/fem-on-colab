@@ -1,4 +1,4 @@
-name: Release new docker image containing the base environment
+name: Release docker image of base environment
 
 on:
   schedule:
