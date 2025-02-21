@@ -40,14 +40,14 @@ remove_packages_built_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove machine learning packages to decrease the image size
 remove_machine_learning_packages () {
-    grep -v -e "^accelerate" -e "^arviz==" -e "^chex" -e "^datascience" -e "^dlib" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^imbalanced-learn" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^langchain" -e "^librosa" -e "^malloy" -e "^mlxtend" -e "^openai" -e "^optax" -e "^orbax" -e "^peft" -e "^pymc==" -e "^scikit" -e "^sentence-transformers" -e "^shap" -e "^sklearn" -e "^tensorboard" -e "^tensorflow" -e "^tf_" -e "^timm" -e "^torch" -e "^transformers" -e "^triton" -e "^xgboost" -e "^woodwork" -e "^yellowbrick" -h ${1} > ${1}.tmp
+    grep -v -e "^accelerate" -e "^arviz==" -e "^chex" -e "^datascience" -e "^dlib" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^hdbscan" -e "^imbalanced-learn" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^langchain" -e "^librosa" -e "^malloy" -e "^mlxtend" -e "^openai" -e "^optax" -e "^orbax" -e "^peft" -e "^pymc==" -e "^pynndescent" -e "^pytorch" -e "^scikit" -e "^sentence-transformers" -e "^shap" -e "^sklearn" -e "^tensorboard" -e "^tensorflow" -e "^tf_" -e "^timm" -e "^torch" -e "^transformers" -e "^triton" -e "^umap-learn" -e "^xgboost" -e "^woodwork" -e "^yellowbrick" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_machine_learning_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove cuda packages to decrease the image size
 remove_cuda_packages () {
-    grep -v -e "^albucore" -e "^albumentations" -e "^cuda-" -e "^cudf-" -e "^cupy-" -e "^dopamine" -e "^imgaug" -e "^libcudf-" -e "^libcuml-" -e "^libcuvs-" -e "^libraft-" -e "^libkvikio" -e "^nvidia-" -e "^nx-" -e "^opencv" -e "^pylibcudf" -e "^pylibcugraph" -e "^pylibraft" -e "^pynvjitlink" -e "^pynvml" -e "^qudida" -e "^rmm-" -h ${1} > ${1}.tmp
+    grep -v -e "^albucore" -e "^albumentations" -e "^cuda-" -e "^cudf-" -e "^cuml-" -e "^cupy-" -e "^cuvs-" -e "^dopamine" -e "^imgaug" -e "^libcudf-" -e "^libcuml-" -e "^libcuvs-" -e "^libraft-" -e "^libucx" -e "^libkvikio" -e "^nvidia-" -e "^nx-" -e "^opencv" -e "^pylibcudf" -e "^pylibcugraph" -e "^pylibraft" -e "^pynvjitlink" -e "^pynvml" -e "^qudida" -e "^rmm-" -e "^ucx" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_cuda_packages ${BACKEND_INFO}/pip-freeze-clean.txt
@@ -68,7 +68,7 @@ remove_mkl_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove misc packages to decrease the image size
 remove_misc_packages () {
-    grep -v -e "^betterproto" -e "^bigframes" -e "^bigquery-magics" -e "^cyipopt" -e "^db-dtypes" -e"^earthengine" -e "^eerepr" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^geopandas" -e "^google" -e "^grpc" -e "^gspread" -e "^highspy" -e "^kaggle" -e "^ibis-framework" -e "^model-signing" -e "^music21" -e "^pandas-gbq" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pyspark" -e "^sigstore" -e "^spanner" -h ${1} > ${1}.tmp
+    grep -v -e "^betterproto" -e "^bigframes" -e "^bigquery-magics" -e "^cyipopt" -e "^dask" -e "^db-dtypes" -e "^distributed" -e "^earthengine" -e "^eerepr" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^geopandas" -e "^google" -e "^grpc" -e "^gspread" -e "^highspy" -e "^kaggle" -e "^ibis-framework" -e "^model-signing" -e "^music21" -e "^pandas-gbq" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pyspark" -e "^raft-dask" -e "^rapids-dask" -e "^sigstore" -e "^spanner" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_misc_packages ${BACKEND_INFO}/pip-freeze-clean.txt
