@@ -10,10 +10,15 @@ set -x
 REPODIR=$PWD
 
 # Expect one argument to set the scalar type
-: ${1?"Usage: $0 real"}
-SCALAR_TYPE="$1"
+: ${2?"Usage: $0 release_type real"}
+RELEASE_TYPE="$1"
+if [[ "$RELEASE_TYPE" != "development" && "$RELEASE_TYPE" != "release" ]]; then
+    echo "Expecting first input argument to be either development or release, but got $RELEASE_TYPE"
+    exit 1
+fi
+SCALAR_TYPE="$2"
 if [[ "$SCALAR_TYPE" != "real" ]]; then
-    echo "Expecting first input argument to be real, but got $SCALAR_TYPE"
+    echo "Expecting second input argument to be real, but got $SCALAR_TYPE"
     exit 1
 fi
 
