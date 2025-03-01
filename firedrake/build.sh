@@ -10,10 +10,15 @@ set -x
 REPODIR=$PWD
 
 # Expect one argument to set the scalar type
-: ${1?"Usage: $0 scalar_type"}
-SCALAR_TYPE="$1"
+: ${2?"Usage: $0 release_type scalar_type"}
+RELEASE_TYPE="$1"
+if [[ "$RELEASE_TYPE" != "development" && "$RELEASE_TYPE" != "release" ]]; then
+    echo "Expecting first input argument to be either development or release, but got $RELEASE_TYPE"
+    exit 1
+fi
+SCALAR_TYPE="$2"
 if [[ "$SCALAR_TYPE" != "complex" && "$SCALAR_TYPE" != "real" ]]; then
-    echo "Expecting first input argument to be either real or complex, but got $SCALAR_TYPE"
+    echo "Expecting second input argument to be either real or complex, but got $SCALAR_TYPE"
     exit 1
 fi
 
@@ -57,6 +62,11 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja scikit-build-
 # libsupermesh
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
 cd /tmp/libsupermesh-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout master  # TODO: will replace this with the latest tag when versioned firedrake releases will be available
+else
+    git checkout master
+fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/libsupermesh-src
 
@@ -66,6 +76,11 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling pkgconfig
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout master  # TODO: will replace this with the latest tag when versioned firedrake releases will be available
+else
+    git checkout master
+fi
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-omp-num-threads-in-firedrake
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/firedrake-src
