@@ -10,10 +10,15 @@ set -x
 REPODIR=$PWD
 
 # Expect one argument to set the scalar type
-: ${1?"Usage: $0 scalar_type"}
-SCALAR_TYPE="$1"
+: ${2?"Usage: $0 release_type scalar_type"}
+RELEASE_TYPE="$1"
+if [[ "$RELEASE_TYPE" != "development" && "$RELEASE_TYPE" != "release" ]]; then
+    echo "Expecting first input argument to be either development or release, but got $RELEASE_TYPE"
+    exit 1
+fi
+SCALAR_TYPE="$2"
 if [[ "$SCALAR_TYPE" != "complex" && "$SCALAR_TYPE" != "real" ]]; then
-    echo "Expecting first input argument to be either real or complex, but got $SCALAR_TYPE"
+    echo "Expecting second input argument to be either real or complex, but got $SCALAR_TYPE"
     exit 1
 fi
 
@@ -26,6 +31,11 @@ NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 # netgen
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout v6.2.2501
+else
+    git checkout master
+fi
 git submodule update --init
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
@@ -50,6 +60,11 @@ cd && rm -rf /tmp/netgen-src
 # ngsolve
 git clone https://github.com/NGSolve/ngsolve /tmp/ngsolve-src
 cd /tmp/ngsolve-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout v6.2.2501
+else
+    git checkout master
+fi
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
 patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
@@ -74,7 +89,11 @@ cd && rm -rf /tmp/ngsolve-src
 # ngsxfem
 git clone https://github.com/ngsxfem/ngsxfem.git /tmp/ngsxfem-src
 cd /tmp/ngsxfem-src
-git checkout master
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout b6d26c1
+else
+    git checkout master
+fi
 git submodule update --init
 mkdir -p /tmp/ngsxfem-src/build
 cd /tmp/ngsxfem-src/build
@@ -94,6 +113,11 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user poetry-core
 # ngsPETSc
 git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout df827fa
+else
+    git checkout main
+fi
 patch -p 1 < $REPODIR/ngsolve/patches/03-ngspetsc-drop-dependencies
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 
