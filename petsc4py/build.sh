@@ -23,6 +23,7 @@ PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
 cd /tmp/petsc-src
+git checkout release
 DOWNLOADS="\
     --download-metis \
     --download-parmetis \
