@@ -269,8 +269,8 @@ jobs:
       args: ""
       strip-args-when-packaging: ""
 
-  # petsc4py/real build & test
-  build_petsc4py_real:
+  # petsc4py/{development, real} build & test
+  build_petsc4py_development_real:
     needs: [test_h5py]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
@@ -286,31 +286,31 @@ jobs:
     with:
       library: "petsc4py"
       task: "build"
-      args: "real"
+      args: "development real"
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
-  test_petsc4py_real:
-    needs: [build_petsc4py_real]
+  test_petsc4py_development_real:
+    needs: [build_petsc4py_development_real]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
-          github.event_name == 'schedule' && needs.build_petsc4py_real.result == 'success'
+          github.event_name == 'schedule' && needs.build_petsc4py_development_real.result == 'success'
         ) || (
-          github.event_name != 'schedule' && needs.build_petsc4py_real.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && needs.build_petsc4py_development_real.result == 'success' && always() && !cancelled()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "petsc4py"
       task: "test"
-      args: "real"
+      args: "development real"
       strip-args-when-packaging: ""
 
-  # petsc4py/complex build & test
-  build_petsc4py_complex:
+  # petsc4py/{development, complex} build & test
+  build_petsc4py_development_complex:
     needs: [test_h5py]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
@@ -326,27 +326,107 @@ jobs:
     with:
       library: "petsc4py"
       task: "build"
-      args: "complex"
+      args: "development complex"
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
-  test_petsc4py_complex:
-    needs: [build_petsc4py_complex]
+  test_petsc4py_development_complex:
+    needs: [build_petsc4py_development_complex]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
-          github.event_name == 'schedule' && needs.build_petsc4py_complex.result == 'success'
+          github.event_name == 'schedule' && needs.build_petsc4py_development_complex.result == 'success'
         ) || (
-          github.event_name != 'schedule' && needs.build_petsc4py_complex.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && needs.build_petsc4py_development_complex.result == 'success' && always() && !cancelled()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "petsc4py"
       task: "test"
-      args: "complex"
+      args: "development complex"
+      strip-args-when-packaging: ""
+
+  # petsc4py/{release, real} build & test
+  build_petsc4py_release_real:
+    needs: [test_h5py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.test_h5py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'petsc4py' && needs.test_h5py.result == 'skipped' && always() && !cancelled()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'petsc4py' && needs.test_h5py.result == 'success' && always() && !cancelled()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "petsc4py"
+      task: "build"
+      args: "release real"
+      strip-args-when-packaging: "false"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
+
+  test_petsc4py_release_real:
+    needs: [build_petsc4py_release_real]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_petsc4py_release_real.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_petsc4py_release_real.result == 'success' && always() && !cancelled()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "petsc4py"
+      task: "test"
+      args: "release real"
+      strip-args-when-packaging: ""
+
+  # petsc4py/{release, complex} build & test
+  build_petsc4py_release_complex:
+    needs: [test_h5py]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.test_h5py.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'petsc4py' && needs.test_h5py.result == 'skipped' && always() && !cancelled()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'petsc4py' && needs.test_h5py.result == 'success' && always() && !cancelled()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "petsc4py"
+      task: "build"
+      args: "release complex"
+      strip-args-when-packaging: "false"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
+
+  test_petsc4py_release_complex:
+    needs: [build_petsc4py_release_complex]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_petsc4py_release_complex.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_petsc4py_release_complex.result == 'success' && always() && !cancelled()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "petsc4py"
+      task: "test"
+      args: "release complex"
       strip-args-when-packaging: ""
 
   # vtk build & test
@@ -389,84 +469,164 @@ jobs:
       args: ""
       strip-args-when-packaging: ""
 
-  # slepc4py/real build & test
-  build_slepc4py_real:
-    needs: [test_petsc4py_real]
+  # slepc4py/{development, real} build & test
+  build_slepc4py_development_real:
+    needs: [test_petsc4py_development_real]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
-          github.event_name == 'schedule' && needs.test_petsc4py_real.result == 'success'
+          github.event_name == 'schedule' && needs.test_petsc4py_development_real.result == 'success'
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_real.result == 'skipped' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_development_real.result == 'skipped' && always() && !cancelled()
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_real.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_development_real.result == 'success' && always() && !cancelled()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "slepc4py"
       task: "build"
-      args: "real"
+      args: "development real"
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
-  test_slepc4py_real:
-    needs: [build_slepc4py_real]
+  test_slepc4py_development_real:
+    needs: [build_slepc4py_development_real]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
-          github.event_name == 'schedule' && needs.build_slepc4py_real.result == 'success'
+          github.event_name == 'schedule' && needs.build_slepc4py_development_real.result == 'success'
         ) || (
-          github.event_name != 'schedule' && needs.build_slepc4py_real.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && needs.build_slepc4py_development_real.result == 'success' && always() && !cancelled()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "slepc4py"
       task: "test"
-      args: "real"
+      args: "development real"
       strip-args-when-packaging: ""
 
-  # slepc4py/complex build & test
-  build_slepc4py_complex:
-    needs: [test_petsc4py_complex]
+  # slepc4py/{development, complex} build & test
+  build_slepc4py_development_complex:
+    needs: [test_petsc4py_development_complex]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
-          github.event_name == 'schedule' && needs.test_petsc4py_complex.result == 'success'
+          github.event_name == 'schedule' && needs.test_petsc4py_development_complex.result == 'success'
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_complex.result == 'skipped' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_development_complex.result == 'skipped' && always() && !cancelled()
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_complex.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_development_complex.result == 'success' && always() && !cancelled()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "slepc4py"
       task: "build"
-      args: "complex"
+      args: "development complex"
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
-  test_slepc4py_complex:
-    needs: [build_slepc4py_complex]
+  test_slepc4py_development_complex:
+    needs: [build_slepc4py_development_complex]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
-          github.event_name == 'schedule' && needs.build_slepc4py_complex.result == 'success'
+          github.event_name == 'schedule' && needs.build_slepc4py_development_complex.result == 'success'
         ) || (
-          github.event_name != 'schedule' && needs.build_slepc4py_complex.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && needs.build_slepc4py_development_complex.result == 'success' && always() && !cancelled()
         )
       )
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "slepc4py"
       task: "test"
-      args: "complex"
+      args: "development complex"
+      strip-args-when-packaging: ""
+
+  # slepc4py/{release, real} build & test
+  build_slepc4py_release_real:
+    needs: [test_petsc4py_release_real]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.test_petsc4py_release_real.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_release_real.result == 'skipped' && always() && !cancelled()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_release_real.result == 'success' && always() && !cancelled()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "slepc4py"
+      task: "build"
+      args: "release real"
+      strip-args-when-packaging: "false"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
+
+  test_slepc4py_release_real:
+    needs: [build_slepc4py_release_real]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_slepc4py_release_real.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_slepc4py_release_real.result == 'success' && always() && !cancelled()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "slepc4py"
+      task: "test"
+      args: "release real"
+      strip-args-when-packaging: ""
+
+  # slepc4py/{release, complex} build & test
+  build_slepc4py_release_complex:
+    needs: [test_petsc4py_release_complex]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.test_petsc4py_release_complex.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library == 'slepc4py' && needs.test_petsc4py_release_complex.result == 'skipped' && always() && !cancelled()
+        ) || (
+          github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_release_complex.result == 'success' && always() && !cancelled()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "slepc4py"
+      task: "build"
+      args: "release complex"
+      strip-args-when-packaging: "false"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
+
+  test_slepc4py_release_complex:
+    needs: [build_slepc4py_release_complex]
+    if: >-
+      github.repository == 'fem-on-colab/fem-on-colab' && (
+        (
+          github.event_name == 'schedule' && needs.build_slepc4py_release_complex.result == 'success'
+        ) || (
+          github.event_name != 'schedule' && needs.build_slepc4py_release_complex.result == 'success' && always() && !cancelled()
+        )
+      )
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "slepc4py"
+      task: "test"
+      args: "release complex"
       strip-args-when-packaging: ""
 
   # Warn if scheduled workflow is about to be disabled

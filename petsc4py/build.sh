@@ -10,10 +10,15 @@ set -x
 REPODIR=$PWD
 
 # Expect one argument to set the scalar type
-: ${1?"Usage: $0 scalar_type"}
-SCALAR_TYPE="$1"
+: ${2?"Usage: $0 release_type scalar_type"}
+RELEASE_TYPE="$1"
+if [[ "$RELEASE_TYPE" != "development" && "$RELEASE_TYPE" != "release" ]]; then
+    echo "Expecting first input argument to be either development or release, but got $RELEASE_TYPE"
+    exit 1
+fi
+SCALAR_TYPE="$2"
 if [[ "$SCALAR_TYPE" != "complex" && "$SCALAR_TYPE" != "real" ]]; then
-    echo "Expecting first input argument to be either real or complex, but got $SCALAR_TYPE"
+    echo "Expecting second input argument to be either real or complex, but got $SCALAR_TYPE"
     exit 1
 fi
 
@@ -23,7 +28,13 @@ PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 # Install PETSc
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
 cd /tmp/petsc-src
-git checkout release
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    TAGS=($(git tag -l --sort=-version:refname "v3.22.[0-9]"))
+    echo "Latest tag is ${TAGS[0]}"
+    git checkout ${TAGS[0]}
+else
+    git checkout main
+fi
 DOWNLOADS="\
     --download-metis \
     --download-parmetis \
