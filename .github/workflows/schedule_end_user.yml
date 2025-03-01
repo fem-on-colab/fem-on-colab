@@ -63,48 +63,92 @@ jobs:
       args: "real"
       strip-args-when-packaging: ""
 
-  # FEniCSx/real build & test
-  build_fenicsx_real:
+  # FEniCSx/{development, real} build & test
+  build_fenicsx_development_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenicsx')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "fenicsx"
       task: "build"
-      args: "real"
+      args: "development real"
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
-  test_fenicsx_real:
-    needs: [build_fenicsx_real]
+  test_fenicsx_development_real:
+    needs: [build_fenicsx_development_real]
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "fenicsx"
       task: "test"
-      args: "real"
+      args: "development real"
       strip-args-when-packaging: ""
 
-  # FEniCSx/complex build & test
-  build_fenicsx_complex:
+  # FEniCSx/{development, complex} build & test
+  build_fenicsx_development_complex:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenicsx')
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "fenicsx"
       task: "build"
-      args: "complex"
+      args: "development complex"
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
 
-  test_fenicsx_complex:
-    needs: [build_fenicsx_complex]
+  test_fenicsx_development_complex:
+    needs: [build_fenicsx_development_complex]
     uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
     with:
       library: "fenicsx"
       task: "test"
-      args: "complex"
+      args: "development complex"
+      strip-args-when-packaging: ""
+
+  # FEniCSx/{release, real} build & test
+  build_fenicsx_release_real:
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenicsx')
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "fenicsx"
+      task: "build"
+      args: "release real"
+      strip-args-when-packaging: "false"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
+
+  test_fenicsx_release_real:
+    needs: [build_fenicsx_release_real]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "fenicsx"
+      task: "test"
+      args: "release real"
+      strip-args-when-packaging: ""
+
+  # FEniCSx/{release, complex} build & test
+  build_fenicsx_release_complex:
+    if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenicsx')
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "fenicsx"
+      task: "build"
+      args: "release complex"
+      strip-args-when-packaging: "false"
+    secrets:
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
+
+  test_fenicsx_release_complex:
+    needs: [build_fenicsx_release_complex]
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    with:
+      library: "fenicsx"
+      task: "test"
+      args: "release complex"
       strip-args-when-packaging: ""
 
   # Firedrake/real build & test

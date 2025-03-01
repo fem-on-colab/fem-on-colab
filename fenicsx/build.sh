@@ -10,10 +10,15 @@ set -x
 REPODIR=$PWD
 
 # Expect one argument to set the scalar type
-: ${1?"Usage: $0 scalar_type"}
-SCALAR_TYPE="$1"
+: ${2?"Usage: $0 release_type scalar_type"}
+RELEASE_TYPE="$1"
+if [[ "$RELEASE_TYPE" != "development" && "$RELEASE_TYPE" != "release" ]]; then
+    echo "Expecting first input argument to be either development or release, but got $RELEASE_TYPE"
+    exit 1
+fi
+SCALAR_TYPE="$2"
 if [[ "$SCALAR_TYPE" != "complex" && "$SCALAR_TYPE" != "real" ]]; then
-    echo "Expecting first input argument to be either real or complex, but got $SCALAR_TYPE"
+    echo "Expecting second input argument to be either real or complex, but got $SCALAR_TYPE"
     exit 1
 fi
 
@@ -26,11 +31,22 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user scikit-build-core[p
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout 2024.2.0
+else
+    git checkout main
+fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/ufl-src
 
 # Basix
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
+cd /tmp/basix-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout v0.9.0
+else
+    git checkout main
+fi
 mkdir -p /tmp/basix-src/build
 cd /tmp/basix-src/build
 cmake \
@@ -48,6 +64,11 @@ cd && rm -rf /tmp/basix-src
 # FFCX
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout v0.9.0
+else
+    git checkout main
+fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/ffcx-src
 
@@ -78,6 +99,11 @@ cd && rm -rf /tmp/pugixml-src
 # DOLFINx
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout v0.9.0
+else
+    git checkout main
+fi
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
 patch -p 1 < $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
 mkdir -p /tmp/dolfinx-src/build
