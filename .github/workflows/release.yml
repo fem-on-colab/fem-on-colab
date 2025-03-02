@@ -324,6 +324,8 @@ jobs:
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
           SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
+          MAX_RETRIES=5
+          RETRY_DELAY=3
           pushd _build/html
           git config user.name "GitHub Actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -333,7 +335,25 @@ jobs:
           WEBSITE_BRANCH=$(git branch --show-current)
           git pull origin ${WEBSITE_BRANCH}
           [ -n "$(git status --porcelain=v1 2>/dev/null)" ] && git commit -m "deploy: ${GITHUB_REPOSITORY}@${SHA_SHORT}"
-          git push origin ${WEBSITE_BRANCH}
+          ATTEMPT=0
+          SUCCESS=false
+          while [ ${ATTEMPT} -lt ${MAX_RETRIES} ]; do
+            if git push origin ${WEBSITE_BRANCH}; then
+              SUCCESS=true
+              break
+            else
+              echo "Push failed. Retrying in ${RETRY_DELAY} seconds..."
+              sleep ${RETRY_DELAY}
+              git pull --rebase origin ${WEBSITE_BRANCH}
+              ((ATTEMPT++))
+            fi
+          done
+          if [ "${SUCCESS}" = true ]; then
+            echo "Push successful."
+          else
+            echo "Push failed after ${MAX_RETRIES} attempts."
+            exit 1
+          fi
           popd
         shell: bash
       - name: Create an archive of build directory, install prefix and test directory in case of failure
