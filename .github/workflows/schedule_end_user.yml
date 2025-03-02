@@ -22,7 +22,7 @@ jobs:
   # Mock build & test
   build_mock:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'mock')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "mock"
       task: "build"
@@ -34,7 +34,7 @@ jobs:
 
   test_mock:
     needs: [build_mock]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "mock"
       task: "test"
@@ -44,7 +44,7 @@ jobs:
   # FEniCS/{development, real} build & test
   build_fenics_development_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenics')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenics"
       task: "build"
@@ -56,7 +56,7 @@ jobs:
 
   test_fenics_development_real:
     needs: [build_fenics_development_real]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenics"
       task: "test"
@@ -66,7 +66,7 @@ jobs:
   # FEniCS/{release, real} build & test
   build_fenics_release_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenics')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenics"
       task: "build"
@@ -78,7 +78,7 @@ jobs:
 
   test_fenics_release_real:
     needs: [build_fenics_release_real]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenics"
       task: "test"
@@ -88,7 +88,7 @@ jobs:
   # FEniCSx/{development, real} build & test
   build_fenicsx_development_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenicsx')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenicsx"
       task: "build"
@@ -100,7 +100,7 @@ jobs:
 
   test_fenicsx_development_real:
     needs: [build_fenicsx_development_real]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenicsx"
       task: "test"
@@ -110,7 +110,7 @@ jobs:
   # FEniCSx/{development, complex} build & test
   build_fenicsx_development_complex:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenicsx')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenicsx"
       task: "build"
@@ -122,7 +122,7 @@ jobs:
 
   test_fenicsx_development_complex:
     needs: [build_fenicsx_development_complex]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenicsx"
       task: "test"
@@ -132,7 +132,7 @@ jobs:
   # FEniCSx/{release, real} build & test
   build_fenicsx_release_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenicsx')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenicsx"
       task: "build"
@@ -144,7 +144,7 @@ jobs:
 
   test_fenicsx_release_real:
     needs: [build_fenicsx_release_real]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenicsx"
       task: "test"
@@ -154,7 +154,7 @@ jobs:
   # FEniCSx/{release, complex} build & test
   build_fenicsx_release_complex:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'fenicsx')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenicsx"
       task: "build"
@@ -166,7 +166,7 @@ jobs:
 
   test_fenicsx_release_complex:
     needs: [build_fenicsx_release_complex]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "fenicsx"
       task: "test"
@@ -176,7 +176,7 @@ jobs:
   # Firedrake/{development, real} build & test
   build_firedrake_development_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'firedrake')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "firedrake"
       task: "build"
@@ -188,7 +188,7 @@ jobs:
 
   test_firedrake_development_real:
     needs: [build_firedrake_development_real]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "firedrake"
       task: "test"
@@ -198,7 +198,7 @@ jobs:
   # Firedrake/{development, complex} build & test
   build_firedrake_development_complex:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'firedrake')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "firedrake"
       task: "build"
@@ -210,7 +210,7 @@ jobs:
 
   test_firedrake_development_complex:
     needs: [build_firedrake_development_complex]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "firedrake"
       task: "test"
@@ -220,7 +220,7 @@ jobs:
   # Firedrake/{release, real} build & test
   build_firedrake_release_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'firedrake')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "firedrake"
       task: "build"
@@ -232,7 +232,7 @@ jobs:
 
   test_firedrake_release_real:
     needs: [build_firedrake_release_real]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "firedrake"
       task: "test"
@@ -242,7 +242,7 @@ jobs:
   # Firedrake/{release, complex} build & test
   build_firedrake_release_complex:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'firedrake')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "firedrake"
       task: "build"
@@ -254,7 +254,7 @@ jobs:
 
   test_firedrake_release_complex:
     needs: [build_firedrake_release_complex]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "firedrake"
       task: "test"
@@ -264,7 +264,7 @@ jobs:
   # Gmsh build & test
   build_gmsh:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'gmsh')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "gmsh"
       task: "build"
@@ -276,7 +276,7 @@ jobs:
 
   test_gmsh:
     needs: [build_gmsh]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "gmsh"
       task: "test"
@@ -286,7 +286,7 @@ jobs:
   # NGSolve/{development, real} build & test
   build_ngsolve_development_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'ngsolve')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "ngsolve"
       task: "build"
@@ -298,7 +298,7 @@ jobs:
 
   test_ngsolve_development_real:
     needs: [build_ngsolve_development_real]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "ngsolve"
       task: "test"
@@ -308,7 +308,7 @@ jobs:
   # NGSolve/{development, complex} build & test
   build_ngsolve_development_complex:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'ngsolve')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "ngsolve"
       task: "build"
@@ -320,7 +320,7 @@ jobs:
 
   test_ngsolve_development_complex:
     needs: [build_ngsolve_development_complex]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "ngsolve"
       task: "test"
@@ -330,7 +330,7 @@ jobs:
   # NGSolve/{release, real} build & test
   build_ngsolve_release_real:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'ngsolve')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "ngsolve"
       task: "build"
@@ -342,7 +342,7 @@ jobs:
 
   test_ngsolve_release_real:
     needs: [build_ngsolve_release_real]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "ngsolve"
       task: "test"
@@ -352,7 +352,7 @@ jobs:
   # NGSolve/{release, complex} build & test
   build_ngsolve_release_complex:
     if: github.repository == 'fem-on-colab/fem-on-colab' && (github.event_name == 'schedule' || (inputs || github.event.inputs).library == '' || (inputs || github.event.inputs).library == 'ngsolve')
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "ngsolve"
       task: "build"
@@ -364,7 +364,7 @@ jobs:
 
   test_ngsolve_release_complex:
     needs: [build_ngsolve_release_complex]
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@retry
     with:
       library: "ngsolve"
       task: "test"
