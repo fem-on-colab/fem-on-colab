@@ -63,7 +63,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja scikit-build-
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
 cd /tmp/libsupermesh-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout master  # TODO: will replace this with the latest tag when versioned firedrake releases will be available
+    git checkout v2025.3.0
 else
     git checkout master
 fi
