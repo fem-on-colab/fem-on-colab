@@ -71,7 +71,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies
 cd && rm -rf /tmp/libsupermesh-src
 
 # firedrake build dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling pkgconfig
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling meson meson-python pkgconfig
 
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
