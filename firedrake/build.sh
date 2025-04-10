@@ -89,33 +89,16 @@ cd && rm -rf /tmp/firedrake-src
 # fireshape dependencies (real mode only)
 # We package them for simplicity with firedrake so that fireshape may be pip installed.
 if [[ "$SCALAR_TYPE" != "complex" ]]; then
-    # roltrilinos
-    git clone https://bitbucket.org/pyrol/trilinos/src/pyrol/ /tmp/roltrilinos-src
-    cd /tmp/roltrilinos-src
-    patch -p 1 < $REPODIR/firedrake/patches/09-add-cstdint-include-in-roltrilinos
-    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --user .
-    cd && rm -rf /tmp/roltrilinos-src
+    # pyroltrilinos build dependencies
+    PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user setuptools_scm
 
-    # Move roltrilinos already to the final site target (which normally would be done at a later CI step),
-    # so that patchelf will set the correct path
-    if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
-        mv $INSTALL_PREFIX/lib/$PYTHON_VERSION/site-packages/roltrilinos* $INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages/
-    fi
-
-    # PETSc had downloaded ML from Trilinos: remove its CMake configuration so that it does not
-    # get in the way of the detection of roltrilinos
-    rm -rf $INSTALL_PREFIX/lib/cmake/Trilinos
-
-    # ROL
-    git clone https://bitbucket.org/pyrol/pyrol/src/master/ /tmp/rol-src
-    cd /tmp/rol-src
+    # pyroltrilinos
+    git clone https://github.com/angus-g/pyrol /tmp/pyroltrilinos-src
+    cd /tmp/pyroltrilinos-src
     patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
     export PYBIND11_DIR=$INSTALL_PREFIX
-    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --user .
-    cd && rm -rf /tmp/rol-src
-
-    # wurlitzer (only used in notebooks to redirect the C++ output to the notebook cell ouput)
-    PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user wurlitzer
+    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
+    cd && rm -rf /tmp/pyroltrilinos-src
 fi
 
 # gusto and icepack depend on netCDF4-python

@@ -1,14 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f189ff6..7fb0d94 100644
+index 819ef68..3192484 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -32,8 +32,7 @@ endif()
- find_package(MPI)
+@@ -43,7 +43,7 @@ FetchContent_MakeAvailable(Trilinos)
  find_package(Boost)
+ find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
  
 -add_subdirectory(pybind11)
--# find_package(pybind11 REQUIRED) # if not including pybind11 in subdirectory
 +find_package(pybind11 REQUIRED CONFIG HINTS ${PYBIND11_DIR} ${PYBIND11_ROOT} $ENV{PYBIND11_DIR} $ENV{PYBIND11_ROOT})
- 
  pybind11_add_module(_ROL MODULE ROL/ROL.cpp
-   ROL/algorithm.cpp
+   ROL/algorithmstate.cpp
+   ROL/augmentedlagrangian.cpp
