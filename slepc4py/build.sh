@@ -27,7 +27,7 @@ SLEPC4PY_ARCHIVE_PATH="skip" source slepc4py/install.sh
 git clone https://gitlab.com/slepc/slepc.git /tmp/slepc-src
 cd /tmp/slepc-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    TAGS=($(git tag -l --sort=-version:refname "v3.22.[0-9]"))
+    TAGS=($(git tag -l --sort=-version:refname "v3.23.[0-9]"))
     echo "Latest tag is ${TAGS[0]}"
     git checkout ${TAGS[0]}
 else
