@@ -1,0 +1,11 @@
+diff --git a/3rdparty/tetgen1.5.0/CMakeLists.txt b/3rdparty/tetgen1.5.0/CMakeLists.txt
+index 7f0fa070..c0c1fecc 100644
+--- a/3rdparty/tetgen1.5.0/CMakeLists.txt
++++ b/3rdparty/tetgen1.5.0/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # Set  the minimum  required version  of cmake  for a  project.
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 3.10)
+ 
+ # Add an executable to the project using the specified source files.
+ # add_executable(tetgen tetgen.cxx predicates.cxx)

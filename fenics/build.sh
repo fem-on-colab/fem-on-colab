@@ -114,6 +114,7 @@ cd && rm -rf /tmp/cgal-src
 # mshr
 git clone https://bitbucket.org/fenics-project/mshr.git /tmp/mshr-src
 cd /tmp/mshr-src/
+patch -p 1 < $REPODIR/fenics/patches/15-tetgen-increase-cmake-minim-required-version
 cat <<EOT > python/config.json.in
 {
     "pybind11" : {
