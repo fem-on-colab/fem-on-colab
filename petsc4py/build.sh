@@ -29,9 +29,11 @@ PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
 cd /tmp/petsc-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    TAGS=($(git tag -l --sort=-version:refname "v3.22.[0-9]"))
+    TAGS=($(git tag -l --sort=-version:refname "v3.23.[0-9]"))
     echo "Latest tag is ${TAGS[0]}"
     git checkout ${TAGS[0]}
+    wget https://gitlab.com/petsc/petsc/-/commit/c70d0316ce66d5ad835e4c75f9e4fbfe300ae5d9.patch
+    patch -p1 < c70d0316ce66d5ad835e4c75f9e4fbfe300ae5d9.patch
 else
     git checkout main
 fi
