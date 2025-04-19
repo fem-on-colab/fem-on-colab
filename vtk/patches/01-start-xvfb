@@ -1,8 +1,8 @@
 diff --git a/pyvista/plotting/plotter.py b/pyvista/plotting/plotter.py
-index 7877b5ee..0e79fc7c 100644
+index d01aac4d..606f6b74 100644
 --- a/pyvista/plotting/plotter.py
 +++ b/pyvista/plotting/plotter.py
-@@ -148,7 +148,6 @@ def _warn_xserver():  # pragma: no cover
+@@ -149,7 +149,6 @@ def _warn_xserver():  # pragma: no cover
          # finally, check if using a backend that doesn't require an xserver
          if pyvista.global_theme.jupyter_backend in [
              'client',
@@ -10,7 +10,7 @@ index 7877b5ee..0e79fc7c 100644
          ]:
              return
  
-@@ -156,13 +155,8 @@ def _warn_xserver():  # pragma: no cover
+@@ -157,12 +156,14 @@ def _warn_xserver():  # pragma: no cover
          if uses_egl():
              return
  
@@ -18,11 +18,16 @@ index 7877b5ee..0e79fc7c 100644
 -            '\n'
 -            'This system does not appear to be running an xserver.\n'
 -            'PyVista will likely segfault when rendering.\n\n'
--            'Try starting a virtual frame buffer with xvfb, or using\n '
--            ' ``pyvista.start_xvfb()``\n',
+-            'Alternatively, an offscreen version using OSMesa libraries and ``vtk-osmesa`` is available.\n',
 -        )
 +        if "DISPLAY" not in os.environ:
-+            pyvista.start_xvfb()
++            # Copy of the former implementation of pyvista.start_xvfb, deprecated since pyvista 0.45.0
++            window_size = pyvista.global_theme.window_size
++            window_size_parm = f'{window_size[0]:d}x{window_size[1]:d}x24'
++            display_num = ':99'
++            os.system(f'Xvfb {display_num} -screen 0 {window_size_parm} > /dev/null 2>&1 &')
++            os.environ['DISPLAY'] = display_num
++            time.sleep(3)
  
  
  @abstract_class
