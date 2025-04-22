@@ -108,3 +108,6 @@ cd /tmp/netcdf4-python-src
 patch -p 1 < $REPODIR/firedrake/patches/02-unpin-numpy-setuptools-in-netcdf4-python
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/netcdf4-python-src
+
+# Install extra packages to enable the visualization of pyadjoint tape, see issue #43
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user networkx pdf2image pygraphviz

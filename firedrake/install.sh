@@ -46,6 +46,9 @@ if [[ ! -f $FIREDRAKE_INSTALLED ]]; then
         tar -xzf $FIREDRAKE_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
+    # Install extra packages to enable the visualization of pyadjoint tape, see issue #43
+    apt install -y -qq fonts-dejavu graphviz libgraphviz-dev poppler-utils
+
     # Mark package as installed
     mkdir -p $SHARE_PREFIX
     touch $FIREDRAKE_INSTALLED
