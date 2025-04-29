@@ -77,12 +77,12 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling meson mes
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout master  # TODO: will replace this with the latest tag when versioned firedrake releases will be available
+    git checkout 2025.4.0
+    patch -p 1 < $REPODIR/firedrake/patches/05-unpin-petsc4py-slepc4py
 else
     git checkout master
 fi
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-omp-num-threads-in-firedrake
-patch -p 1 < $REPODIR/firedrake/patches/05-unpin-petsc4py-slepc4py
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/firedrake-src
 
