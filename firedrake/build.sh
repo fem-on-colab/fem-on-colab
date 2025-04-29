@@ -77,7 +77,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling meson mes
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout master  # TODO: will replace this with the latest tag when versioned firedrake releases will be available
+    git checkout 2025.4.0
 else
     git checkout master
 fi
