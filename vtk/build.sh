@@ -25,6 +25,9 @@ cd /tmp/adios2-src
 TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9]*.[0-9]"))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
+# Backport ADIOS2 PR #4255 as required by dolfinx PR #3734
+wget https://github.com/ornladios/ADIOS2/commit/8afa8afd34b4cfaf83974525740873a63b6edf9b.patch
+patch -p1 < 8afa8afd34b4cfaf83974525740873a63b6edf9b.patch
 mkdir -p /tmp/adios2-src/build
 cd /tmp/adios2-src/build
 cmake \
