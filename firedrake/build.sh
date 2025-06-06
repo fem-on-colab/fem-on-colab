@@ -26,12 +26,11 @@ fi
 FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 
 # islpy build dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja pcpp scikit-build
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja pcpp scikit-build-core
 
 # islpy
 git clone --recursive https://github.com/inducer/islpy.git /tmp/islpy-src
 cd /tmp/islpy-src
-patch -p 1 < $REPODIR/firedrake/patches/01-unpin-setuptools-in-islpy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/islpy-src
 
@@ -55,9 +54,6 @@ sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/firedrake/patches/08-i
 patch -p 1 < $REPODIR/firedrake/patches/08-install-prefix-in-rtree
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/rtree-src
-
-# libsupermesh build dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja scikit-build-core
 
 # libsupermesh
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
