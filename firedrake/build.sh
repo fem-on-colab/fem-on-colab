@@ -69,11 +69,14 @@ cd && rm -rf /tmp/libsupermesh-src
 # firedrake build dependencies
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling meson meson-python pkgconfig
 
+# firedrake requires setuptools >= 77 to support PEP 639
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "setuptools>=77"
+
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout 2025.4.0
+    git checkout 2025.4.1
     patch -p 1 < $REPODIR/firedrake/patches/05-unpin-petsc4py-slepc4py
 else
     git checkout master
