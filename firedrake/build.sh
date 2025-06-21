@@ -67,7 +67,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies
 cd && rm -rf /tmp/libsupermesh-src
 
 # firedrake build dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling meson meson-python pkgconfig
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling meson meson-python pkgconfig "petsctools @ git+https://github.com/firedrakeproject/petsctools.git"
 
 # firedrake requires setuptools >= 77 to support PEP 639
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "setuptools>=77"
