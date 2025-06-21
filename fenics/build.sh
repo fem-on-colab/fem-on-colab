@@ -29,6 +29,7 @@ FENICS_ARCHIVE_PATH="skip" source fenics/install.sh
 git clone https://github.com/FEniCS/fiat.git /tmp/fiat-src
 cd /tmp/fiat-src
 patch -p 1 < $REPODIR/fenics/patches/06-pkg-resources-to-importlib-in-fiat
+patch -p 1 < $REPODIR/fenics/patches/16-sympy-1-14-compatibility-fiat.patch
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .
 cd && rm -rf /tmp/fiat-src
 
