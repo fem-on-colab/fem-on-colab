@@ -6,7 +6,7 @@ index 056af084d..2672e114c 100644
    "h5py>3.12.1",
    "libsupermesh",
    "loopy>2024.1",
--  "petsc4py==3.23.3",
+-  "petsc4py==3.23.4",
 +  "petsc4py",
    "numpy",
    "packaging",
@@ -15,7 +15,7 @@ index 056af084d..2672e114c 100644
    "ngsPETSc",
  ]
  slepc = [
--  "slepc4py==3.23.1",
+-  "slepc4py==3.23.2",
 +  "slepc4py",
  ]
  torch = [  # requires passing '--extra-index-url' to work
@@ -24,7 +24,7 @@ index 056af084d..2672e114c 100644
    "pytest-split",  # needed for firedrake-run-split-tests
    "pytest-timeout",
    "pytest-xdist",
--  "slepc4py==3.23.1",
+-  "slepc4py==3.23.2",
 +  "slepc4py",
    "torch",  # requires passing '--extra-index-url' to work
    "vtk",
@@ -33,16 +33,16 @@ index 056af084d..2672e114c 100644
    "pytest-split",  # needed for firedrake-run-split-tests
    "pytest-timeout",
    "pytest-xdist",
--  "slepc4py==3.23.1",
+-  "slepc4py==3.23.2",
 +  "slepc4py",
  ]
- 
+
  [build-system]
 @@ -138,7 +138,7 @@ requires = [
    "pkgconfig",
    "pybind11",
-   "setuptools>61.2",
--  "petsc4py==3.23.3",
+   "setuptools>=77.0.3",
+-  "petsc4py==3.23.4",
 +  "petsc4py",
    "rtree>=1.2",
  ]

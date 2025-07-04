@@ -32,7 +32,7 @@ NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2501
+    git checkout v6.2.2504
 else
     git checkout master
 fi
@@ -61,7 +61,7 @@ cd && rm -rf /tmp/netgen-src
 git clone https://github.com/NGSolve/ngsolve /tmp/ngsolve-src
 cd /tmp/ngsolve-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2501
+    git checkout v6.2.2504
 else
     git checkout master
 fi
@@ -90,7 +90,7 @@ cd && rm -rf /tmp/ngsolve-src
 git clone https://github.com/ngsxfem/ngsxfem.git /tmp/ngsxfem-src
 cd /tmp/ngsxfem-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout b6d26c1
+    git checkout v2.1.2504
 else
     git checkout master
 fi
@@ -114,7 +114,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user poetry-core
 git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout df827fa
+    git checkout v0.1.0
 else
     git checkout main
 fi
