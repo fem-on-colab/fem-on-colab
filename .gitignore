@@ -6,6 +6,7 @@
 *.py[cod]
 .ipynb_checkpoints
 .pytest_cache
+.virtual_documents
 build
 dist
 **/test*.py
