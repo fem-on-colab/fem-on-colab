@@ -61,7 +61,7 @@ cd /tmp/libsupermesh-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout v2025.3.0
 else
-    git checkout master
+    git checkout main
 fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/libsupermesh-src
@@ -79,7 +79,7 @@ if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout 2025.4.2
     patch -p 1 < $REPODIR/firedrake/patches/05-unpin-petsc4py-slepc4py
 else
-    git checkout master
+    git checkout main
 fi
 patch -p 1 < $REPODIR/firedrake/patches/03-disable-Wincompatible-pointer-types-firedrake-cython
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-omp-num-threads-in-firedrake
