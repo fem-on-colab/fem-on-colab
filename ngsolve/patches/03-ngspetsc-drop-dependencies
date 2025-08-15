@@ -7,7 +7,7 @@ index a12ded8..08b2138 100644
  dependencies = [
    "netgen-mesher >= 6.2,<7.0",
 -  "netgen-occt >=7.8,<8.0",
-   "petsc4py >=3.22.1,<4.0",
+   "petsc4py >=3.22,<4.0",
 -  "numpy >=2,<3",
    "scipy >=1,<2",
  ]
