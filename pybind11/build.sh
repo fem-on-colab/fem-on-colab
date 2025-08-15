@@ -12,10 +12,9 @@ set -x
 PYBIND11_ARCHIVE_PATH="skip" source pybind11/install.sh
 
 # Install pybind11
-# TODO: temporarily pinned to 2.*.* because of https://github.com/NGSolve/ngsolve/issues/82
 git clone https://github.com/pybind/pybind11.git /tmp/pybind11-src
 cd /tmp/pybind11-src
-TAGS=($(git tag -l --sort=-version:refname "v2.[0-9]*.[0-9]"))
+TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9]*.[0-9]"))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
 cmake \
