@@ -68,7 +68,7 @@ remove_mkl_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove misc packages to decrease the image size
 remove_misc_packages () {
-    grep -v -e "^betterproto" -e "^bigframes" -e "^bigquery-magics" -e "^cyipopt" -e "^dask" -e "^dataproc" -e "^db-dtypes" -e "^diffusers" -e "^distributed" -e "^earthengine" -e "^eerepr" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^geopandas" -e "^google" -e "^gradio" -e "^grpc" -e "^gspread" -e "^hf_" -e "^hf-" -e "^highspy" -e "^huggingface" -e "^ibis-framework" -e "^jupyter_kernel_gateway" -e "^kaggle" -e "^keyrings" -e "^libpysal" -e "^model-signing" -e "^music21" -e "^pandas-gbq" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pyspark" -e "^raft-dask" -e "^rapids-dask" -e "^sigstore" -e "^spanner" -e "^tokenizers" -h ${1} > ${1}.tmp
+    grep -v -e "^betterproto" -e "^bigframes" -e "^bigquery-magics" -e "^cyipopt" -e "^dask" -e "^dataproc" -e "^db-dtypes" -e "^diffusers" -e "^distributed" -e "^earthengine" -e "^eerepr" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^geopandas" -e "^google" -e "^gradio" -e "^grpc" -e "^gspread" -e "^hf_" -e "^hf-" -e "^highspy" -e "^huggingface" -e "^ibis-framework" -e "^jupyter_kernel_gateway" -e "^kaggle" -e "^keyrings" -e "^libpysal" -e "^model-signing" -e "^music21" -e "^opentelemetry" -e "^pandas-gbq" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pyspark" -e "^raft-dask" -e "^rapids-dask" -e "^sigstore" -e "^spanner" -e "^tokenizers" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_misc_packages ${BACKEND_INFO}/pip-freeze-clean.txt
