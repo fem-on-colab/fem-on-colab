@@ -1,8 +1,8 @@
 diff --git a/pyvista/plotting/plotter.py b/pyvista/plotting/plotter.py
-index d01aac4d..606f6b74 100644
+index 17a4fefd7..564cfd840 100644
 --- a/pyvista/plotting/plotter.py
 +++ b/pyvista/plotting/plotter.py
-@@ -149,7 +149,6 @@ def _warn_xserver():  # pragma: no cover
+@@ -195,7 +195,6 @@ def _warn_xserver() -> None:  # pragma: no cover
          # finally, check if using a backend that doesn't require an xserver
          if pyvista.global_theme.jupyter_backend in [
              'client',
@@ -10,7 +10,7 @@ index d01aac4d..606f6b74 100644
          ]:
              return
  
-@@ -157,12 +156,14 @@ def _warn_xserver():  # pragma: no cover
+@@ -203,13 +202,14 @@ def _warn_xserver() -> None:  # pragma: no cover
          if uses_egl():
              return
  
@@ -18,7 +18,8 @@ index d01aac4d..606f6b74 100644
 -            '\n'
 -            'This system does not appear to be running an xserver.\n'
 -            'PyVista will likely segfault when rendering.\n\n'
--            'Alternatively, an offscreen version using OSMesa libraries and ``vtk-osmesa`` is available.\n',
+-            'Alternatively, an offscreen version using OSMesa libraries '
+-            'and ``vtk-osmesa`` is available.\n',
 -        )
 +        if "DISPLAY" not in os.environ:
 +            # Copy of the former implementation of pyvista.start_xvfb, deprecated since pyvista 0.45.0
