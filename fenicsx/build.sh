@@ -165,7 +165,7 @@ cd /tmp/dolfinx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout v0.9.0
 else
-    git checkout main
+    git checkout francesco/format
 fi
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
 patch -p 1 < $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
