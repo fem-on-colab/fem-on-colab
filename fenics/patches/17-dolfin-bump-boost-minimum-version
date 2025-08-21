@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d771be3a7..5f9166478 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -250,7 +250,7 @@ endif()
+ set(Boost_NO_BOOST_CMAKE true)
+ 
+ set(Boost_USE_MULTITHREADED $ENV{BOOST_USE_MULTITHREADED})
+-find_package(Boost 1.56 QUIET REQUIRED)
++find_package(Boost 1.72 QUIET REQUIRED)
+ 
+ # Boost public/private libraries to link to.
+ # Note: These should all be private as they do not appear in the
+diff --git a/cmake/templates/UseDOLFIN.cmake.in b/cmake/templates/UseDOLFIN.cmake.in
+index 9efa85b64..2d0fa84fa 100644
+--- a/cmake/templates/UseDOLFIN.cmake.in
++++ b/cmake/templates/UseDOLFIN.cmake.in
+@@ -31,7 +31,7 @@ if (NOT DOLFIN_USE_FILE_INCLUDED)
+   set(Boost_NO_BOOST_CMAKE true)
+ 
+   set(Boost_USE_MULTITHREADED $ENV{BOOST_USE_MULTITHREADED})
+-  find_package(Boost 1.48 QUIET REQUIRED COMPONENTS
++  find_package(Boost 1.72 QUIET REQUIRED COMPONENTS
+     @DOLFIN_BOOST_COMPONENTS_PUBLIC@)
+ 
+   if (@PETSC_FOUND@)

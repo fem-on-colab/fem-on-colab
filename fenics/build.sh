@@ -75,6 +75,7 @@ patch -p 1 < $REPODIR/fenics/patches/05-deprecated-std-bind2nd
 patch -p 1 < $REPODIR/fenics/patches/07-deprecated-petsc
 patch -p 1 < $REPODIR/fenics/patches/10-c++-14-in-dolfin
 patch -p 1 < $REPODIR/fenics/patches/12-do-not-fiddle-with-dlopenflags-in-dolfin
+patch -p 1 < $REPODIR/fenics/patches/17-dolfin-bump-boost-minimum-version
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX
