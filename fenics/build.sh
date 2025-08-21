@@ -75,6 +75,7 @@ patch -p 1 < $REPODIR/fenics/patches/05-deprecated-std-bind2nd
 patch -p 1 < $REPODIR/fenics/patches/07-deprecated-petsc
 patch -p 1 < $REPODIR/fenics/patches/10-c++-14-in-dolfin
 patch -p 1 < $REPODIR/fenics/patches/12-do-not-fiddle-with-dlopenflags-in-dolfin
+patch -p 1 < $REPODIR/fenics/patches/17-dolfin-bump-boost-minimum-version
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX
@@ -116,6 +117,7 @@ cd && rm -rf /tmp/cgal-src
 git clone https://bitbucket.org/fenics-project/mshr.git /tmp/mshr-src
 cd /tmp/mshr-src/
 patch -p 1 < $REPODIR/fenics/patches/15-tetgen-increase-cmake-minimum-required-version
+patch -p 1 < $REPODIR/fenics/patches/18-mshr-drop-boost-system
 cat <<EOT > python/config.json.in
 {
     "pybind11" : {

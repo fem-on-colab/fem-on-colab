@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f1e50be6..148c1e8b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,7 +56,7 @@ endif()
+ 
+ # Prevent FindBoost.cmake from looking for system Boost{foo}.cmake files
+ set(Boost_NO_BOOST_CMAKE true)
+-find_package( Boost REQUIRED system filesystem program_options )
++find_package( Boost REQUIRED filesystem program_options )
+ # Save this because it will be overwritten by find_package(DOLFIN)
+ set(Boost_MSHR_LIBRARIES ${Boost_LIBRARIES})
+ include_directories("${Boost_INCLUDE_DIRS}")
