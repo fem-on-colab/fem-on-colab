@@ -1,0 +1,13 @@
+diff --git a/python/dolfin/jit/pybind11jit.py b/python/dolfin/jit/pybind11jit.py
+index d7a6e3fd5..7dda881d7 100644
+--- a/python/dolfin/jit/pybind11jit.py
++++ b/python/dolfin/jit/pybind11jit.py
+@@ -42,7 +42,7 @@ def compile_cpp_code(cpp_code, **kwargs):
+ 
+     # Set compiler/build options
+     # FIXME: need to locate Python libs and pybind11
+-    from distutils import sysconfig
++    import sysconfig
+     params = dijitso.params.default_params()
+     pyversion = "python" + sysconfig.get_config_var("LDVERSION")
+     params['cache']['lib_prefix'] = ""
