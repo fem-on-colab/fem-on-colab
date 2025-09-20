@@ -99,7 +99,7 @@ cd && rm -rf /tmp/dolfin-src/
 apt install -y -qq libgmp3-dev libmpfr-dev
 git clone https://github.com/CGAL/cgal.git /tmp/cgal-src
 cd /tmp/cgal-src
-git checkout 5.6.x-branch
+git checkout v5.6.3
 mkdir -p /tmp/cgal-src/build
 cd /tmp/cgal-src/build
 cmake \
