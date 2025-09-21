@@ -37,7 +37,7 @@ else
     git checkout master
 fi
 git submodule update --init
-patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-disable-FMAComplex-arm64
+patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
 cmake \
