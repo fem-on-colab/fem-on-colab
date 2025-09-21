@@ -34,6 +34,8 @@ if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout ${TAGS[0]}
 else
     git checkout main
+    patch -p 1 < $REPODIR/petsc4py/patches/01-pnetcdf-compatibility-gcc-15.patch
+    patch -p 1 < $REPODIR/petsc4py/patches/02-spai-compatibility-gcc-15.patch
 fi
 DOWNLOADS="\
     --download-metis \
