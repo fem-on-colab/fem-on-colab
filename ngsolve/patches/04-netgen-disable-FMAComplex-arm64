@@ -1,0 +1,39 @@
+diff --git a/libsrc/core/simd_arm64.hpp b/libsrc/core/simd_arm64.hpp
+index 5bc833fd..91d76fe6 100644
+--- a/libsrc/core/simd_arm64.hpp
++++ b/libsrc/core/simd_arm64.hpp
+@@ -217,20 +217,20 @@ namespace ngcore
+   // ARM complex mult:
+   // https://arxiv.org/pdf/1901.07294.pdf
+   // c += a*b    (a0re, a0im, a1re, a1im, ...), 
+-  NETGEN_INLINE void FMAComplex (SIMD<double,2> a, SIMD<double,2> b, SIMD<double,2> & c)
+-  {
+-    auto tmp = vcmlaq_f64(c.Data(), a.Data(), b.Data());   // are * b
+-    c = vcmlaq_rot90_f64(tmp, a.Data(), b.Data());    // += i*aim * b
+-  }
+-
+-  NETGEN_INLINE void FMAComplex (SIMD<double,4> a, SIMD<double,4> b, SIMD<double,4> & c)
+-  {
+-    SIMD<double,2> clo = c.Lo();
+-    SIMD<double,2> chi = c.Hi();
+-    FMAComplex (a.Lo(), b.Lo(), clo);
+-    FMAComplex (a.Hi(), b.Hi(), chi);
+-    c = SIMD<double,4> (clo, chi);
+-  }
++//  NETGEN_INLINE void FMAComplex (SIMD<double,2> a, SIMD<double,2> b, SIMD<double,2> & c)
++//  {
++//    auto tmp = vcmlaq_f64(c.Data(), a.Data(), b.Data());   // are * b
++//    c = vcmlaq_rot90_f64(tmp, a.Data(), b.Data());    // += i*aim * b
++//  }
++
++//  NETGEN_INLINE void FMAComplex (SIMD<double,4> a, SIMD<double,4> b, SIMD<double,4> & c)
++//  {
++//    SIMD<double,2> clo = c.Lo();
++//    SIMD<double,2> chi = c.Hi();
++//    FMAComplex (a.Lo(), b.Lo(), clo);
++//    FMAComplex (a.Hi(), b.Hi(), chi);
++//    c = SIMD<double,4> (clo, chi);
++//  }
+ 
+   
+ 
