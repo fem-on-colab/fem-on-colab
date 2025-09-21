@@ -32,7 +32,7 @@ NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2504
+    git checkout v6.2.2506
 else
     git checkout master
 fi
@@ -59,10 +59,10 @@ make -j $(nproc) install
 cd && rm -rf /tmp/netgen-src
 
 # ngsolve
-git clone https://github.com/NGSolve/ngsolve /tmp/ngsolve-src
+git clone https://github.com/NGSolve/ngsolve.git /tmp/ngsolve-src
 cd /tmp/ngsolve-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2504
+    git checkout v6.2.2506
 else
     git checkout master
 fi
@@ -91,7 +91,7 @@ cd && rm -rf /tmp/ngsolve-src
 git clone https://github.com/ngsxfem/ngsxfem.git /tmp/ngsxfem-src
 cd /tmp/ngsxfem-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v2.1.2504
+    git checkout v2.1.2505
 else
     git checkout master
 fi
