@@ -1,0 +1,106 @@
+diff --git a/config/BuildSystem/config/packages/spai.py b/config/BuildSystem/config/packages/spai.py
+index 91ff11d0fe7..7e32f77d39c 100644
+--- a/config/BuildSystem/config/packages/spai.py
++++ b/config/BuildSystem/config/packages/spai.py
+@@ -1,3 +1,4 @@
++import os
+ import config.package
+ 
+ class Configure(config.package.Package):
+@@ -22,6 +23,96 @@ class Configure(config.package.Package):
+     self.deps       = [self.mpi,self.blasLapack]
+     return
+ 
++  def applyPatches(self):
++    try:
++      patch_content = """diff --git a/lib/bicgstab.c b/lib/bicgstab.c
++index c354a09..80e5bcb 100644
++--- a/lib/bicgstab.c
+++++ b/lib/bicgstab.c
++@@ -13,7 +13,7 @@
++ */
++
++ void bicgstab_R
++-(void Av_proc(),
+++(void Av_proc(matrix*,vector*,vector*),
++  matrix *A,
++  matrix *M,
++  vector *x,
++@@ -129,7 +129,7 @@ void bicgstab_R
++ */
++
++ void bicgstab_L
++-(void Av_proc(),
+++(void Av_proc(matrix*,vector*,vector*),
++  matrix *A,
++  matrix *M,
++  vector *x,
++diff --git a/lib/bicgstab.h b/lib/bicgstab.h
++index fc6a1d5..49f4732 100644
++--- a/lib/bicgstab.h
+++++ b/lib/bicgstab.h
++@@ -15,7 +15,7 @@
++ #include "debug.h"
++
++ void bicgstab_R
++-(void Av_proc(),
+++(void Av_proc(matrix*,vector*,vector*),
++  matrix *,
++  matrix *,
++  vector *,
++@@ -25,7 +25,7 @@ void bicgstab_R
++  int);
++
++ void bicgstab_L
++-(void Av_proc(),
+++(void Av_proc(matrix*,vector*,vector*),
++  matrix *,
++  matrix *,
++  vector *,
++diff --git a/lib/spai.c b/lib/spai.c
++index 864892e..fc7f2b2 100644
++--- a/lib/spai.c
+++++ b/lib/spai.c
++@@ -634,7 +634,7 @@ int amount_touched(double *a, int size, double val)
++
++ /**********************************************************************/
++
++-void free_globals()
+++void free_globals(int nbsteps)
++ {
++   int i;
++
++diff --git a/lib/spai.h b/lib/spai.h
++index e086536..0399f27 100644
++--- a/lib/spai.h
+++++ b/lib/spai.h
++@@ -130,7 +130,7 @@ int amount_touched
++  double);
++
++ void free_globals
++-();
+++(int);
++
++ int *new_int_array
++ (int *,"""
++      patch_file = os.path.join(self.packageDir, 'spai-fix.patch')
++
++      # Write patch to file
++      if not os.path.exists(patch_file):
++        self.logPrint('Writing SPAI patch to %s' % patch_file)
++        with open(patch_file, 'w') as f:
++          f.write(patch_content)
++
++      # Apply patch
++      self.logPrint('Applying SPAI patch')
++      output, err, ret = config.package.Package.executeShellCommand(
++        'patch -p1 < "%s"' % patch_file,
++        cwd=self.packageDir, log=self.framework.log)
++      if ret:
++        raise RuntimeError('Error applying SPAI patch: %s' % err)
++    except Exception as e:
++      raise RuntimeError('Unable to apply SPAI patch: %s' % str(e))
++
+   def Install(self):
+     import os
+ 
