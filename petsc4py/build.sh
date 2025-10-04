@@ -29,13 +29,11 @@ PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 git clone https://gitlab.com/petsc/petsc.git /tmp/petsc-src
 cd /tmp/petsc-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    TAGS=($(git tag -l --sort=-version:refname "v3.23.[0-9]"))
+    TAGS=($(git tag -l --sort=-version:refname "v3.24.[0-9]"))
     echo "Latest tag is ${TAGS[0]}"
     git checkout ${TAGS[0]}
 else
     git checkout main
-    patch -p 1 < $REPODIR/petsc4py/patches/01-pnetcdf-compatibility-gcc-15.patch
-    patch -p 1 < $REPODIR/petsc4py/patches/02-spai-compatibility-gcc-15.patch
 fi
 DOWNLOADS="\
     --download-metis \
