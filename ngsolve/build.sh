@@ -92,7 +92,7 @@ cd && rm -rf /tmp/ngsolve-src
 git clone https://github.com/ngsxfem/ngsxfem.git /tmp/ngsxfem-src
 cd /tmp/ngsxfem-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v2.1.2505
+    git checkout v2.1.2506
 else
     git checkout master
 fi
@@ -116,12 +116,11 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user poetry-core
 git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.1.0
-    patch -p 1 < $REPODIR/ngsolve/patches/03-ngspetsc-drop-dependencies-v0.1.0
+    git checkout v0.1.1
 else
     git checkout main
-    patch -p 1 < $REPODIR/ngsolve/patches/03-ngspetsc-drop-dependencies
 fi
+patch -p 1 < $REPODIR/ngsolve/patches/03-ngspetsc-drop-dependencies
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 
 # Install a further ngsolve.webgui dependency
