@@ -81,7 +81,6 @@ if [[ "$RELEASE_TYPE" == "release" ]]; then
 else
     git checkout main
 fi
-patch -p 1 < $REPODIR/firedrake/patches/03-disable-Wincompatible-pointer-types-firedrake-cython
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-omp-num-threads-in-firedrake
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/firedrake-src
