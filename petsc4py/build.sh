@@ -35,6 +35,7 @@ if [[ "$RELEASE_TYPE" == "release" ]]; then
 else
     git checkout main
 fi
+patch -p 1 < $REPODIR/petsc4py/patches/01-spai-compatibility-gcc-15.patch
 DOWNLOADS="\
     --download-metis \
     --download-parmetis \
