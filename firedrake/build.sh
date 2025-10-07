@@ -76,7 +76,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "setuptools>=77"
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout 2025.10.0
+    git checkout 2025.10.1
     patch -p 1 < $REPODIR/firedrake/patches/05-unpin-petsc4py-slepc4py
 else
     git checkout main
