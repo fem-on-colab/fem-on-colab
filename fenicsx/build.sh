@@ -32,7 +32,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user scikit-build-core[p
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout 2024.2.0
+    git checkout 2025.2.0
 else
     git checkout main
 fi
@@ -43,7 +43,7 @@ cd && rm -rf /tmp/ufl-src
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
 cd /tmp/basix-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.9.0
+    git checkout v0.10.0
 else
     git checkout main
 fi
@@ -65,7 +65,7 @@ cd && rm -rf /tmp/basix-src
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.9.0
+    git checkout v0.10.0
 else
     git checkout main
 fi
@@ -163,17 +163,12 @@ cd && rm -rf /tmp/format-check
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.9.0
+    git checkout v0.10.0.post1
 else
     git checkout main
 fi
-if [[ "$RELEASE_TYPE" == "release" ]]; then
-    sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx-v0.9.0
-    patch -p 1 < $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx-v0.9.0
-else
-    sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
-    patch -p 1 < $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
-fi
+sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
+patch -p 1 < $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
 mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src/build
 export UFC_DIR=$INSTALL_PREFIX
