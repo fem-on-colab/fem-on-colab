@@ -92,7 +92,7 @@ cmake \
 make -j $(nproc) install
 cd /tmp/dolfin-src/python
 export DOLFIN_DIR=$INSTALL_PREFIX
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --user .
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/dolfin-src/
 
 # CGAL (required by mshr)
@@ -152,5 +152,5 @@ cmake \
     ..
 make -j $(nproc) install
 cd /tmp/mshr-src/python
-PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --user .
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/mshr-src/
