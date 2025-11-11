@@ -25,8 +25,11 @@ fi
 # Install boost, pybind11, slepc4py (and their dependencies), as well as vtk
 FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 
-# scikit-build-core, required for building Basix and DOLFINx
+# Install scikit-build-core, required for building Basix and DOLFINx
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user scikit-build-core[pyproject]
+
+# Install recent setuptools, required for building FFCX
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "setuptools>=77"
 
 # UFL
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
