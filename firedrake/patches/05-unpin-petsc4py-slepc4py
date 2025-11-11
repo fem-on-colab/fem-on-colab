@@ -1,8 +1,8 @@
 diff --git a/pyproject.toml b/pyproject.toml
-index cdac6d549..df64d93b5 100644
+index 7a23f6057..584f24589 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
-@@ -26,7 +26,7 @@ dependencies = [
+@@ -27,7 +27,7 @@ dependencies = [
    "loopy>2024.1",
    "numpy",
    "packaging",
@@ -11,7 +11,7 @@ index cdac6d549..df64d93b5 100644
    "petsctools",
    "pkgconfig",
    "progress",
-@@ -89,7 +89,7 @@ netgen = [
+@@ -90,7 +90,7 @@ netgen = [
    "ngsPETSc>=0.1.1",
  ]
  slepc = [
@@ -20,25 +20,25 @@ index cdac6d549..df64d93b5 100644
  ]
  torch = [  # requires passing '--extra-index-url' to work
    "torch",
-@@ -111,7 +111,7 @@ ci = [
+@@ -115,7 +115,7 @@ ci = [
    "pytest-split",  # needed for firedrake-run-split-tests
    "pytest-timeout",
    "pytest-xdist",
 -  "slepc4py==3.24.0",
 +  "slepc4py",
    "torch",  # requires passing '--extra-index-url' to work
+   "vtk",
  ]
- docker = [  # Used in firedrake-vanilla container
-@@ -127,7 +127,7 @@ docker = [  # Used in firedrake-vanilla container
+@@ -132,7 +132,7 @@ docker = [  # Used in firedrake-vanilla container
    "pytest-split",  # needed for firedrake-run-split-tests
    "pytest-timeout",
    "pytest-xdist",
 -  "slepc4py==3.24.0",
 +  "slepc4py",
+   "vtk",
  ]
  
- [build-system]
-@@ -141,7 +141,7 @@ requires = [
+@@ -147,7 +147,7 @@ requires = [
    "pkgconfig",
    "pybind11",
    "setuptools>=77.0.3",
