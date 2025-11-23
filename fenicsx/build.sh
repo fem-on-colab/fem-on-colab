@@ -68,7 +68,7 @@ cd && rm -rf /tmp/basix-src
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.10.0
+    git checkout v0.10.1
 else
     git checkout main
 fi
@@ -166,7 +166,7 @@ cd && rm -rf /tmp/format-check
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.10.0.post1
+    git checkout v0.10.0.post3
 else
     git checkout main
 fi
