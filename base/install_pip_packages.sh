@@ -40,7 +40,7 @@ remove_packages_built_from_source ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove machine learning packages to decrease the image size
 remove_machine_learning_packages () {
-    grep -v -e "^accelerate" -e "^arviz==" -e "^chex" -e "^datascience" -e "^datasets" -e "^dlib" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^hdbscan" -e "^imbalanced-learn" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^langchain" -e "^lightgbm" -e "^librosa" -e "^malloy" -e "^mlxtend" -e "^openai" -e "^optax" -e "^orbax" -e "^peft" -e "^pymc==" -e "^pynndescent" -e "^pytorch" -e "^scikit" -e "^sentence-transformers" -e "^shap" -e "^sklearn" -e "^spacy" -e "^tensorboard" -e "^tensorflow" -e "^tf_" -e "^thinc" -e "^timm" -e "^torch" -e "^transformers" -e "^triton" -e"^tsfresh" -e "^umap-learn" -e "^xgboost" -e "^woodwork" -e "^yellowbrick" -h ${1} > ${1}.tmp
+    grep -v -e "^accelerate" -e "^arviz==" -e "^chex" -e "^datascience" -e "^datasets" -e "^dlib" -e "^en-core-web-sm" -e "^fastai" -e "^flax" -e "^gensim" -e "^hdbscan" -e "^imbalanced-learn" -e "^jax" -e "^kapre" -e "^keras" -e "^Keras" -e "^langchain" -e "^langgraph" -e "^lightgbm" -e "^librosa" -e "^malloy" -e "^mlxtend" -e "^openai" -e "^optax" -e "^orbax" -e "^peft" -e "^pymc==" -e "^pynndescent" -e "^pytorch" -e "^scikit" -e "^sentence-transformers" -e "^shap==" -e "^sklearn" -e "^spacy" -e "^tensorboard" -e "^tensorflow" -e "^tf_" -e "^thinc" -e "^timm" -e "^torch" -e "^transformers" -e "^triton" -e"^tsfresh" -e "^umap-learn" -e "^xgboost" -e "^woodwork" -e "^yellowbrick" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_machine_learning_packages ${BACKEND_INFO}/pip-freeze-clean.txt
@@ -68,7 +68,7 @@ remove_mkl_packages ${BACKEND_INFO}/pip-freeze-clean.txt
 
 # Remove misc packages to decrease the image size
 remove_misc_packages () {
-    grep -v -e "^betterproto" -e "^bigframes" -e "^bigquery-magics" -e "^cyipopt" -e "^dask" -e "^dataproc" -e "^db-dtypes" -e "^diffusers" -e "^distributed" -e "^earthengine" -e "^eerepr" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^geopandas" -e "^google" -e "^gradio" -e "^grpc" -e "^gspread" -e "^hf_" -e "^hf-" -e "^highspy" -e "^huggingface" -e "^ibis-framework" -e "^jupyter_kernel_gateway" -e "^kaggle" -e "^keyrings" -e "^libpysal" -e "^model-signing" -e "^music21" -e "^opentelemetry" -e "^pandas-gbq" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pyspark" -e "^raft-dask" -e "^rapids-dask" -e "^sigstore" -e "^spanner" -e "^sqlalchemy" -e "^tokenizers" -h ${1} > ${1}.tmp
+    grep -v -e "^betterproto" -e "^bigframes" -e "^bigquery-magics" -e "^cyipopt" -e "^dask" -e "^dataproc" -e "^db-dtypes" -e "^diffusers" -e "^distributed" -e "^earthengine" -e "^eerepr" -e "^esda" -e "^firebase" -e "^gcsfs" -e "^geemap" -e "^geopandas" -e "^giddy" -e "^google" -e "^gradio" -e "^grpc" -e "^gspread" -e "^hf_" -e "^hf-" -e "^highspy" -e "^huggingface" -e "^ibis-framework" -e "^inequality" -e "^jupyter_kernel_gateway" -e "^kaggle" -e "^keyrings" -e "^libpysal" -e "^mapclassify" -e "^mgwr" -e "^model-signing" -e "^momepy" -e "^music21" -e "^opentelemetry" -e "^pandas-gbq" -e "^pointpats" -e "^polars" -e "^pyarrow" -e "^pydata-google-auth" -e "^PyDrive" -e "^pysal" -e "^pyspark" -e "^raft-dask" -e "^rapids-dask" -e "^segregation" -e "^sigstore" -e "^spaghetti" -e "^spanner" -e "^spglm" -e "^spint" -e "^splot" -e "^spopt" -e "^spreg" -e "^sqlalchemy" -e "^tobler" -e "^tokenizers" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_misc_packages ${BACKEND_INFO}/pip-freeze-clean.txt
