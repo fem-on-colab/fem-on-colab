@@ -1,0 +1,13 @@
+diff --git a/src/FoundationClasses/TKernel/Quantity/Quantity_ColorRGBA.hxx b/src/FoundationClasses/TKernel/Quantity/Quantity_ColorRGBA.hxx
+index 805ffec6b8..8d7f817c83 100644
+--- a/src/FoundationClasses/TKernel/Quantity/Quantity_ColorRGBA.hxx
++++ b/src/FoundationClasses/TKernel/Quantity/Quantity_ColorRGBA.hxx
+@@ -78,7 +78,7 @@ public:
+   constexpr void SetAlpha(const Standard_ShortReal theAlpha) noexcept { myAlpha = theAlpha; }
+ 
+   //! Return the color as vector of 4 float elements.
+-  constexpr operator const NCollection_Vec4<float>&() const noexcept
++  operator const NCollection_Vec4<float>&() const noexcept
+   {
+     return *(const NCollection_Vec4<float>*)this;
+   }
