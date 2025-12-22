@@ -166,7 +166,7 @@ cd && rm -rf /tmp/format-check
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.10.0.post3
+    git checkout v0.10.0.post5
 else
     git checkout main
 fi
