@@ -117,10 +117,10 @@ git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
 if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout v0.1.1
+    patch -p 1 < $REPODIR/ngsolve/patches/03-ngspetsc-drop-dependencies
 else
     git checkout main
 fi
-patch -p 1 < $REPODIR/ngsolve/patches/03-ngspetsc-drop-dependencies
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 
 # Install a further ngsolve.webgui dependency
