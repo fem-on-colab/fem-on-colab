@@ -28,9 +28,6 @@ git checkout ${TAGS[0]}
 # Backport ADIOS2 PR #4255 as required by dolfinx PR #3734
 wget https://github.com/ornladios/ADIOS2/commit/8afa8afd34b4cfaf83974525740873a63b6edf9b.patch
 patch -p1 < 8afa8afd34b4cfaf83974525740873a63b6edf9b.patch
-# Backport ADIOS2 PR #4578 to ensure compatibility with GCC 15
-wget https://github.com/ornladios/ADIOS2/commit/e7e8785f428597c02a010b428d54bf159b051031.patch
-patch -p1 < e7e8785f428597c02a010b428d54bf159b051031.patch
 mkdir -p /tmp/adios2-src/build
 cd /tmp/adios2-src/build
 cmake \
