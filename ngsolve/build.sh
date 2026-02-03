@@ -69,7 +69,11 @@ else
 fi
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
-patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime.2506
+else
+    patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
+fi
 mkdir -p /tmp/ngsolve-src/build
 cd /tmp/ngsolve-src/build
 cmake \
