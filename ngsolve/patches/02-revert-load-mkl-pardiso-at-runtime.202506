@@ -12,7 +12,7 @@ index 426b843d9..7b8a4ca67 100644
  #include "blockjacobi.hpp"
  #include "commutingAMG.hpp"
 diff --git a/linalg/pardisoinverse.cpp b/linalg/pardisoinverse.cpp
-index 35a470695..8c1f6d10e 100644
+index 881843067..5c3e26099 100644
 --- a/linalg/pardisoinverse.cpp
 +++ b/linalg/pardisoinverse.cpp
 @@ -48,20 +48,10 @@ extern  integer F77_FUNC(pardisoinit)
@@ -114,10 +114,10 @@ index 3ee46464a..7fe4b3fc5 100644
  
    /*
 diff --git a/linalg/python_linalg.cpp b/linalg/python_linalg.cpp
-index 9079fcd9b..48a836803 100644
+index 5745be1de..c32209343 100644
 --- a/linalg/python_linalg.cpp
 +++ b/linalg/python_linalg.cpp
-@@ -1933,8 +1933,9 @@ shift : object
+@@ -1818,8 +1818,9 @@ shift : object
  
    m.def("GetAvailableSolvers", []() {
      py::list solvers;
@@ -129,10 +129,38 @@ index 9079fcd9b..48a836803 100644
      solvers.append(GetInverseName(MUMPS));
  #endif // USE_MUMPS
 diff --git a/linalg/sparsematrix.cpp b/linalg/sparsematrix.cpp
-index f98b7b759..e7917d368 100644
+index 8b114847b..47e001222 100644
 --- a/linalg/sparsematrix.cpp
 +++ b/linalg/sparsematrix.cpp
-@@ -2338,13 +2338,12 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM,T
+@@ -2006,10 +2006,11 @@ namespace ngla
+       }
+     else if ( BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
+       {
+-        if(is_pardiso_available)
++#ifdef USE_PARDISO
+           return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (dynamic_pointer_cast<const SparseMatrix<TM,TV_ROW,TV_COL>>(this->shared_from_this()), subset, nullptr, 1);
+-        else
++#else
+           throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
++#endif
+       }
+     else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
+       {
+@@ -2047,10 +2048,11 @@ namespace ngla
+       }
+     else if (  BaseSparseMatrix :: GetInverseType()  == PARDISO ||  BaseSparseMatrix :: GetInverseType()  == PARDISOSPD)
+       {
+-        if(is_pardiso_available)
++#ifdef USE_PARDISO
+           return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (dynamic_pointer_cast<const SparseMatrix<TM,TV_ROW,TV_COL>>(this->shared_from_this()), nullptr, clusters, 1);
+-        else
++#else
+           throw Exception ("SparseMatrix::InverseMatrix:  PardisoInverse not available");
++#endif
+       }
+     else if (  BaseSparseMatrix :: GetInverseType()  == UMFPACK)
+       {
+@@ -2177,13 +2179,12 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM,T
      case(PARDISO):
      case(PARDISOSPD):
      {
