@@ -170,8 +170,6 @@ if [[ "$RELEASE_TYPE" == "release" ]]; then
 else
     git checkout main
 fi
-sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
-patch -p 1 < $REPODIR/fenicsx/patches/01-pkg-config-path-in-dolfinx
 mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src/build
 export UFC_DIR=$INSTALL_PREFIX
