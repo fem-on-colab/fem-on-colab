@@ -1,0 +1,74 @@
+diff --git a/dolfin/la/PETScKrylovSolver.cpp b/dolfin/la/PETScKrylovSolver.cpp
+index 8ad33a22b..76275b7a6 100644
+--- a/dolfin/la/PETScKrylovSolver.cpp
++++ b/dolfin/la/PETScKrylovSolver.cpp
+@@ -499,7 +499,7 @@ void PETScKrylovSolver::monitor(bool monitor_convergence)
+     ierr = KSPMonitorSet(_ksp,
+                          (PetscErrorCode (*)(KSP,PetscInt,PetscReal,void*)) KSPMonitorTrueResidual,
+                          vf,
+-                         (PetscErrorCode (*)(void**))PetscViewerAndFormatDestroy);
++                         (PetscErrorCode (*)(PetscCtxRt))PetscViewerAndFormatDestroy);
+     if (ierr != 0) petsc_error(ierr, __FILE__, "KSPMonitorSet");
+   }
+   else
+diff --git a/dolfin/la/SLEPcEigenSolver.cpp b/dolfin/la/SLEPcEigenSolver.cpp
+index c5b3349a6..36cf1edf4 100644
+--- a/dolfin/la/SLEPcEigenSolver.cpp
++++ b/dolfin/la/SLEPcEigenSolver.cpp
+@@ -194,7 +194,7 @@ void SLEPcEigenSolver::solve(std::size_t n)
+       PetscViewerAndFormatCreate(PETSC_VIEWER_STDOUT_WORLD, PETSC_VIEWER_DEFAULT, &vf);
+       EPSMonitorSet(_eps,(PetscErrorCode (*)(EPS,PetscInt,PetscInt,PetscScalar*,PetscScalar*,
+                                              PetscReal*,PetscInt,void*))EPSMonitorAll,vf,
+-                    (PetscErrorCode (*)(void**))PetscViewerAndFormatDestroy);
++                    (PetscErrorCode (*)(PetscCtxRt))PetscViewerAndFormatDestroy);
+     }
+   }
+ 
+diff --git a/dolfin/nls/PETScSNESSolver.cpp b/dolfin/nls/PETScSNESSolver.cpp
+index 0153ae215..d339b2f78 100644
+--- a/dolfin/nls/PETScSNESSolver.cpp
++++ b/dolfin/nls/PETScSNESSolver.cpp
+@@ -212,7 +212,7 @@ void PETScSNESSolver::init(NonlinearProblem& nonlinear_problem,
+       ierr = SNESMonitorSet(_snes,
+                             (PetscErrorCode (*)(SNES,PetscInt,PetscReal,void*)) SNESMonitorDefault,
+                             vf,
+-                            (PetscErrorCode (*)(void**))PetscViewerAndFormatDestroy);
++                            (PetscErrorCode (*)(PetscCtxRt))PetscViewerAndFormatDestroy);
+       if (ierr != 0) petsc_error(ierr, __FILE__, "SNESMonitorSet");
+     }
+   }
+@@ -519,7 +519,7 @@ void PETScSNESSolver::set_linear_solver_parameters()
+       ierr = KSPMonitorSet(ksp,
+                            (PetscErrorCode (*)(KSP,PetscInt,PetscReal,void*)) KSPMonitorTrueResidual,
+                            vf,
+-                           (PetscErrorCode (*)(void**))PetscViewerAndFormatDestroy);
++                           (PetscErrorCode (*)(PetscCtxRt))PetscViewerAndFormatDestroy);
+       if (ierr != 0) petsc_error(ierr, __FILE__, "KSPMonitorSet");
+     }
+ 
+diff --git a/dolfin/nls/PETScTAOSolver.cpp b/dolfin/nls/PETScTAOSolver.cpp
+index c10caa44b..ae7a422a1 100644
+--- a/dolfin/nls/PETScTAOSolver.cpp
++++ b/dolfin/nls/PETScTAOSolver.cpp
+@@ -579,7 +579,7 @@ void PETScTAOSolver::set_ksp_options()
+         ierr = KSPMonitorSet(ksp,
+                          (PetscErrorCode (*)(KSP,PetscInt,PetscReal,void*)) KSPMonitorTrueResidual,
+                          vf,
+-                         (PetscErrorCode (*)(void**))PetscViewerAndFormatDestroy);
++                         (PetscErrorCode (*)(PetscCtxRt))PetscViewerAndFormatDestroy);
+         if (ierr != 0) petsc_error(ierr, __FILE__, "KSPMonitorSet");
+       }
+     }
+diff --git a/dolfin/nls/TAOLinearBoundSolver.cpp b/dolfin/nls/TAOLinearBoundSolver.cpp
+index 45147b527..bd4fb0953 100644
+--- a/dolfin/nls/TAOLinearBoundSolver.cpp
++++ b/dolfin/nls/TAOLinearBoundSolver.cpp
+@@ -414,7 +414,7 @@ void TAOLinearBoundSolver::set_ksp_options()
+         PetscViewerAndFormat *vf;
+         ierr = PetscViewerAndFormatCreate(viewer,format,&vf);
+         ierr = KSPMonitorSet(ksp, (PetscErrorCode (*)(KSP,PetscInt,PetscReal,void*)) KSPMonitorTrueResidual,
+-                             vf,(PetscErrorCode (*)(void**))PetscViewerAndFormatDestroy);
++                             vf,(PetscErrorCode (*)(PetscCtxRt))PetscViewerAndFormatDestroy);
+         if (ierr != 0) petsc_error(ierr, __FILE__, "KSPMonitorSet");
+       }
+     }
