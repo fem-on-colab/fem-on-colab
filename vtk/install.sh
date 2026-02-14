@@ -27,8 +27,8 @@ if [[ ! -f $VTK_INSTALLED ]]; then
         tar -xzf $VTK_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
-    # Install X11
-    apt install -y -qq libgl1-mesa-dev libxrender1 xvfb
+    # Install OSMesa
+    apt install -y -qq libosmesa6-dev
 
     # Mark package as installed
     mkdir -p $SHARE_PREFIX

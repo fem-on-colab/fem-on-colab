@@ -43,16 +43,14 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/adios2-src
 
-# Install xvfbwrapper too
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user xvfbwrapper
-
 # Install pyvista: note that this will also install vtk
 git clone https://github.com/pyvista/pyvista.git /tmp/pyvista-src
 cd /tmp/pyvista-src
 TAGS=($(git tag -l --sort=-version:refname "v[0-9].[0-9]*.[0-9]"))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
-patch -p 1 < $REPODIR/vtk/patches/01-start-xvfb
+patch -p 1 < $REPODIR/vtk/patches/01-force-osmesa
+patch -p 1 < $REPODIR/vtk/patches/02-pin-trame-vtk
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .[jupyter]
 cd && rm -rf /tmp/pyvista-src
 

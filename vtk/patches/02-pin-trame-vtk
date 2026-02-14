@@ -1,0 +1,13 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 835a9afb8..6cf1aff49 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -47,7 +47,7 @@ jupyter = [
+   'nest-asyncio2',
+   'trame-client>=2.12.7',
+   'trame-server >= 2.11.7, != 3.7.*, != 3.8.0',
+-  'trame-vtk>=2.5.8',
++  'trame-vtk>=2.5.8, <2.10.3',
+   'trame-vuetify>=2.3.1',
+   'trame>=2.5.2',
+ ]

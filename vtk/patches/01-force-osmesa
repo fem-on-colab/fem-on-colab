@@ -1,0 +1,12 @@
+diff --git a/pyvista/__init__.py b/pyvista/__init__.py
+index 89f5ee4db..8c8a79c9d 100755
+--- a/pyvista/__init__.py
++++ b/pyvista/__init__.py
+@@ -129,3 +129,7 @@ def __getattr__(name):
+         raise AttributeError(msg) from None
+ 
+     return feature
++
++
++if "DISPLAY" not in os.environ:
++    os.environ["VTK_DEFAULT_OPENGL_WINDOW"] = "vtkOSOpenGLRenderWindow"
