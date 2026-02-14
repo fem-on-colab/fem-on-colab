@@ -27,8 +27,8 @@ if [[ ! -f $VTK_INSTALLED ]]; then
         tar -xzf $VTK_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
-    # Install OSMesa
-    apt install -y -qq libosmesa6-dev
+    # Install EGL
+    apt install -y -qq libegl1 libgl1-mesa-dri
 
     # Mark package as installed
     mkdir -p $SHARE_PREFIX
