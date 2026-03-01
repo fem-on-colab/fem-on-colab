@@ -72,3 +72,29 @@ index 45147b527..bd4fb0953 100644
          if (ierr != 0) petsc_error(ierr, __FILE__, "KSPMonitorSet");
        }
      }
+diff --git a/dolfin/nls/PETScTAOSolver.cpp b/dolfin/nls/PETScTAOSolver.cpp
+index ae7a422a1..7028faf43 100644
+--- a/dolfin/nls/PETScTAOSolver.cpp
++++ b/dolfin/nls/PETScTAOSolver.cpp
+@@ -240,17 +240,17 @@ void PETScTAOSolver::init(OptimisationProblem& optimisation_problem,
+   if (ierr != 0) petsc_error(ierr, __FILE__, "TaoSetHessian");
+ 
+   // Clear previous monitors
+-  ierr = TaoCancelMonitors(_tao);
+-  if (ierr != 0) petsc_error(ierr, __FILE__, "TaoCancelMonitors");
++  ierr = TaoMonitorCancel(_tao);
++  if (ierr != 0) petsc_error(ierr, __FILE__, "TaoMonitorCancel");
+ 
+   // Set the monitor
+   if (parameters["monitor_convergence"])
+   {
+-    ierr = TaoSetMonitor(_tao,
++    ierr = TaoMonitorSet(_tao,
+ #if PETSC_VERSION_MAJOR == 3 && PETSC_VERSION_MINOR <= 8 && PETSC_VERSION_RELEASE == 1
+                          TaoDefaultMonitor,
+ #else
+-                         TaoMonitorDefault,
++                         (PetscErrorCode (*)(Tao, PetscCtx)) TaoMonitorDefault,
+ #endif
+                          PETSC_VIEWER_STDOUT_(PetscObjectComm((PetscObject)_tao)),
+                          NULL);

@@ -1,0 +1,16 @@
+diff --git a/dolfin/la/PETScKrylovSolver.cpp b/dolfin/la/PETScKrylovSolver.cpp
+index 76275b7a6..683ca52ea 100644
+--- a/dolfin/la/PETScKrylovSolver.cpp
++++ b/dolfin/la/PETScKrylovSolver.cpp
+@@ -453,9 +453,9 @@ void PETScKrylovSolver::set_dm_active(bool val)
+ {
+   dolfin_assert(_ksp);
+   if (val)
+-    KSPSetDMActive(_ksp, PETSC_TRUE);
++    KSPSetDMActive(_ksp, KSP_DMACTIVE_ALL, PETSC_TRUE);
+   else
+-    KSPSetDMActive(_ksp, PETSC_FALSE);
++    KSPSetDMActive(_ksp, KSP_DMACTIVE_ALL, PETSC_FALSE);
+ }
+ //-----------------------------------------------------------------------------
+ PETScKrylovSolver::norm_type PETScKrylovSolver::get_norm_type() const
