@@ -7,8 +7,6 @@
 set -e
 set -x
 
-REPODIR=$PWD
-
 # Install gcc
 OCC_ARCHIVE_PATH="skip" source occ/install.sh
 
@@ -21,7 +19,6 @@ cd /tmp/occt-src
 TAGS=($(git tag -l --sort=-version:refname))
 echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
-patch -p 1 < $REPODIR/occ/patches/01-drop-constexpr.patch
 mkdir -p /tmp/occt-src/build
 cd /tmp/occt-src/build
 cmake \
