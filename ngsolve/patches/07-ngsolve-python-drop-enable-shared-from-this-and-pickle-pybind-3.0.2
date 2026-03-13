@@ -1,0 +1,89 @@
+diff --git a/comp/ngsobject.hpp b/comp/ngsobject.hpp
+index 16c227df2..a79f2b9d2 100644
+--- a/comp/ngsobject.hpp
++++ b/comp/ngsobject.hpp
+@@ -34,7 +34,7 @@ namespace ngcomp
+   /** 
+       NGSolve base class
+   */
+-  class NGS_DLL_HEADER NGS_Object : public enable_shared_from_this_virtual<NGS_Object>
++  class NGS_DLL_HEADER NGS_Object : public enable_shared_from_this<NGS_Object>
+   {
+   protected:
+     /// name of the instance
+diff --git a/comp/python_comp.cpp b/comp/python_comp.cpp
+index 97fe44fb1..ad6645255 100644
+--- a/comp/python_comp.cpp
++++ b/comp/python_comp.cpp
+@@ -2074,7 +2074,7 @@ active_dofs : BitArray or None
+                       state.append (Flags(gf.GetFlags()).SetFlag("parallel", false));
+                       for (int i = 0; i < gf.GetMultiDim(); i++)
+                         state.append (gf.GetVectorPtr(i));
+-                      return py::tuple(state);
++                      throw Exception("FB disabled - incompatible with pybind 3.0.2"); //return py::tuple(state);
+                       /*
+                       return py::make_tuple(gf.GetFESpace(),
+                                             gf.GetName(),
+diff --git a/comp/python_comp_mesh.cpp b/comp/python_comp_mesh.cpp
+index 9581c9402..f305151a4 100644
+--- a/comp/python_comp_mesh.cpp
++++ b/comp/python_comp_mesh.cpp
+@@ -885,12 +885,8 @@ will create a CF being 1e6 on the top boundary and 0. elsewhere.
+     
+     .def("GetParentFaces", [](MeshAccess & ma, int fnum)
+          {
+-           auto [info,nrs] = ma.GetParentFaces (fnum);
+-           if (nrs[1] == -1)
+-             return py::make_tuple(nrs[0]);
+-           else
+-             return py::make_tuple(nrs);
+-         },
++            throw Exception("FB disabled, error with pybind11 3.0.2");
++	 },
+          py::arg("fnum"),
+          "Return parent faces")
+ 
+diff --git a/linalg/basematrix.hpp b/linalg/basematrix.hpp
+index b150c3320..c4b31371c 100644
+--- a/linalg/basematrix.hpp
++++ b/linalg/basematrix.hpp
+@@ -26,7 +26,7 @@ namespace ngla
+   /**
+      The base for all matrices in the linalg.
+   */
+-  class NGS_DLL_HEADER BaseMatrix : public enable_shared_from_this_virtual<BaseMatrix>
++  class NGS_DLL_HEADER BaseMatrix : public enable_shared_from_this<BaseMatrix>
+   {
+   protected:
+     shared_ptr<ParallelDofs> paralleldofs;
+diff --git a/linalg/basevector.hpp b/linalg/basevector.hpp
+index 5a6ba78bd..0330503a1 100644
+--- a/linalg/basevector.hpp
++++ b/linalg/basevector.hpp
+@@ -105,7 +105,7 @@ namespace ngla
+   /**
+      Base vector for linalg
+   */
+-  class NGS_DLL_HEADER BaseVector : public enable_shared_from_this_virtual<BaseVector>
++  class NGS_DLL_HEADER BaseVector : public enable_shared_from_this<BaseVector>
+   {
+   protected:
+     /// size of vector
+diff --git a/ngstd/python_ngstd.cpp b/ngstd/python_ngstd.cpp
+index e07e7798e..51c3262f2 100644
+--- a/ngstd/python_ngstd.cpp
++++ b/ngstd/python_ngstd.cpp
+@@ -172,10 +172,9 @@ void NGS_DLL_HEADER  ExportNgstd(py::module & m) {
+                           return py::make_tuple(true,
+                                                 py::array_t<char> (py::buffer_info((char*) mv.Ptr(),
+                                                                                    mv.Size())));
+-                      else
+-                          return py::make_tuple(false,
+-                                                py::bytes((char*) mv.Ptr(),
+-                                                          mv.Size()));
++                      else {
++		          throw Exception("FB disabled - incompatible with pybind 3.0.2");
++	 	      }
+                     },
+                     [](py::tuple state)
+                     {

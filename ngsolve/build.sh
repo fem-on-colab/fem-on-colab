@@ -72,6 +72,7 @@ fi
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
 patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
+patch -p 1 < $REPODIR/ngsolve/patches/07-ngsolve-python-drop-enable-shared-from-this-and-pickle-pybind-3.0.2
 mkdir -p /tmp/ngsolve-src/build
 cd /tmp/ngsolve-src/build
 cmake \
