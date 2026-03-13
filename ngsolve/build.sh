@@ -38,6 +38,8 @@ else
 fi
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
+patch -p 1 < $REPODIR/ngsolve/patches/05-netgen-python-mesh-drop-keep-alive-pybind-3.0.2
+patch -p 1 < $REPODIR/ngsolve/patches/06-netgen-occ-8-deprecated-headers
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
 cmake \

@@ -1,0 +1,226 @@
+diff --git a/libsrc/occ/Partition_Inter2d.cxx b/libsrc/occ/Partition_Inter2d.cxx
+index 88b6f7d8..24fb345f 100644
+--- a/libsrc/occ/Partition_Inter2d.cxx
++++ b/libsrc/occ/Partition_Inter2d.cxx
+@@ -46,9 +46,9 @@
+ #include <TopOpeBRepDS_Transition.hxx>
+ #include <TopOpeBRep_EdgesIntersector.hxx>
+ #include <TopOpeBRep_Point2d.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
++#include <TopTools_ListOfListOfShape.hxx>
+ #include <TopTools_ListOfShape.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
++#include <TopTools_IndexedMapOfShape.hxx>
+ #include <TopTools_MapOfShape.hxx>
+ #include <TopoDS.hxx>
+ #include <TopoDS_Edge.hxx>
+diff --git a/libsrc/occ/Partition_Inter2d.hxx b/libsrc/occ/Partition_Inter2d.hxx
+index c018bacb..db93f0e4 100644
+--- a/libsrc/occ/Partition_Inter2d.hxx
++++ b/libsrc/occ/Partition_Inter2d.hxx
+@@ -38,6 +38,7 @@
+ #else
+    #include <BRepAlgo_AsDes.hxx>
+    #include <TopTools_MapOfShape.hxx>
++   #include <TopTools_ListOfShape.hxx>
+ #endif
+ 
+ #ifndef _Standard_Real_HeaderFile
+diff --git a/libsrc/occ/Partition_Inter3d.cxx b/libsrc/occ/Partition_Inter3d.cxx
+index 3fc97b43..9aec3c09 100644
+--- a/libsrc/occ/Partition_Inter3d.cxx
++++ b/libsrc/occ/Partition_Inter3d.cxx
+@@ -46,8 +46,8 @@
+ #include <TopExp_Explorer.hxx>
+ 
+ #include <TopOpeBRepTool_BoxSort.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
++#include <TopTools_DataMapOfShapeListOfShape.hxx>
++#include <TopTools_ListOfListOfShape.hxx>
+ #include <TopTools_ListOfShape.hxx>
+ #include <TopoDS.hxx>
+ #include <TopoDS_Compound.hxx>
+@@ -74,6 +74,7 @@
+ #include <Geom_TrimmedCurve.hxx>
+ #include <Precision.hxx>
+ #include <TColStd_MapOfInteger.hxx>
++#include <TColStd_ListOfInteger.hxx>
+ #include <TopOpeBRepBuild_Builder.hxx>
+ #include <TopOpeBRepDS_BuildTool.hxx>
+ #include <TopOpeBRepDS_CurveExplorer.hxx>
+@@ -85,7 +86,8 @@
+ #include <TopOpeBRepTool_GeomTool.hxx>
+ #include <TopOpeBRepTool_OutCurveType.hxx>
+ #include <TopOpeBRep_DSFiller.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeShape.hxx>
++#include <TopTools_DataMapOfShapeListOfShape.hxx>
++#include <TopTools_IndexedMapOfShape.hxx>
+ #include <stdio.h>
+ 
+ //=======================================================================
+diff --git a/libsrc/occ/Partition_Loop.cxx b/libsrc/occ/Partition_Loop.cxx
+index efaf77f7..de21df16 100644
+--- a/libsrc/occ/Partition_Loop.cxx
++++ b/libsrc/occ/Partition_Loop.cxx
+@@ -44,12 +44,11 @@
+ #include <Geom_Surface.hxx>
+ 
+ #include <TopTools_SequenceOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
++#include <TopTools_ListOfListOfShape.hxx>
+ #include <TopTools_MapOfShape.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
+ #include <TopTools_MapOfOrientedShape.hxx>
+ #include <TopTools_DataMapOfShapeShape.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
++#include <TopTools_DataMapOfShapeListOfShape.hxx>
+ 
+ #include <gp_Pnt.hxx>
+ #include <gp_Pnt2d.hxx>
+diff --git a/libsrc/occ/Partition_Loop2d.cxx b/libsrc/occ/Partition_Loop2d.cxx
+index 1c3d7957..e4d380a7 100644
+--- a/libsrc/occ/Partition_Loop2d.cxx
++++ b/libsrc/occ/Partition_Loop2d.cxx
+@@ -34,14 +34,12 @@
+ #include <TColStd_SequenceOfReal.hxx>
+ #include <TopExp.hxx>
+ #include <TopExp_Explorer.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeShape.hxx>
++#include <TopTools_DataMapOfShapeListOfShape.hxx>
+ #include <TopTools_DataMapOfShapeInteger.hxx>
+ #include <TopTools_DataMapOfShapeReal.hxx>    // V6.5
+ #include <TopTools_DataMapOfShapeShape.hxx>
+ #include <TopTools_IndexedMapOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
++#include <TopTools_ListOfListOfShape.hxx>
+ #include <TopTools_MapOfOrientedShape.hxx>
+ #include <TopTools_MapOfShape.hxx>
+ #include <TopTools_SequenceOfShape.hxx>
+diff --git a/libsrc/occ/Partition_Loop3d.cxx b/libsrc/occ/Partition_Loop3d.cxx
+index 3e9acc3c..bae55560 100644
+--- a/libsrc/occ/Partition_Loop3d.cxx
++++ b/libsrc/occ/Partition_Loop3d.cxx
+@@ -17,11 +17,11 @@
+ #include <TopExp.hxx>
+ #include <BRep_Builder.hxx>
+ #include <TopTools_MapOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
++#include <TopTools_ListOfListOfShape.hxx>
+ #include <TopoDS_Shell.hxx>
+ #include <TopoDS_Iterator.hxx>
+ #include <TopoDS.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
++#include <TopTools_MapOfShape.hxx>
+ #include <gp_Vec.hxx>
+ #include <gp_Pnt.hxx>
+ #include <Geom2d_Curve.hxx>
+diff --git a/libsrc/occ/Partition_Spliter.cxx b/libsrc/occ/Partition_Spliter.cxx
+index 7a1d913a..05da1be5 100644
+--- a/libsrc/occ/Partition_Spliter.cxx
++++ b/libsrc/occ/Partition_Spliter.cxx
+@@ -43,13 +43,12 @@
+ #include <TopExp.hxx>
+ #include <TopExp_Explorer.hxx>
+ 
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
+ #include <TopTools_DataMapOfShapeListOfShape.hxx>
+ #include <TopTools_IndexedDataMapOfShapeListOfShape.hxx>
+ #include <TopTools_IndexedMapOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
++#include <TopTools_ListOfListOfShape.hxx>
+ #include <TopTools_ListOfShape.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
++#include <TopTools_MapOfShape.hxx>
+ #include <TopTools_SequenceOfShape.hxx>
+ 
+ #include <Geom2d_Curve.hxx>
+diff --git a/libsrc/occ/occgeom.cpp b/libsrc/occ/occgeom.cpp
+index e324c047..4cd66c10 100644
+--- a/libsrc/occ/occgeom.cpp
++++ b/libsrc/occ/occgeom.cpp
+@@ -45,6 +45,7 @@
+ #include <StepBasic_ProductDefinitionRelationship.hxx>
+ #include <StepRepr_RepresentationItem.hxx>
+ #include <StlAPI_Writer.hxx>
++#include <TDF_LabelSequence.hxx>
+ #include <TopoDS_Shape.hxx>
+ #include <TransferBRep.hxx>
+ #include <Transfer_FinderProcess.hxx>
+@@ -54,6 +55,7 @@
+ #include <XCAFDoc_DocumentTool.hxx>
+ #include <XCAFDoc_ShapeTool.hxx>
+ #include <XCAFPrs.hxx>
++#include <XCAFPrs_IndexedDataMapOfShapeStyle.hxx>
+ #include <XCAFPrs_Style.hxx>
+ #include <XSControl_TransferReader.hxx>
+ #include <XSControl_WorkSession.hxx>
+diff --git a/libsrc/occ/occgeom.hpp b/libsrc/occ/occgeom.hpp
+index d8c02b10..a899b836 100644
+--- a/libsrc/occ/occgeom.hpp
++++ b/libsrc/occ/occgeom.hpp
+@@ -23,12 +23,14 @@
+ #include <STEPCAFControl_Reader.hxx>
+ #include <StepBasic_MeasureValueMember.hxx>
+ #include <StepRepr_CompoundRepresentationItem.hxx>
++#include <StepRepr_HArray1OfRepresentationItem.hxx>
+ #include <StepRepr_IntegerRepresentationItem.hxx>
+ #include <StepRepr_ValueRepresentationItem.hxx>
+ #include <TCollection_HAsciiString.hxx>
+ #include <TDocStd_Document.hxx>
+ #include <TopoDS.hxx>
+ #include <TopoDS_Shape.hxx>
++#include <TopTools_MapOfShape.hxx>
+ #include <Transfer_FinderProcess.hxx>
+ 
+ #if OCC_VERSION_MAJOR>=7 && OCC_VERSION_MINOR>=4
+diff --git a/libsrc/occ/python_occ.cpp b/libsrc/occ/python_occ.cpp
+index 97b40d92..e5c6c15c 100644
+--- a/libsrc/occ/python_occ.cpp
++++ b/libsrc/occ/python_occ.cpp
+@@ -14,6 +14,7 @@
+ #include <BOPAlgo_Builder.hxx>
+ #include <BRepLProp_SLProps.hxx>
+ #include <Message.hxx>
++#include <Message_SequenceOfPrinters.hxx>
+ #include <Standard_GUID.hxx>
+ #include <Standard_Version.hxx>
+ #include <TDF_Attribute.hxx>
+@@ -89,11 +90,7 @@ DLL_HEADER void ExportNgOCC(py::module &m)
+     try {
+       if(p) std::rethrow_exception(p);
+     } catch (const Standard_Failure& e) {
+-#if (PYBIND11_VERSION_MAJOR == 2 && PYBIND11_VERSION_MINOR < 12)
+-      exc((string(e.DynamicType()->Name()) + ": " + e.GetMessageString()).c_str());
+-#else
+-      py::set_error(PyExc_RuntimeError, (string(e.DynamicType()->Name()) + ": " + e.GetMessageString()).c_str());
+-#endif
++      py::set_error(PyExc_RuntimeError, (string(e.ExceptionType()) + ": " + e.GetMessageString()).c_str());
+     }
+   });
+   
+diff --git a/libsrc/occ/python_occ_shapes.cpp b/libsrc/occ/python_occ_shapes.cpp
+index b8752c45..5ccbcdf4 100644
+--- a/libsrc/occ/python_occ_shapes.cpp
++++ b/libsrc/occ/python_occ_shapes.cpp
+@@ -81,6 +81,18 @@
+ #include <ShapeAnalysis_FreeBounds.hxx>
+ #include <ShapeUpgrade_UnifySameDomain.hxx>
+ #include <ShapeFix_ShapeTolerance.hxx>
++#include <TColgp_Array1OfPnt.hxx>
++#include <TColgp_Array2OfPnt.hxx>
++#include <TColgp_Array1OfVec.hxx>
++#include <TColgp_Array1OfVec2d.hxx>
++#include <TColgp_HArray1OfPnt.hxx>
++#include <TColgp_HArray1OfPnt2d.hxx>
++#include <TColStd_Array1OfInteger.hxx>
++#include <TColStd_Array1OfReal.hxx>
++#include <TColStd_Array2OfReal.hxx>
++#include <TColStd_HArray1OfBoolean.hxx>
++#include <TopTools_HSequenceOfShape.hxx>
++#include <TopTools_ListOfShape.hxx>
+ #include <gp_Ax1.hxx>
+ #include <gp_Ax2.hxx>
+ #include <gp_Ax2d.hxx>
