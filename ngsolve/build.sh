@@ -32,7 +32,7 @@ NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2506
+    git checkout v6.2.2602
 else
     git checkout master
 fi
@@ -63,17 +63,13 @@ cd && rm -rf /tmp/netgen-src
 git clone https://github.com/NGSolve/ngsolve.git /tmp/ngsolve-src
 cd /tmp/ngsolve-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2506
+    git checkout v6.2.2602
 else
     git checkout master
 fi
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
-if [[ "$RELEASE_TYPE" == "release" ]]; then
-    patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime.2506
-else
-    patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
-fi
+patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
 mkdir -p /tmp/ngsolve-src/build
 cd /tmp/ngsolve-src/build
 cmake \
