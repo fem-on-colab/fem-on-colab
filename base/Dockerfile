@@ -29,7 +29,7 @@ RUN cd ${DOCKER_SCRIPTS} && \
 
 RUN cd ${DOCKER_SCRIPTS} && \
     . scripts/docker_pre.sh && \
-    apt install -y -qq git && \
+    apt install -y -qq ca-certificates git && \
     git clone https://github.com/googlecolab/backend-info.git ${BACKEND_INFO} && \
     . scripts/docker_post.sh && \
     cd -
