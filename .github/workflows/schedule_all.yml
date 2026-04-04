@@ -25,7 +25,7 @@ jobs:
       github.repository == 'fem-on-colab/fem-on-colab' && (
         github.event_name == 'schedule' || github.event.inputs.library == 'base'
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/docker_base.yml@main
+    uses: ./.github/workflows/docker_base.yml
     with:
       push: "yes"
 
@@ -42,7 +42,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'gcc' && needs.build_base.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "gcc"
       task: "build"
@@ -62,7 +62,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_gcc.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "gcc"
       task: "test"
@@ -82,7 +82,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'boost' && needs.test_gcc.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "boost"
       task: "build"
@@ -102,7 +102,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_boost.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "boost"
       task: "test"
@@ -122,7 +122,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'mpi4py' && needs.test_gcc.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "mpi4py"
       task: "build"
@@ -142,7 +142,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_mpi4py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "mpi4py"
       task: "test"
@@ -162,7 +162,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'occ' && needs.test_gcc.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "occ"
       task: "build"
@@ -182,7 +182,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_occ.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "occ"
       task: "test"
@@ -202,7 +202,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'h5py' && needs.test_mpi4py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "h5py"
       task: "build"
@@ -222,7 +222,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_h5py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "h5py"
       task: "test"
@@ -242,7 +242,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'pybind11' && needs.test_mpi4py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "pybind11"
       task: "build"
@@ -262,7 +262,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_pybind11.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "pybind11"
       task: "test"
@@ -282,7 +282,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'petsc4py' && needs.test_h5py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "petsc4py"
       task: "build"
@@ -302,7 +302,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_petsc4py_development_real.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "petsc4py"
       task: "test"
@@ -322,7 +322,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'petsc4py' && needs.test_h5py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "petsc4py"
       task: "build"
@@ -342,7 +342,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_petsc4py_development_complex.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "petsc4py"
       task: "test"
@@ -362,7 +362,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'petsc4py' && needs.test_h5py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "petsc4py"
       task: "build"
@@ -382,7 +382,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_petsc4py_release_real.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "petsc4py"
       task: "test"
@@ -402,7 +402,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'petsc4py' && needs.test_h5py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "petsc4py"
       task: "build"
@@ -422,7 +422,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_petsc4py_release_complex.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "petsc4py"
       task: "test"
@@ -442,7 +442,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'vtk' && needs.test_h5py.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "vtk"
       task: "build"
@@ -462,7 +462,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_vtk.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "vtk"
       task: "test"
@@ -482,7 +482,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_development_real.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "slepc4py"
       task: "build"
@@ -502,7 +502,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_slepc4py_development_real.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "slepc4py"
       task: "test"
@@ -522,7 +522,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_development_complex.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "slepc4py"
       task: "build"
@@ -542,7 +542,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_slepc4py_development_complex.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "slepc4py"
       task: "test"
@@ -562,7 +562,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_release_real.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "slepc4py"
       task: "build"
@@ -582,7 +582,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_slepc4py_release_real.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "slepc4py"
       task: "test"
@@ -602,7 +602,7 @@ jobs:
           github.event_name != 'schedule' && github.event.inputs.library != 'slepc4py' && needs.test_petsc4py_release_complex.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "slepc4py"
       task: "build"
@@ -622,7 +622,7 @@ jobs:
           github.event_name != 'schedule' && needs.build_slepc4py_release_complex.result == 'success' && always() && !cancelled()
         )
       )
-    uses: fem-on-colab/fem-on-colab/.github/workflows/release.yml@main
+    uses: ./.github/workflows/release.yml
     with:
       library: "slepc4py"
       task: "test"
