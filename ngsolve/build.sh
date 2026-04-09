@@ -32,15 +32,12 @@ NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2602
+    git checkout v6.2.2603
 else
     git checkout master
 fi
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
-if [[ "$RELEASE_TYPE" == "release" ]]; then
-    patch -p 1 < $REPODIR/ngsolve/patches/05-netgen-python-mesh-drop-keep-alive-pybind-3.0.2
-fi
 patch -p 1 < $REPODIR/ngsolve/patches/06-netgen-occ-8-deprecated-headers
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
@@ -67,7 +64,7 @@ cd && rm -rf /tmp/netgen-src
 git clone https://github.com/NGSolve/ngsolve.git /tmp/ngsolve-src
 cd /tmp/ngsolve-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2602
+    git checkout v6.2.2603
 else
     git checkout master
 fi
