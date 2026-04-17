@@ -1,49 +1,49 @@
 diff --git a/pyproject.toml b/pyproject.toml
-index 7a23f6057..584f24589 100644
+index f34c6f57e..46d0b013f 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
 @@ -27,7 +27,7 @@ dependencies = [
    "loopy>2024.1",
    "numpy",
    "packaging",
--  "petsc4py==3.24.5",
+-  "petsc4py==3.25.0",
 +  "petsc4py",
-   "petsctools",
+   "petsctools>=2026.0",
    "pkgconfig",
    "progress",
 @@ -90,7 +90,7 @@ netgen = [
-   "ngsPETSc>=0.1.1",
+   "ngsPETSc>=0.2.0",
  ]
  slepc = [
--  "slepc4py==3.24.3",
+-  "slepc4py==3.25.0",
 +  "slepc4py",
  ]
  torch = [  # requires passing '--extra-index-url' to work
    "torch",
-@@ -115,7 +115,7 @@ ci = [
+@@ -116,7 +116,7 @@ ci = [
    "pytest-split",  # needed for firedrake-run-split-tests
    "pytest-timeout",
    "pytest-xdist",
--  "slepc4py==3.24.3",
+-  "slepc4py==3.25.0",
 +  "slepc4py",
    "torch",  # requires passing '--extra-index-url' to work
    "vtk",
  ]
-@@ -132,7 +132,7 @@ docker = [  # Used in firedrake-vanilla container
+@@ -134,7 +134,7 @@ docker = [  # Used in firedrake-vanilla container
    "pytest-split",  # needed for firedrake-run-split-tests
    "pytest-timeout",
    "pytest-xdist",
--  "slepc4py==3.24.3",
+-  "slepc4py==3.25.0",
 +  "slepc4py",
    "vtk",
  ]
  
-@@ -147,7 +147,7 @@ requires = [
+@@ -145,7 +145,7 @@ requires = [
+   "mpi4py>3; python_version >= '3.13'",
+   "mpi4py; python_version < '3.13'",
+   "numpy",
+-  "petsc4py==3.25.0",
++  "petsc4py",
+   "petsctools",
    "pkgconfig",
    "pybind11",
-   "setuptools>=77.0.3",
--  "petsc4py==3.24.5",
-+  "petsc4py",
-   "rtree>=1.2",
- ]
- build-backend = "setuptools.build_meta"
