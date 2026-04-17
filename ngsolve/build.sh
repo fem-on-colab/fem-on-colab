@@ -118,8 +118,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user poetry-core
 git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.1.1
-    patch -p 1 < $REPODIR/ngsolve/patches/03-ngspetsc-drop-dependencies
+    git checkout v0.2.0
 else
     git checkout main
 fi
