@@ -77,10 +77,8 @@ patch -p 1 < $REPODIR/fenics/patches/10-c++-14-in-dolfin
 patch -p 1 < $REPODIR/fenics/patches/12-do-not-fiddle-with-dlopenflags-in-dolfin
 patch -p 1 < $REPODIR/fenics/patches/17-dolfin-bump-boost-minimum-version
 patch -p 1 < $REPODIR/fenics/patches/19-dolfin-jit-avoid-distutils
-if [[ "$RELEASE_TYPE" == "development" ]]; then
-    patch -p 1 < $REPODIR/fenics/patches/20-petsc-context-pointers-3.25-PR8956-PR9029
-    patch -p 1 < $REPODIR/fenics/patches/21-petsc-kspsetdmactive-extra-arg-3.25-PR8990
-fi
+patch -p 1 < $REPODIR/fenics/patches/20-petsc-context-pointers-3.25-PR8956-PR9029
+patch -p 1 < $REPODIR/fenics/patches/21-petsc-kspsetdmactive-extra-arg-3.25-PR8990
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX
