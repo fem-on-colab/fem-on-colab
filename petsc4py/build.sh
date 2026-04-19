@@ -63,7 +63,6 @@ if [[ "$SCALAR_TYPE" != "complex" ]]; then
     "
 fi
 ./configure \
-    --with-clanguage=cxx \
     --with-scalar-type=$SCALAR_TYPE \
     --with-debugging=0 \
     --with-hdf5-dir=$INSTALL_PREFIX \
@@ -71,7 +70,6 @@ fi
     --with-zlib-lib=$(find /usr/lib -name libz.so -print -quit) \
     $DOWNLOADS \
     --prefix=$INSTALL_PREFIX \
-    CPPFLAGS="-fPIC" \
     COPTFLAGS="-g -O3" \
     CXXOPTFLAGS="-g -O3" \
     FOPTFLAGS="-g -O3"
