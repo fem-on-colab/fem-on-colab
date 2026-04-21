@@ -94,7 +94,7 @@ cd && rm -rf /tmp/ngsolve-src
 git clone https://github.com/ngsxfem/ngsxfem.git /tmp/ngsxfem-src
 cd /tmp/ngsxfem-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v2.1.2506
+    git checkout v2.1.2603
 else
     git checkout master
 fi
