@@ -105,7 +105,7 @@ assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_mkl_pack
 assert_removed_packages ${BACKEND_INFO}/pip-freeze-installed.txt remove_misc_packages
 
 # Install build backends
-PYTHONUSERBASE=/usr python3 -m pip install --user cmake hatchling maturin meson meson-python ninja poetry-core pcpp scikit-build-core[pyproject] "setuptools>=77"
+PYTHONUSERBASE=/usr python3 -m pip install --user cmake hatchling maturin meson meson-python ninja poetry-core pcpp puccinialin scikit-build-core[pyproject] "setuptools>=77"
 
 # Install pytest (for testing)
 PYTHONUSERBASE=/usr python3 -m pip install --user pytest
