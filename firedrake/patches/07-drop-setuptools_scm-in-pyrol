@@ -1,0 +1,19 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 60ac588..009dd6e 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -21,7 +21,7 @@ dynamic = ["version"]
+ homepage = "https://github.com/angus-g/pyrol"
+ 
+ [build-system]
+-requires = ["setuptools>=61", "setuptools_scm>=8"]
++requires = ["setuptools>=61"]
+ build-backend = "setuptools.build_meta"
+ 
+ [tool.cibuildwheel]
+@@ -44,5 +44,3 @@ environment = {"FC" = "gfortran-14", "CC" = "gcc-14", "CXX" = "g++-14"}
+ select = "*-musllinux*"
+ before-all = "apk add openblas-dev boost-dev"
+ environment = {"CMAKE_ARGS" = "-DTPL_BLAS_LIBRARIES=/usr/lib/libopenblas.so -DTPL_LAPACK_LIBRARIES=/usr/lib/libopenblas.so"}
+-
+-[tool.setuptools_scm]

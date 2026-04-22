@@ -25,9 +25,6 @@ fi
 # Install boost, pybind11, slepc4py and vtk (and their dependencies)
 FIREDRAKE_ARCHIVE_PATH="skip" source firedrake/install.sh
 
-# islpy build dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user ninja pcpp scikit-build-core
-
 # islpy
 git clone --recursive https://github.com/inducer/islpy.git /tmp/islpy-src
 cd /tmp/islpy-src
@@ -88,13 +85,11 @@ cd && rm -rf /tmp/firedrake-src
 # fireshape dependencies (real mode only)
 # We package them for simplicity with firedrake so that fireshape may be pip installed.
 if [[ "$SCALAR_TYPE" != "complex" ]]; then
-    # pyroltrilinos build dependencies
-    PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user setuptools_scm
-
     # pyroltrilinos
     git clone https://github.com/angus-g/pyrol /tmp/pyroltrilinos-src
     cd /tmp/pyroltrilinos-src
     patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
+    patch -p 1 < $REPODIR/firedrake/patches/07-drop-setuptools_scm-in-pyrol
     export PYBIND11_DIR=$INSTALL_PREFIX
     PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
     cd && rm -rf /tmp/pyroltrilinos-src

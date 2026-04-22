@@ -111,9 +111,6 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/ngsxfem-src
 
-# poetry-core, required for building ngsPETSc
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user poetry-core
-
 # ngsPETSc
 git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
