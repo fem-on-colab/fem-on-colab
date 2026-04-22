@@ -44,7 +44,7 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/libspatialindex-src
 
-# rtree
+# rtree (required by libsupermesh)
 git clone https://github.com/Toblerity/rtree.git /tmp/rtree-src
 cd /tmp/rtree-src
 sed -i "s|INSTALL_PREFIX_IN|${INSTALL_PREFIX}|g" $REPODIR/firedrake/patches/08-install-prefix-in-rtree
@@ -63,11 +63,30 @@ fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/libsupermesh-src
 
-# firedrake build dependencies
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user hatchling meson meson-python pkgconfig "petsctools @ git+https://github.com/firedrakeproject/petsctools.git"
+# petsctools
+git clone https://github.com/firedrakeproject/petsctools.git /tmp/petsctools-src
+cd /tmp/petsctools-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout 2026.0
+else
+    git checkout main
+fi
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
+cd && rm -rf /tmp/petsctools-src
 
-# firedrake requires setuptools >= 77 to support PEP 639
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user "setuptools>=77"
+# firedrake-rtree
+git clone https://github.com/firedrakeproject/firedrake-rtree.git /tmp/firedrake-rtree-src
+cd /tmp/firedrake-rtree-src
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    git checkout v2026.1.0
+else
+    git checkout main
+fi
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
+cd && rm -rf /tmp/firedrake-rtree-src
+
+# pkgconfig (required by firedrake)
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pkgconfig
 
 # firedrake
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
@@ -82,18 +101,15 @@ patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-omp-num-threads-in-firedrake
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/firedrake-src
 
-# fireshape dependencies (real mode only)
-# We package them for simplicity with firedrake so that fireshape may be pip installed.
-if [[ "$SCALAR_TYPE" != "complex" ]]; then
-    # pyroltrilinos
-    git clone https://github.com/angus-g/pyrol /tmp/pyroltrilinos-src
-    cd /tmp/pyroltrilinos-src
-    patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
-    patch -p 1 < $REPODIR/firedrake/patches/07-drop-setuptools_scm-in-pyrol
-    export PYBIND11_DIR=$INSTALL_PREFIX
-    PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
-    cd && rm -rf /tmp/pyroltrilinos-src
-fi
+# fireshape and icepack depend on pyroltrilinos
+# We package it for simplicity with firedrake so that fireshape and icepack may be pip installed.
+git clone https://github.com/angus-g/pyrol /tmp/pyroltrilinos-src
+cd /tmp/pyroltrilinos-src
+patch -p 1 < $REPODIR/firedrake/patches/06-use-system-pybind11-in-pyrol
+patch -p 1 < $REPODIR/firedrake/patches/07-drop-setuptools_scm-in-pyrol
+export PYBIND11_DIR=$INSTALL_PREFIX
+PYTHONUSERBASE=$INSTALL_PREFIX CXX="mpicxx" python3 -m pip install --check-build-dependencies --no-build-isolation --user .
+cd && rm -rf /tmp/pyroltrilinos-src
 
 # gusto and icepack depend on netCDF4-python
 # We package it for simplicity with firedrake so that gusto and icepack may be pip installed.
