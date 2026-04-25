@@ -162,7 +162,7 @@ cd /tmp/dolfinx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout v0.10.0.post5
 else
-    git checkout main
+    git checkout francesco/mesh-format
 fi
 mkdir -p /tmp/dolfinx-src/build
 cd /tmp/dolfinx-src/build
