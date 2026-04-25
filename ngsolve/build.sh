@@ -33,12 +33,12 @@ git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout v6.2.2603
+    patch -p 1 < $REPODIR/ngsolve/patches/06-netgen-occ-8-deprecated-headers
 else
     git checkout master
 fi
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
-patch -p 1 < $REPODIR/ngsolve/patches/06-netgen-occ-8-deprecated-headers
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
 cmake \
@@ -65,13 +65,13 @@ git clone https://github.com/NGSolve/ngsolve.git /tmp/ngsolve-src
 cd /tmp/ngsolve-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout v6.2.2603
+    patch -p 1 < $REPODIR/ngsolve/patches/07-ngsolve-python-drop-enable-shared-from-this-and-pickle-pybind-3.0.2
 else
     git checkout master
 fi
 git submodule update --init
 patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
 patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
-patch -p 1 < $REPODIR/ngsolve/patches/07-ngsolve-python-drop-enable-shared-from-this-and-pickle-pybind-3.0.2
 mkdir -p /tmp/ngsolve-src/build
 cd /tmp/ngsolve-src/build
 cmake \
