@@ -12,7 +12,7 @@ index 426b843d9..7b8a4ca67 100644
  #include "blockjacobi.hpp"
  #include "commutingAMG.hpp"
 diff --git a/linalg/pardisoinverse.cpp b/linalg/pardisoinverse.cpp
-index 35a470695..8c1f6d10e 100644
+index 6ca7ed2ee..62a7f6bc3 100644
 --- a/linalg/pardisoinverse.cpp
 +++ b/linalg/pardisoinverse.cpp
 @@ -48,20 +48,10 @@ extern  integer F77_FUNC(pardisoinit)
@@ -44,7 +44,7 @@ index 35a470695..8c1f6d10e 100644
 -#ifdef USE_PARDISO
 -  bool is_pardiso_available = true;
 -#else
--#ifndef __EMSCRIPTEN__
+-#if !defined(__EMSCRIPTEN__) && !defined(NGS_PYTHON)
 -  static SharedLibrary libmkl;
 -  static bool LoadMKL()
 -  {
@@ -65,15 +65,15 @@ index 35a470695..8c1f6d10e 100644
 -      }
 -  };
 -  bool is_pardiso_available = LoadMKL();
--#else // __EMSCRIPTEN__
+-#else // !__EMSCRIPTEN__ && !NGS_PYTHON
 -  bool is_pardiso_available = false;
--#endif // __EMSCRIPTEN__
+-#endif // !__EMSCRIPTEN__ && !NGS_PYTHON
 -#endif
 -
    int pardiso_msg = 0;
  
  
-@@ -219,7 +180,7 @@ namespace ngla
+@@ -222,7 +183,7 @@ namespace ngla
  
      for (int i = 0; i < 128; i++) pt[i] = 0;
  
@@ -82,7 +82,7 @@ index 35a470695..8c1f6d10e 100644
      //    no init in MKL PARDISO
  #else
  
-@@ -654,9 +615,9 @@ namespace ngla
+@@ -657,9 +618,9 @@ namespace ngla
      F77_FUNC(pardiso) ( pt, &maxfct, &mnum, &matrixtype, &phase, &compressed_height, NULL,
  			rowstart.Data(), indices.Data(), NULL, &nrhs, params, &msglevel,
  			NULL, NULL, &error );
@@ -94,7 +94,7 @@ index 35a470695..8c1f6d10e 100644
      GetMemoryTracer().Free(memory_allocated_in_pardiso_lib);
      memory_allocated_in_pardiso_lib = 0;
      if (task_manager) task_manager -> StartWorkers();
-@@ -823,3 +784,6 @@ namespace ngla
+@@ -826,3 +787,6 @@ namespace ngla
  
  }
  
@@ -114,10 +114,10 @@ index 3ee46464a..7fe4b3fc5 100644
  
    /*
 diff --git a/linalg/python_linalg.cpp b/linalg/python_linalg.cpp
-index 9079fcd9b..48a836803 100644
+index ed2965245..12cba4647 100644
 --- a/linalg/python_linalg.cpp
 +++ b/linalg/python_linalg.cpp
-@@ -1933,8 +1933,9 @@ shift : object
+@@ -1955,8 +1955,9 @@ shift : object
  
    m.def("GetAvailableSolvers", []() {
      py::list solvers;
@@ -129,10 +129,10 @@ index 9079fcd9b..48a836803 100644
      solvers.append(GetInverseName(MUMPS));
  #endif // USE_MUMPS
 diff --git a/linalg/sparsematrix.cpp b/linalg/sparsematrix.cpp
-index f98b7b759..e7917d368 100644
+index 7bb7810e4..9da4966fa 100644
 --- a/linalg/sparsematrix.cpp
 +++ b/linalg/sparsematrix.cpp
-@@ -2338,13 +2338,12 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM,T
+@@ -2359,13 +2359,12 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM,T
      case(PARDISO):
      case(PARDISOSPD):
      {
@@ -150,10 +150,10 @@ index f98b7b759..e7917d368 100644
      }
      case(UMFPACK):
 diff --git a/solve/ngsolve.cpp b/solve/ngsolve.cpp
-index c742c0433..d2e7018ac 100644
+index c776db973..a26c94181 100644
 --- a/solve/ngsolve.cpp
 +++ b/solve/ngsolve.cpp
-@@ -695,8 +695,9 @@ int NGSolve_Init (Tcl_Interp * interp)
+@@ -696,8 +696,9 @@ int NGSolve_Init (Tcl_Interp * interp)
  #endif
  
  

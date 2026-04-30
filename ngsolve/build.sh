@@ -32,8 +32,7 @@ NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2603
-    patch -p 1 < $REPODIR/ngsolve/patches/06-netgen-occ-8-deprecated-headers
+    git checkout v6.2.2604
 else
     git checkout master
 fi
@@ -64,8 +63,7 @@ cd && rm -rf /tmp/netgen-src
 git clone https://github.com/NGSolve/ngsolve.git /tmp/ngsolve-src
 cd /tmp/ngsolve-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2603
-    patch -p 1 < $REPODIR/ngsolve/patches/07-ngsolve-python-drop-enable-shared-from-this-and-pickle-pybind-3.0.2
+    git checkout v6.2.2604
 else
     git checkout master
 fi
