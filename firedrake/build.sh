@@ -107,7 +107,7 @@ fi
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout 2026.4.0
+    git checkout 2026.4.1
     patch -p 1 < $REPODIR/firedrake/patches/05-unpin-petsc4py-slepc4py
 else
     git checkout main
