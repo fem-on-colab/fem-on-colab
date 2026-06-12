@@ -29,7 +29,7 @@ FENICSX_ARCHIVE_PATH="skip" source fenicsx/install.sh
 git clone https://github.com/FEniCS/ufl.git /tmp/ufl-src
 cd /tmp/ufl-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout 2025.2.0
+    git checkout 2026.1.0
 else
     git checkout main
 fi
@@ -40,7 +40,7 @@ cd && rm -rf /tmp/ufl-src
 git clone https://github.com/FEniCS/basix.git /tmp/basix-src
 cd /tmp/basix-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.10.0
+    git checkout v0.11.0
 else
     git checkout main
 fi
@@ -62,7 +62,7 @@ cd && rm -rf /tmp/basix-src
 git clone https://github.com/FEniCS/ffcx.git /tmp/ffcx-src
 cd /tmp/ffcx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.10.1
+    git checkout v0.11.0
 else
     git checkout main
 fi
@@ -160,7 +160,7 @@ cd && rm -rf /tmp/format-check
 git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.10.0.post5
+    git checkout v0.11.0.post0
 else
     git checkout main
 fi
