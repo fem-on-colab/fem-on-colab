@@ -52,9 +52,3 @@ git checkout ${TAGS[0]}
 patch -p 1 < $REPODIR/vtk/patches/01-force-egl
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user .[jupyter]
 cd && rm -rf /tmp/pyvista-src
-
-# Automatically enable widgets
-ENABLE_WIDGETS_SCRIPT="/usr/bin/enable_widgets.py"
-if [ -f $ENABLE_WIDGETS_SCRIPT ]; then
-    python3 $ENABLE_WIDGETS_SCRIPT pyvista $(python3 -c 'import pyvista; print(pyvista.__file__)')
-fi

@@ -122,12 +122,3 @@ else
     git checkout main
 fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
-
-# Install a further ngsolve.webgui dependency
-PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user webgui_jupyter_widgets
-
-# Automatically enable widgets
-ENABLE_WIDGETS_SCRIPT="/usr/bin/enable_widgets.py"
-if [ -f $ENABLE_WIDGETS_SCRIPT ]; then
-    python3 $ENABLE_WIDGETS_SCRIPT webgui_jupyter_widgets $(python3 -c 'import webgui_jupyter_widgets; print(webgui_jupyter_widgets.__file__)')
-fi
