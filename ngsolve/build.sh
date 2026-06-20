@@ -122,3 +122,6 @@ else
     git checkout main
 fi
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
+
+# Install a further ngsolve.webgui dependency
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user anywidget
