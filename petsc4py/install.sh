@@ -21,7 +21,11 @@ if [[ ! -f $PETSC4PY_INSTALLED ]]; then
     source $H5PY_INSTALL_SCRIPT_PATH
 
     # Install BLAS and LAPACK
-    apt install -y -qq libblas-dev liblapack-dev
+    APT_PACKAGES="libblas-dev liblapack-dev"
+    apt install -y -qq $APT_PACKAGES || {
+        apt update -y -q
+        apt install -y -qq $APT_PACKAGES
+    }
 
     # Download and uncompress library archive
     PETSC4PY_ARCHIVE_PATH=${PETSC4PY_ARCHIVE_PATH:-"PETSC4PY_ARCHIVE_PATH_IN"}

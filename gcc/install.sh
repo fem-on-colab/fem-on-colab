@@ -35,7 +35,11 @@ if [[ ! -f $GCC_INSTALLED ]]; then
     fi
 
     # Install zlib
-    apt install -y -qq zlib1g-dev
+    APT_PACKAGES="zlib1g-dev"
+    apt install -y -qq $APT_PACKAGES || {
+        apt update -y -q
+        apt install -y -qq $APT_PACKAGES
+    }
 
     # Set alternatives
     if [[ $GCC_ARCHIVE_PATH != skip ]]; then

@@ -28,7 +28,11 @@ if [[ ! -f $VTK_INSTALLED ]]; then
     fi
 
     # Install EGL
-    apt install -y -qq libegl1 libgl1-mesa-dri
+    APT_PACKAGES="libegl1 libgl1-mesa-dri"
+    apt install -y -qq $APT_PACKAGES || {
+        apt update -y -q
+        apt install -y -qq $APT_PACKAGES
+    }
 
     # Mark package as installed
     mkdir -p $SHARE_PREFIX

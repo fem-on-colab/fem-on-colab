@@ -47,7 +47,11 @@ if [[ ! -f $FIREDRAKE_INSTALLED ]]; then
     fi
 
     # Install extra packages to enable the visualization of pyadjoint tape, see issue #43
-    apt install -y -qq fonts-dejavu graphviz libgraphviz-dev poppler-utils
+    APT_PACKAGES="fonts-dejavu graphviz libgraphviz-dev poppler-utils"
+    apt install -y -qq $APT_PACKAGES || {
+        apt update -y -q
+        apt install -y -qq $APT_PACKAGES
+    }
 
     # Mark package as installed
     mkdir -p $SHARE_PREFIX

@@ -34,7 +34,11 @@ if [[ ! -f $OCC_INSTALLED ]]; then
     fi
 
     # Install X11 for OCC
-    apt install -y -qq libfontconfig1 libgl1
+    APT_PACKAGES="libfontconfig1 libgl1"
+    apt install -y -qq $APT_PACKAGES || {
+        apt update -y -q
+        apt install -y -qq $APT_PACKAGES
+    }
 
     # Mark package as installed
     mkdir -p $SHARE_PREFIX
