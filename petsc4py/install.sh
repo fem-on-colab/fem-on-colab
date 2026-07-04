@@ -20,13 +20,6 @@ if [[ ! -f $PETSC4PY_INSTALLED ]]; then
     [[ $H5PY_INSTALL_SCRIPT_PATH == http* ]] && H5PY_INSTALL_SCRIPT_DOWNLOAD=${H5PY_INSTALL_SCRIPT_PATH} && H5PY_INSTALL_SCRIPT_PATH=/tmp/h5py-install.sh && [[ ! -f ${H5PY_INSTALL_SCRIPT_PATH} ]] && wget ${H5PY_INSTALL_SCRIPT_DOWNLOAD} -O ${H5PY_INSTALL_SCRIPT_PATH}
     source $H5PY_INSTALL_SCRIPT_PATH
 
-    # Install BLAS and LAPACK
-    APT_PACKAGES="libblas-dev liblapack-dev"
-    apt install -y -qq $APT_PACKAGES || {
-        apt update -y -q
-        apt install -y -qq $APT_PACKAGES
-    }
-
     # Download and uncompress library archive
     PETSC4PY_ARCHIVE_PATH=${PETSC4PY_ARCHIVE_PATH:-"PETSC4PY_ARCHIVE_PATH_IN"}
     [[ $PETSC4PY_ARCHIVE_PATH == http* ]] && PETSC4PY_ARCHIVE_DOWNLOAD=${PETSC4PY_ARCHIVE_PATH} && PETSC4PY_ARCHIVE_PATH=/tmp/petsc4py-install.tar.gz && wget ${PETSC4PY_ARCHIVE_DOWNLOAD} -O ${PETSC4PY_ARCHIVE_PATH}

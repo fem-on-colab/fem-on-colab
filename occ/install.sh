@@ -33,13 +33,6 @@ if [[ ! -f $OCC_INSTALLED ]]; then
         ln -fs $INSTALL_PREFIX/lib/libTK*.so* /usr/lib
     fi
 
-    # Install X11 for OCC
-    APT_PACKAGES="libfontconfig1 libgl1"
-    apt install -y -qq $APT_PACKAGES || {
-        apt update -y -q
-        apt install -y -qq $APT_PACKAGES
-    }
-
     # Mark package as installed
     mkdir -p $SHARE_PREFIX
     touch $OCC_INSTALLED

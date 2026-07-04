@@ -34,13 +34,6 @@ if [[ ! -f $GCC_INSTALLED ]]; then
         tar -xzf $GCC_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
-    # Install zlib
-    APT_PACKAGES="zlib1g-dev"
-    apt install -y -qq $APT_PACKAGES || {
-        apt update -y -q
-        apt install -y -qq $APT_PACKAGES
-    }
-
     # Set alternatives
     if [[ $GCC_ARCHIVE_PATH != skip ]]; then
         # Legacy system-wide version
