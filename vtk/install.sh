@@ -27,13 +27,6 @@ if [[ ! -f $VTK_INSTALLED ]]; then
         tar -xzf $VTK_ARCHIVE_PATH --strip-components=$INSTALL_PREFIX_DEPTH --directory=$INSTALL_PREFIX
     fi
 
-    # Install EGL
-    APT_PACKAGES="libegl1 libgl1-mesa-dri"
-    apt install -y -qq $APT_PACKAGES || {
-        apt update -y -q
-        apt install -y -qq $APT_PACKAGES
-    }
-
     # Mark package as installed
     mkdir -p $SHARE_PREFIX
     touch $VTK_INSTALLED
