@@ -85,6 +85,9 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/ngsolve-src
 
+# Install a build dependency of ngsxfem
+PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user poetry-dynamic-versioning
+
 # ngsxfem
 git clone https://github.com/ngsxfem/ngsxfem.git /tmp/ngsxfem-src
 cd /tmp/ngsxfem-src
