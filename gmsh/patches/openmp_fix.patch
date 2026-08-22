@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 498b87fd1..7a191df06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -356,12 +356,6 @@ if(ENABLE_OPENMP)
+     set(CMAKE_CXX_FLAGS
+         "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include")
+     list(APPEND EXTERNAL_LIBRARIES "-L/opt/homebrew/opt/libomp/lib -lomp")
+-  elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND EXISTS "/usr/local/lib64/libgomp.a")
+-    # custom static openmp for official linux builds
+-    set_config_option(HAVE_OPENMP "OpenMP[static]")
+-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Xpreprocessor -fopenmp")
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp")
+-    list(APPEND EXTERNAL_LIBRARIES "/usr/local/lib64/libgomp.a")
+   else()
+     # general case:
+     find_package(OpenMP)

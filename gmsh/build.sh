@@ -7,11 +7,15 @@
 set -e
 set -x
 
+REPODIR=$PWD
+
 # Install h5py and OCC
 GMSH_ARCHIVE_PATH="skip" source gmsh/install.sh
 
 # Install gmsh
 git clone https://gitlab.onelab.info/gmsh/gmsh.git /tmp/gmsh-src
+cd /tmp/gmsh-src
+patch -p 1 < $REPODIR/gmsh/patches/openmp_fix.patch
 mkdir -p /tmp/gmsh-src/build
 cd /tmp/gmsh-src/build
 cmake \
