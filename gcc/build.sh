@@ -16,7 +16,7 @@ GCC_ARCHIVE_PATH="skip" source gcc/install.sh
 : ${1?"Usage: $0 version"}
 GCC_VERSION="$1"
 GCC_SHORT_VERSION=$(echo ${GCC_VERSION} | cut -d "." -f 1)
-GCC_REPO="https://gcc.gnu.org/git/gcc.git"
+GCC_REPO="https://github.com/gcc-mirror/gcc.git"
 GCC_TAG=$(git -c "versionsort.suffix=-" ls-remote --tags --sort=-version:refname ${GCC_REPO} "releases/gcc-${GCC_VERSION}" | head --lines=1 | cut --delimiter='/' --fields=3-)
 echo "Latest tag in the v${GCC_VERSION} series is ${GCC_TAG}"
 git clone --depth 1 --branch ${GCC_TAG} ${GCC_REPO} /tmp/gcc-src
