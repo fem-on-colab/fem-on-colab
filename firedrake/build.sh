@@ -71,6 +71,7 @@ cd && rm -rf /tmp/petsctools-src
 # islpy (external dependency required by firedrake)
 git clone --recursive https://github.com/inducer/islpy.git /tmp/islpy-src
 cd /tmp/islpy-src
+patch -p 1 < $REPODIR/firedrake/patches/09-islpy-nanobind-3.patch
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/islpy-src
 
