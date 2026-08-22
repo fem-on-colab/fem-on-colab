@@ -161,6 +161,7 @@ git clone https://github.com/FEniCS/dolfinx.git /tmp/dolfinx-src
 cd /tmp/dolfinx-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout v0.11.0.post0
+    patch -p 1 < $REPODIR/fenicsx/patches/PR_4371.patch
 else
     git checkout main
 fi

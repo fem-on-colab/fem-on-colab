@@ -1,0 +1,47 @@
+diff --git a/python/dolfinx/fem/forms.py b/python/dolfinx/fem/forms.py
+index 96513d9cc3..ba32a04196 100644
+--- a/python/dolfinx/fem/forms.py
++++ b/python/dolfinx/fem/forms.py
+@@ -315,7 +315,10 @@ def mixed_topology_form(
+ 
+     # TODO coeffs, constants, subdomains, entity_maps
+     f = ftype(
+-        [module.ffi.cast("uintptr_t", module.ffi.addressof(ufcx_form)) for ufcx_form in ufcx_forms],
++        [
++            int(module.ffi.cast("uintptr_t", module.ffi.addressof(ufcx_form)))
++            for ufcx_form in ufcx_forms
++        ],
+         V,
+         [],
+         [],
+@@ -424,7 +427,7 @@ def form(
+             _entity_maps = [entity_map._cpp_object for entity_map in entity_maps]
+ 
+         f = ftype(
+-            [module.ffi.cast("uintptr_t", module.ffi.addressof(ufcx_form))],
++            [int(module.ffi.cast("uintptr_t", module.ffi.addressof(ufcx_form)))],
+             V,
+             coeffs,
+             constants,
+@@ -675,7 +678,7 @@ def create_form(
+ 
+     ftype = form_cpp_creator(form.dtype)
+     f = ftype(
+-        form.module.ffi.cast("uintptr_t", form.module.ffi.addressof(form.ufcx_form)),
++        int(form.module.ffi.cast("uintptr_t", form.module.ffi.addressof(form.ufcx_form))),
+         [fs._cpp_object for fs in V],
+         coefficients,
+         constants,
+diff --git a/python/dolfinx/fem/function.py b/python/dolfinx/fem/function.py
+index 0d26d9d1f1..5157eb2bd3 100644
+--- a/python/dolfinx/fem/function.py
++++ b/python/dolfinx/fem/function.py
+@@ -224,7 +224,7 @@ class Expression(Generic[Scalar]):
+         )
+         ffi = module.ffi
+         self._cpp_object = _create_expression(dtype)(
+-            ffi.cast("uintptr_t", ffi.addressof(self._ufcx_expression)),
++            int(ffi.cast("uintptr_t", ffi.addressof(self._ufcx_expression))),
+             coeffs,
+             constants,
+             _entity_maps,
