@@ -7,7 +7,8 @@
 set -e
 set -x
 
-# Install gcc
+# Source install script for consistency with the other build scripts,
+# even though it is not actually installing anything when archive path is set to "skip"
 BOOST_ARCHIVE_PATH="skip" source boost/install.sh
 
 # Install boost

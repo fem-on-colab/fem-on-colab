@@ -22,7 +22,7 @@ if [[ "$SCALAR_TYPE" != "complex" && "$SCALAR_TYPE" != "real" ]]; then
     exit 1
 fi
 
-# Install h5py (and its dependencies, most notably gcc and mpi4py)
+# Install h5py (and its dependencies, most notably mpi4py)
 PETSC4PY_ARCHIVE_PATH="skip" source petsc4py/install.sh
 
 # Install PETSc

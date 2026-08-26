@@ -29,57 +29,17 @@ jobs:
     with:
       push: "yes"
 
-  # gcc build & test
-  build_gcc:
+  # Boost build & test
+  build_boost:
     needs: [build_base]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
           github.event_name == 'schedule' && needs.build_base.result == 'success'
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library == 'gcc' && needs.build_base.result == 'skipped' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library == 'boost' && needs.build_base.result == 'skipped' && always() && !cancelled()
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library != 'gcc' && needs.build_base.result == 'success' && always() && !cancelled()
-        )
-      )
-    uses: ./.github/workflows/release.yml
-    with:
-      library: "gcc"
-      task: "build"
-      args: "12.3.0"
-      strip-args-when-packaging: "true"
-    secrets:
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-      WEBSITE_ACCESS_TOKEN: ${{ secrets.WEBSITE_ACCESS_TOKEN }}
-
-  test_gcc:
-    needs: [build_gcc]
-    if: >-
-      github.repository == 'fem-on-colab/fem-on-colab' && (
-        (
-          github.event_name == 'schedule' && needs.build_gcc.result == 'success'
-        ) || (
-          github.event_name != 'schedule' && needs.build_gcc.result == 'success' && always() && !cancelled()
-        )
-      )
-    uses: ./.github/workflows/release.yml
-    with:
-      library: "gcc"
-      task: "test"
-      args: ""
-      strip-args-when-packaging: ""
-
-  # Boost build & test
-  build_boost:
-    needs: [test_gcc]
-    if: >-
-      github.repository == 'fem-on-colab/fem-on-colab' && (
-        (
-          github.event_name == 'schedule' && needs.test_gcc.result == 'success'
-        ) || (
-          github.event_name != 'schedule' && github.event.inputs.library == 'boost' && needs.test_gcc.result == 'skipped' && always() && !cancelled()
-        ) || (
-          github.event_name != 'schedule' && github.event.inputs.library != 'boost' && needs.test_gcc.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library != 'boost' && needs.build_base.result == 'success' && always() && !cancelled()
         )
       )
     uses: ./.github/workflows/release.yml
@@ -111,15 +71,15 @@ jobs:
 
   # mpi4py build & test
   build_mpi4py:
-    needs: [test_gcc]
+    needs: [build_base]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
-          github.event_name == 'schedule' && needs.test_gcc.result == 'success'
+          github.event_name == 'schedule' && needs.build_base.result == 'success'
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library == 'mpi4py' && needs.test_gcc.result == 'skipped' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library == 'mpi4py' && needs.build_base.result == 'skipped' && always() && !cancelled()
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library != 'mpi4py' && needs.test_gcc.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library != 'mpi4py' && needs.build_base.result == 'success' && always() && !cancelled()
         )
       )
     uses: ./.github/workflows/release.yml
@@ -151,15 +111,15 @@ jobs:
 
   # OCC build & test
   build_occ:
-    needs: [test_gcc]
+    needs: [build_base]
     if: >-
       github.repository == 'fem-on-colab/fem-on-colab' && (
         (
-          github.event_name == 'schedule' && needs.test_gcc.result == 'success'
+          github.event_name == 'schedule' && needs.build_base.result == 'success'
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library == 'occ' && needs.test_gcc.result == 'skipped' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library == 'occ' && needs.build_base.result == 'skipped' && always() && !cancelled()
         ) || (
-          github.event_name != 'schedule' && github.event.inputs.library != 'occ' && needs.test_gcc.result == 'success' && always() && !cancelled()
+          github.event_name != 'schedule' && github.event.inputs.library != 'occ' && needs.build_base.result == 'success' && always() && !cancelled()
         )
       )
     uses: ./.github/workflows/release.yml

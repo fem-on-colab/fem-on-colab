@@ -9,7 +9,7 @@ set -x
 
 REPODIR=$PWD
 
-# Install h5py (and its dependencies, most notably gcc and mpi4py)
+# Install h5py (and its dependencies, most notably mpi4py)
 VTK_ARCHIVE_PATH="skip" source vtk/install.sh
 
 # Determine site target folder, as it will be passed to ADIOS2 configuration
