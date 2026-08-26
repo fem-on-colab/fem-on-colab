@@ -1,0 +1,13 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 435cccc87..980e261e1 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -43,8 +43,6 @@ dependencies = [
+   "requests",
+   "scipy",
+   "sympy",
+-  "islpy<2026.2",
+-  "islpy>=2025.1.5; sys_platform == 'darwin'",
+ ]
+ classifiers = [
+   "Development Status :: 5 - Production/Stable",
