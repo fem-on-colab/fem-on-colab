@@ -7,7 +7,7 @@
 set -e
 set -x
 
-SYSTEM_PYTHON_VERSION="python3.10"
+SYSTEM_PYTHON_VERSION="python3.12"
 COLAB_PYTHON_VERSION="python3.13"
 
 # Setup non-default python version
