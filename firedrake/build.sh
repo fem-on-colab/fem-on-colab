@@ -50,7 +50,7 @@ cd && rm -rf /tmp/rtree-src
 git clone https://github.com/firedrakeproject/libsupermesh.git /tmp/libsupermesh-src
 cd /tmp/libsupermesh-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout 2026.0
+    git checkout 2026.1
 else
     git checkout main
 fi
@@ -81,7 +81,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user pkgconfig
 git clone https://github.com/firedrakeproject/firedrake-rtree.git /tmp/firedrake-rtree-src
 cd /tmp/firedrake-rtree-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v2026.1.0
+    git checkout v2026.2.0
 else
     git checkout main
 fi
@@ -107,7 +107,7 @@ fi
 git clone https://github.com/firedrakeproject/firedrake.git /tmp/firedrake-src
 cd /tmp/firedrake-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout 2026.4.1
+    git checkout 2026.4.2
     patch -p 1 < $REPODIR/firedrake/patches/05-unpin-petsc4py-slepc4py
 else
     git checkout main
