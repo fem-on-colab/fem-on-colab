@@ -37,7 +37,7 @@ remove_cuda_packages ${BACKEND_INFO}/apt-list-clean.txt
 
 # Remove R packages to decrease the image size
 remove_R_packages () {
-    grep -v -e "^r-" -e "^libgit2" -e "^libmbedcrypto" -e "^libmbedtls" -e "^libmbedx" -h ${1} > ${1}.tmp
+    grep -v -e "^r-" -e "^libgit2" -e "^libmbedcrypto" -e "^libmbedtls" -e "^libmbedx" -e "^librist" -h ${1} > ${1}.tmp
     mv ${1}.tmp ${1}
 }
 remove_R_packages ${BACKEND_INFO}/apt-list-clean.txt
