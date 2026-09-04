@@ -34,6 +34,40 @@ jobs:
       - name: Build docker image
         run: |
           docker build --pull -t ${IMAGE_PREFIX}:latest -f base/Dockerfile .
+      - name: Print docker image size
+        run: |
+          SIZE=$(docker image inspect "${IMAGE_PREFIX}:latest" --format='{{.Size}}')
+          echo "Final image size: $(numfmt --to=iec "$SIZE")"
+      - name: Print biggest apt packages
+        run: |
+          docker run --rm -i "${IMAGE_PREFIX}:latest" sh -s <<'SH'
+          dpkg-query -W -f='${Installed-Size}\t${Package}\n' |
+            sort -nr |
+            head -20 |
+            awk '{printf "%.1f MB\t%s\n", $1/1024, $2}'
+          SH
+      - name: Print biggest pip packages
+        run: |
+          docker run --rm -i "${IMAGE_PREFIX}:latest" python3 - <<'PY'
+          import importlib.metadata
+          import os
+
+          rows = []
+
+          for dist in importlib.metadata.distributions():
+              try:
+                  size = sum(
+                      os.path.getsize(dist.locate_file(f))
+                      for f in (dist.files or [])
+                      if os.path.isfile(dist.locate_file(f))
+                  )
+                  rows.append((size, dist.metadata["Name"]))
+              except (OSError, TypeError):
+                  pass
+
+          for size, name in sorted(rows, reverse=True)[:20]:
+              print(f"{size / 1024 / 1024:8.1f} MB  {name}")
+          PY
       - name: Determine image tag
         if: github.repository == 'fem-on-colab/fem-on-colab' && steps.push.outputs.push == 'yes'
         id: image_name
