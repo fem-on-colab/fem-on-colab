@@ -80,6 +80,7 @@ patch -p 1 < $REPODIR/fenics/patches/19-dolfin-jit-avoid-distutils
 patch -p 1 < $REPODIR/fenics/patches/20-petsc-context-pointers-3.25-PR8956-PR9029
 patch -p 1 < $REPODIR/fenics/patches/21-petsc-kspsetdmactive-extra-arg-3.25-PR8990
 patch -p 1 < $REPODIR/fenics/patches/22-add-cmake-mpi-targets-for-hdf5
+patch -p 1 < $REPODIR/fenics/patches/23-fix-hdf5-2.2-imported-library-target
 mkdir -p /tmp/dolfin-src/build
 cd /tmp/dolfin-src/build
 export UFC_DIR=$INSTALL_PREFIX

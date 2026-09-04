@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fe4757422..0552ff6cb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -371,6 +371,19 @@ if (DOLFIN_ENABLE_HDF5)
+     set(HDF5_PREFER_PARALLEL TRUE)
+   endif()
+   find_package(HDF5 COMPONENTS C)
++  if (TARGET hdf5-shared)
++    get_target_property(_hdf5_location hdf5-shared IMPORTED_LOCATION_RELEASE)
++    if (NOT _hdf5_location)
++      get_target_property(_hdf5_location hdf5-shared IMPORTED_LOCATION_NOCONFIG)
++    endif()
++    if (NOT _hdf5_location)
++      get_target_property(_hdf5_location hdf5-shared IMPORTED_LOCATION)
++    endif()
++    if (_hdf5_location)
++      set(HDF5_LIBRARIES "${_hdf5_location}")
++      set(HDF5_C_LIBRARIES "${_hdf5_location}")
++    endif()
++  endif()
+   set_package_properties(HDF5 PROPERTIES TYPE OPTIONAL
+     DESCRIPTION "Hierarchical Data Format 5 (HDF5)"
+     URL "https://www.hdfgroup.org/HDF5")
+diff --git a/dolfin/CMakeLists.txt b/dolfin/CMakeLists.txt
+index fe5420d65..811ef8fd7 100644
+--- a/dolfin/CMakeLists.txt
++++ b/dolfin/CMakeLists.txt
+@@ -313,7 +313,7 @@ foreach(_lib ${PKGCONFIG_DOLFIN_LIBS})
+   if ("${_lib}" MATCHES "-Wl,[^ ]*")
+     set(PKG_LINKFLAGS "${_lib} ${PKG_LINKFLAGS}")
+   else()
+-    string(REGEX REPLACE "(.?:?/[^ ]*)/lib([^ ]*)\\.(a|so|dylib|dll)" "-L\\1 -l\\2"
++    string(REGEX REPLACE "(.?:?/[^ ]*)/lib([^ ]*)\\.(a|so|dylib|dll)(\\.[0-9]+)*$" "-L\\1 -l\\2"
+       _linkflags
+       "${_lib}"
+       )
