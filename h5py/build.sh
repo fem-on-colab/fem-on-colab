@@ -13,19 +13,22 @@ H5PY_ARCHIVE_PATH="skip" source h5py/install.sh
 # Install HDF5
 git clone https://github.com/HDFGroup/hdf5.git /tmp/hdf5-src
 cd /tmp/hdf5-src
-TAGS=($(git tag -l --sort=-version:refname "hdf5-1_14_[0-9][0-9]"))
-if [ ${#TAGS[@]} -eq 0 ]; then
-    TAGS=($(git tag -l --sort=-version:refname "hdf5-1_14_[0-9]"))
-fi
-echo "Latest tag in the v1.14 series is ${TAGS[0]}"
+TAGS=($(git tag -l --sort=-version:refname "[0-9].[0-9]*.[0-9]"))
+echo "Latest tag is ${TAGS[0]}"
 git checkout ${TAGS[0]}
-./configure \
-    --enable-parallel \
-    --enable-hl \
-    --enable-build-mode=production \
-    --enable-shared \
-    --with-pic \
-    --prefix=$INSTALL_PREFIX
+mkdir build
+cd build
+cmake \
+    -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PREFIX \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DHDF5_BUILD_HL_LIB:BOOL=ON \
+    -DHDF5_ENABLE_OPTIMIZATION:BOOL=ON \
+    -DHDF5_ENABLE_PARALLEL:BOOL=ON \
+    -DHDF5_ENABLE_ZLIB_SUPPORT=ON \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DBUILD_STATIC_LIBS:BOOL=OFF \
+    -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON \
+    ..
 make -j $(nproc)
 make install
 cd && rm -rf /tmp/hdf5-src
