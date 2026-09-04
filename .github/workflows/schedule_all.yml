@@ -7,11 +7,22 @@ on:
     inputs:
       library:
         description: "Library to build and test."
+      channel:
+        description: "Release channel"
+        type: choice
+        options:
+          - production
+          - staging
+        default: production
   workflow_call:
     inputs:
       library:
         description: "Library to build and test"
         type: string
+      channel:
+        description: "Release channel"
+        type: string
+        default: production
     secrets:
       REPO_ACCESS_TOKEN:
         description: "Token that enables adding a tag to this repository"
@@ -27,6 +38,7 @@ jobs:
       )
     uses: ./.github/workflows/docker_base.yml
     with:
+      channel: ${{ inputs.channel || 'production' }}
       push: "yes"
 
   # Boost build & test
@@ -47,6 +59,7 @@ jobs:
       library: "boost"
       task: "build"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -67,6 +80,7 @@ jobs:
       library: "boost"
       task: "test"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # mpi4py build & test
@@ -87,6 +101,7 @@ jobs:
       library: "mpi4py"
       task: "build"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -107,6 +122,7 @@ jobs:
       library: "mpi4py"
       task: "test"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # OCC build & test
@@ -127,6 +143,7 @@ jobs:
       library: "occ"
       task: "build"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -147,6 +164,7 @@ jobs:
       library: "occ"
       task: "test"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # h5py build & test
@@ -167,6 +185,7 @@ jobs:
       library: "h5py"
       task: "build"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -187,6 +206,7 @@ jobs:
       library: "h5py"
       task: "test"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # pybind11 build & test
@@ -207,6 +227,7 @@ jobs:
       library: "pybind11"
       task: "build"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -227,6 +248,7 @@ jobs:
       library: "pybind11"
       task: "test"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # petsc4py/{development, real} build & test
@@ -247,6 +269,7 @@ jobs:
       library: "petsc4py"
       task: "build"
       args: "development real"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -267,6 +290,7 @@ jobs:
       library: "petsc4py"
       task: "test"
       args: "development real"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # petsc4py/{development, complex} build & test
@@ -287,6 +311,7 @@ jobs:
       library: "petsc4py"
       task: "build"
       args: "development complex"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -307,6 +332,7 @@ jobs:
       library: "petsc4py"
       task: "test"
       args: "development complex"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # petsc4py/{release, real} build & test
@@ -327,6 +353,7 @@ jobs:
       library: "petsc4py"
       task: "build"
       args: "release real"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -347,6 +374,7 @@ jobs:
       library: "petsc4py"
       task: "test"
       args: "release real"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # petsc4py/{release, complex} build & test
@@ -367,6 +395,7 @@ jobs:
       library: "petsc4py"
       task: "build"
       args: "release complex"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -387,6 +416,7 @@ jobs:
       library: "petsc4py"
       task: "test"
       args: "release complex"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # vtk build & test
@@ -407,6 +437,7 @@ jobs:
       library: "vtk"
       task: "build"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -427,6 +458,7 @@ jobs:
       library: "vtk"
       task: "test"
       args: ""
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # slepc4py/{development, real} build & test
@@ -447,6 +479,7 @@ jobs:
       library: "slepc4py"
       task: "build"
       args: "development real"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -467,6 +500,7 @@ jobs:
       library: "slepc4py"
       task: "test"
       args: "development real"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # slepc4py/{development, complex} build & test
@@ -487,6 +521,7 @@ jobs:
       library: "slepc4py"
       task: "build"
       args: "development complex"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -507,6 +542,7 @@ jobs:
       library: "slepc4py"
       task: "test"
       args: "development complex"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # slepc4py/{release, real} build & test
@@ -527,6 +563,7 @@ jobs:
       library: "slepc4py"
       task: "build"
       args: "release real"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -547,6 +584,7 @@ jobs:
       library: "slepc4py"
       task: "test"
       args: "release real"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # slepc4py/{release, complex} build & test
@@ -567,6 +605,7 @@ jobs:
       library: "slepc4py"
       task: "build"
       args: "release complex"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: "false"
     secrets:
       REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -587,6 +626,7 @@ jobs:
       library: "slepc4py"
       task: "test"
       args: "release complex"
+      channel: ${{ inputs.channel || 'production' }}
       strip-args-when-packaging: ""
 
   # Warn if scheduled workflow is about to be disabled

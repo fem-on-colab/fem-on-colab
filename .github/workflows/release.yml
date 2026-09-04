@@ -11,6 +11,13 @@ on:
         description: "Additional space separated arguments to be passed to the build script. If empty, no arguments are passed"
       strip-args-when-packaging:
         description: "Strip additional argument when packaging"
+      channel:
+        description: "Release channel"
+        type: choice
+        options:
+          - production
+          - staging
+        default: production
   workflow_call:
     inputs:
       library:
@@ -25,16 +32,25 @@ on:
       strip-args-when-packaging:
         description: "Strip additional argument when packaging"
         type: string
+      channel:
+        description: "Release channel"
+        type: string
+        default: production
     secrets:
       REPO_ACCESS_TOKEN:
         description: "Token that enables adding a tag to this repository"
       WEBSITE_ACCESS_TOKEN:
         description: "Token that enables writing to the website repository"
+env:
+  RELEASES_DIR: ${{ inputs.channel == 'staging' && 'releases-staging' || 'releases' }}
+  TESTS_DIR: ${{ inputs.channel == 'staging' && 'tests-staging' || 'tests' }}
+  RELEASE_TAG_PREFIX: ${{ inputs.channel == 'staging' && 'staging-' || '' }}
+  RELEASE_TITLE_PREFIX: ${{ inputs.channel == 'staging' && 'staging ' || '' }}
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    container: ghcr.io/fem-on-colab/base:latest
+    container: ghcr.io/fem-on-colab/base:${{ inputs.channel == 'staging' && 'staging' || 'latest' }}
     steps:
       - name: Store the current date and time
         id: date_time
@@ -94,20 +110,20 @@ jobs:
           WEBSITE_FETCH_URL=$(git remote get-url origin)
           WEBSITE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           WEBSITE_RAW_PREFIX="${WEBSITE_FETCH_URL}/raw"
-          RELEASE_FILES_ALL=($(git ls-tree -r ${WEBSITE_BRANCH} --name-only -- releases | sed "s|releases/||"))
+          RELEASE_FILES_ALL=($(git ls-tree -r ${WEBSITE_BRANCH} --name-only -- ${RELEASES_DIR} | sed "s|${RELEASES_DIR}/||"))
           declare -a RELEASE_FILES
           declare -a RELEASED_LIBRARIES
           for RELEASE_FILE in "${RELEASE_FILES_ALL[@]}"; do
             if [[ "${RELEASE_FILE}" == *-install.sh ]]; then
               RELEASED_LIBRARY=$(echo ${RELEASE_FILE} | sed "s|-install.sh||")
-              ANY_ARGS_RELEASE_FILES=($(find releases -name "${RELEASED_LIBRARY}-install-*.sh"))
+              ANY_ARGS_RELEASE_FILES=($(find ${RELEASES_DIR} -name "${RELEASED_LIBRARY}-install-*.sh"))
               if [[ -z "${ARGS_JOINED}" || (-n "${ARGS_JOINED}" && -z "${ANY_ARGS_RELEASE_FILES[*]}") ]]; then
                 RELEASED_LIBRARIES+=(${RELEASED_LIBRARY})
-                RELEASE_FILES+=(releases/${RELEASE_FILE})
+                RELEASE_FILES+=(${RELEASES_DIR}/${RELEASE_FILE})
               fi
             elif [[ "${RELEASE_FILE}" == *-install-${ARGS_JOINED}.sh ]]; then
               RELEASED_LIBRARIES+=($(echo ${RELEASE_FILE} | sed "s|-install-${ARGS_JOINED}.sh||"))
-              RELEASE_FILES+=(releases/${RELEASE_FILE})
+              RELEASE_FILES+=(${RELEASES_DIR}/${RELEASE_FILE})
             fi
           done
           declare -a RELEASE_INSTALL_SCRIPT_ENVS
@@ -170,13 +186,14 @@ jobs:
           for TEST_NOTEBOOK in ${LIBRARY}/*.ipynb; do
             sed -i "s|BACKEND_LIBRARY_IN|${BACKEND_LIBRARY}|g" ${TEST_NOTEBOOK}
             sed -i "s|PROJECT_NAME_IN|${PROJECT_NAME}|g" ${TEST_NOTEBOOK}
+            sed -i "s|RELEASES_DIR_IN|${RELEASES_DIR}|g" ${TEST_NOTEBOOK}
             python3 /usr/bin/preprocess_notebook.py ${LIBRARY} ${TEST_NOTEBOOK}
           done
       - name: Copy notebook files for website upload
         if: (inputs || github.event.inputs).task != 'test'
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
-          rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/tests/
+          rsync -avz --include "*/" --include="*.ipynb" --exclude="*" ${LIBRARY} _build/html/${TESTS_DIR}/
       - name: Test library
         run: |
           LIBRARY=${{ (inputs || github.event.inputs).library }}
@@ -209,22 +226,22 @@ jobs:
           if [[ -n "${ARGS_ARRAY[*]}" && "${STRIP_ARGS_WHEN_PACKAGING}" == "false" ]]; then
             ARGS_JOINED_SPACE=$(IFS=" " ; echo "${ARGS_ARRAY[*]}")
             ARGS_JOINED_HYPHEN=$(IFS="-" ; echo "${ARGS_ARRAY[*]}")
-            RELEASE_FILE=_build/html/releases/${LIBRARY}-install-${ARGS_JOINED_HYPHEN}.sh
+            RELEASE_FILE=_build/html/${RELEASES_DIR}/${LIBRARY}-install-${ARGS_JOINED_HYPHEN}.sh
           else
             ARGS_JOINED_SPACE=""
             ARGS_JOINED_HYPHEN=""
-            RELEASE_FILE=_build/html/releases/${LIBRARY}-install.sh
+            RELEASE_FILE=_build/html/${RELEASES_DIR}/${LIBRARY}-install.sh
           fi
           echo "release_file=${RELEASE_FILE}" >> ${GITHUB_OUTPUT}
           if [[ "${NEEDS_RELEASE_ARCHIVE}" == "yes" ]]; then
             DATETIME=${{ steps.date_time.outputs.date_time }}
             SHA_SHORT=${{ steps.sha_short.outputs.sha_short }}
             if [[ -n "${ARGS_JOINED_SPACE}" ]]; then
-              RELEASE_TITLE="${LIBRARY} ${DATETIME} ${SHA_SHORT} ${ARGS_JOINED_SPACE}"
-              RELEASE_TAG="${LIBRARY}-${DATETIME}-${SHA_SHORT}-${ARGS_JOINED_HYPHEN}"
+              RELEASE_TITLE="${RELEASE_TITLE_PREFIX}${LIBRARY} ${DATETIME} ${SHA_SHORT} ${ARGS_JOINED_SPACE}"
+              RELEASE_TAG="${RELEASE_TAG_PREFIX}${LIBRARY}-${DATETIME}-${SHA_SHORT}-${ARGS_JOINED_HYPHEN}"
             else
-              RELEASE_TITLE="${LIBRARY} ${DATETIME} ${SHA_SHORT}"
-              RELEASE_TAG="${LIBRARY}-${DATETIME}-${SHA_SHORT}"
+              RELEASE_TITLE="${RELEASE_TITLE_PREFIX}${LIBRARY} ${DATETIME} ${SHA_SHORT}"
+              RELEASE_TAG="${RELEASE_TAG_PREFIX}${LIBRARY}-${DATETIME}-${SHA_SHORT}"
             fi
             RELEASE_ARCHIVE="${LIBRARY}-install.tar.gz"
             echo "release_title=${RELEASE_TITLE}" >> ${GITHUB_OUTPUT}
@@ -325,9 +342,9 @@ jobs:
           pushd _build/html
           git config user.name "GitHub Actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add releases/${LIBRARY}-install*.sh
-          git add releases/${LIBRARY}-install*.docker
-          git add tests/${LIBRARY}/*.ipynb
+          git add ${RELEASES_DIR}/${LIBRARY}-install*.sh
+          git add ${RELEASES_DIR}/${LIBRARY}-install*.docker
+          git add ${TESTS_DIR}/${LIBRARY}/*.ipynb
           WEBSITE_BRANCH=$(git branch --show-current)
           ATTEMPT=0
           PUSH_SUCCESS=false
