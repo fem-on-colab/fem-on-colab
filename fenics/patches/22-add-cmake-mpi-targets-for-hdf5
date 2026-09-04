@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fe4757422..e8474ef22 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -228,6 +228,30 @@ if (DOLFIN_ENABLE_MPI)
+     set_package_properties(MPI PROPERTIES TYPE OPTIONAL
+       DESCRIPTION "Message Passing Interface (MPI)"
+       PURPOSE "Enables DOLFIN to run in parallel with MPI")
++
++    if (MPI_C_FOUND AND NOT TARGET MPI::MPI_C)
++      add_library(MPI::MPI_C INTERFACE IMPORTED)
++
++      set_target_properties(MPI::MPI_C PROPERTIES
++        INTERFACE_INCLUDE_DIRECTORIES "${MPI_C_INCLUDE_PATH}"
++        INTERFACE_LINK_LIBRARIES "${MPI_C_LIBRARIES}"
++      )
++
++      if (MPI_C_COMPILE_FLAGS)
++        separate_arguments(_mpi_c_compile_flags
++          UNIX_COMMAND "${MPI_C_COMPILE_FLAGS}")
++        set_property(TARGET MPI::MPI_C PROPERTY
++          INTERFACE_COMPILE_OPTIONS "${_mpi_c_compile_flags}")
++      endif()
++
++      if (MPI_C_LINK_FLAGS)
++        separate_arguments(_mpi_c_link_flags
++          UNIX_COMMAND "${MPI_C_LINK_FLAGS}")
++        set_property(TARGET MPI::MPI_C PROPERTY
++          INTERFACE_LINK_OPTIONS "${_mpi_c_link_flags}")
++      endif()
++    endif()
++
+   else()
+     # Assume user has set MPI compiler wrappers (via CXX, etc or
+     # CMAKE_CXX_COMPILER, etc)
