@@ -34,7 +34,11 @@ else
     git checkout master
 fi
 git submodule update --init
-patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
+if [[ "$RELEASE_TYPE" == "release" ]]; then
+    patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors.6.2.2606
+else
+    patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
+fi
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
 cmake \
