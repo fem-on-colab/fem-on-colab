@@ -114,6 +114,14 @@ cmake \
 make -j $(nproc) install
 cd && rm -rf /tmp/ngsxfem-src
 
+# Move libxfem_core.so into the lib directory in the installation prefix
+if [ -d "$INSTALL_PREFIX/lib/$PYTHON_VERSION/dist-packages" ]; then
+    SITE_TARGET="dist-packages"
+else
+    SITE_TARGET="site-packages"
+fi
+mv $INSTALL_PREFIX/lib/$PYTHON_VERSION/$SITE_TARGET/xfem/libxfem_core.so $INSTALL_PREFIX/lib/
+
 # ngsPETSc
 git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
