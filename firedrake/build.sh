@@ -109,11 +109,11 @@ cd /tmp/firedrake-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
     git checkout 2026.10.0
     patch -p 1 < $REPODIR/firedrake/patches/05-unpin-petsc4py-slepc4py
+    patch -p 1 < $REPODIR/firedrake/patches/09-unpin-islpy
 else
     git checkout main
 fi
 patch -p 1 < $REPODIR/firedrake/patches/04-hardcode-omp-num-threads-in-firedrake
-patch -p 1 < $REPODIR/firedrake/patches/09-unpin-islpy
 PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --check-build-dependencies --no-build-isolation --user .
 cd && rm -rf /tmp/firedrake-src
 
