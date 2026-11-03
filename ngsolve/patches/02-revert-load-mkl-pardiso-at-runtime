@@ -1,8 +1,8 @@
 diff --git a/linalg/la.hpp b/linalg/la.hpp
-index 426b843d9..7b8a4ca67 100644
+index ee5eec45b..2e0d91602 100644
 --- a/linalg/la.hpp
 +++ b/linalg/la.hpp
-@@ -23,7 +23,7 @@ namespace ngla
+@@ -24,7 +24,7 @@ namespace ngla
  #include "sparsematrix_dyn.hpp"
  #include "order.hpp"
  #include "sparsecholesky.hpp"
@@ -12,7 +12,7 @@ index 426b843d9..7b8a4ca67 100644
  #include "blockjacobi.hpp"
  #include "commutingAMG.hpp"
 diff --git a/linalg/pardisoinverse.cpp b/linalg/pardisoinverse.cpp
-index 4c0f50bb4..b7ad057e7 100644
+index ea1186434..598c037e8 100644
 --- a/linalg/pardisoinverse.cpp
 +++ b/linalg/pardisoinverse.cpp
 @@ -48,20 +48,10 @@ extern  integer F77_FUNC(pardisoinit)
@@ -73,7 +73,7 @@ index 4c0f50bb4..b7ad057e7 100644
    int pardiso_msg = 0;
  
  
-@@ -221,7 +182,7 @@ namespace ngla
+@@ -244,7 +205,7 @@ namespace ngla
  
      for (int i = 0; i < 128; i++) pt[i] = 0;
  
@@ -82,7 +82,7 @@ index 4c0f50bb4..b7ad057e7 100644
      //    no init in MKL PARDISO
  #else
  
-@@ -710,9 +671,9 @@ namespace ngla
+@@ -756,9 +717,9 @@ namespace ngla
    {
      //    cout << "call pardiso (clean up) ..." << endl;
      ReleaseFactorization (compressed_height, rowstart, indices);
@@ -94,7 +94,7 @@ index 4c0f50bb4..b7ad057e7 100644
    }
  
  
-@@ -876,3 +837,6 @@ namespace ngla
+@@ -828,3 +789,6 @@ namespace ngla
  
  }
  
@@ -102,7 +102,7 @@ index 4c0f50bb4..b7ad057e7 100644
 +
 +#endif
 diff --git a/linalg/pardisoinverse.hpp b/linalg/pardisoinverse.hpp
-index a084ad53c..5a072bb1a 100644
+index c0553b8f6..3a937d709 100644
 --- a/linalg/pardisoinverse.hpp
 +++ b/linalg/pardisoinverse.hpp
 @@ -20,7 +20,6 @@
@@ -114,10 +114,10 @@ index a084ad53c..5a072bb1a 100644
  
    /*
 diff --git a/linalg/python_linalg.cpp b/linalg/python_linalg.cpp
-index ed10dd7d1..24930e47d 100644
+index 4450394d9..026a8657c 100644
 --- a/linalg/python_linalg.cpp
 +++ b/linalg/python_linalg.cpp
-@@ -2007,8 +2007,9 @@ shift : object
+@@ -2359,8 +2359,9 @@ shift : object
  
    m.def("GetAvailableSolvers", []() {
      py::set solvers;
@@ -129,26 +129,26 @@ index ed10dd7d1..24930e47d 100644
      solvers.add("mumps");
  #endif // USE_MUMPS
 diff --git a/linalg/sparsematrix.cpp b/linalg/sparsematrix.cpp
-index 6c386ce81..e30882a44 100644
+index 77e60cf3b..3565179c5 100644
 --- a/linalg/sparsematrix.cpp
 +++ b/linalg/sparsematrix.cpp
-@@ -2341,8 +2341,10 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM,T
+@@ -2206,8 +2206,10 @@ shared_ptr<BaseMatrix> InverseSparseMatrixTM (shared_ptr<const SparseMatrix<TM>>
    #ifdef USE_MUMPS
-       if(invtype == "mumps") return make_shared<MumpsInverse<TM,TV_ROW,TV_COL>> (*A, subset, clusters);
+       if(invtype == "mumps") return make_shared<MumpsInverse<TM>> (*A, subset, clusters);
    #endif
 -  if(is_pardiso_available && (invtype == "pardiso" || invtype == "pardisospd"))
 +  #ifdef USE_PARDISO
 +  if(invtype == "pardiso" || invtype == "pardisospd")
-       return make_shared<PardisoInverse<TM,TV_ROW,TV_COL>> (A, subset, clusters);
+       return make_shared<PardisoInverse<TM>> (A, subset, clusters);
 +  #endif
-   if(invtype == "sparsecholesky") return make_shared<SparseCholesky<TM,TV_ROW,TV_COL>>(A, subset, clusters);
+   if(invtype == "sparsecholesky") return make_shared<SparseCholesky<TM>>(A, subset, clusters);
    throw Exception ("SparseMatrix::InverseMatrix:  no inverse available for type " + invtype);
  }
 diff --git a/solve/ngsolve.cpp b/solve/ngsolve.cpp
-index c776db973..a26c94181 100644
+index 6ad15931a..edcdc4c57 100644
 --- a/solve/ngsolve.cpp
 +++ b/solve/ngsolve.cpp
-@@ -696,8 +696,9 @@ int NGSolve_Init (Tcl_Interp * interp)
+@@ -689,8 +689,9 @@ int NGSolve_Init (Tcl_Interp * interp)
  #endif
  
  

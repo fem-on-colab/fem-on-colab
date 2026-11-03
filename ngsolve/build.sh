@@ -29,16 +29,12 @@ NGSOLVE_ARCHIVE_PATH="skip" source ngsolve/install.sh
 git clone https://github.com/NGSolve/netgen.git /tmp/netgen-src
 cd /tmp/netgen-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2606
+    git checkout v6.2.2608
 else
     git checkout master
 fi
 git submodule update --init
-if [[ "$RELEASE_TYPE" == "release" ]]; then
-    patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors.6.2.2606
-else
-    patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
-fi
+patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
 cmake \
@@ -64,15 +60,16 @@ cd && rm -rf /tmp/netgen-src
 git clone https://github.com/NGSolve/ngsolve.git /tmp/ngsolve-src
 cd /tmp/ngsolve-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v6.2.2606
+    git checkout v6.2.2608
 else
     git checkout master
 fi
 git submodule update --init
-patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime.6.2.2606
+    patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs.6.2.2608
+    patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime.6.2.2608
 else
+    patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
     patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
 fi
 mkdir -p /tmp/ngsolve-src/build
@@ -100,7 +97,7 @@ PYTHONUSERBASE=$INSTALL_PREFIX python3 -m pip install --user poetry-dynamic-vers
 git clone https://github.com/ngsxfem/ngsxfem.git /tmp/ngsxfem-src
 cd /tmp/ngsxfem-src
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v2.1.2606
+    git checkout v2.1.2608
 else
     git checkout master
 fi
@@ -121,7 +118,7 @@ cd && rm -rf /tmp/ngsxfem-src
 git clone https://github.com/NGSolve/ngsPETSc.git /tmp/ngspetsc-src
 cd /tmp/ngspetsc-src/
 if [[ "$RELEASE_TYPE" == "release" ]]; then
-    git checkout v0.2.0
+    git checkout v0.3.0
 else
     git checkout main
 fi
