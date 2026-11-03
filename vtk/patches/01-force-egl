@@ -1,8 +1,8 @@
 diff --git a/pyvista/__init__.py b/pyvista/__init__.py
-index 3fc045b96..0adeee49f 100644
+index 75f250b0f..057cc8d83 100644
 --- a/pyvista/__init__.py
 +++ b/pyvista/__init__.py
-@@ -181,3 +181,7 @@ def __getattr__(name):
+@@ -202,3 +202,7 @@ def __getattr__(name):
          sys.modules['pyvista.plotting']._set_plot_theme_from_env()
  
      return _cache_attr_and_return(feature)
