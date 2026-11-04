@@ -1,0 +1,23 @@
+diff --git a/libsrc/core/CMakeLists.txt b/libsrc/core/CMakeLists.txt
+index f0b6d913..2674d758 100644
+--- a/libsrc/core/CMakeLists.txt
++++ b/libsrc/core/CMakeLists.txt
+@@ -144,7 +144,17 @@ if(USE_MPI)
+   endif()
+ 
+   if(MPI_C_LIBRARY_VERSION_STRING MATCHES "Open MPI.*")
+-    set(OPENMPI_INCLUDE_DIR ${MPI_C_INCLUDE_PATH})
++    if(NOT OPENMPI_INCLUDE_DIR)
++      if(MPI_C_INCLUDE_PATH)
++        set(OPENMPI_INCLUDE_DIR ${MPI_C_INCLUDE_PATH})
++      elseif(MPI_C_INCLUDE_DIRS)
++        set(OPENMPI_INCLUDE_DIR ${MPI_C_INCLUDE_DIRS})
++      elseif(EXISTS "${CMAKE_INSTALL_PREFIX}/include/mpi.h")
++        set(OPENMPI_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include")
++      else()
++        message(FATAL_ERROR "Open MPI detected with USE_MPI=ON, but its include directory was not found; set OPENMPI_INCLUDE_DIR")
++      endif()
++    endif()
+   endif()
+ 
+   if(MPI_C_LIBRARY_VERSION_STRING MATCHES "MPICH.*")

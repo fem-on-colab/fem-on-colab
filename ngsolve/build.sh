@@ -34,6 +34,9 @@ else
     git checkout master
 fi
 git submodule update --init
+if [[ "$RELEASE_TYPE" != "release" ]]; then
+    patch -p 1 < $REPODIR/ngsolve/patches/03-netgen-force-openmpi-wrapper.patch
+fi
 patch -p 1 < $REPODIR/ngsolve/patches/04-netgen-fix-arm64-compilation-errors
 mkdir -p /tmp/netgen-src/build
 cd /tmp/netgen-src/build
