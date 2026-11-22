@@ -73,7 +73,6 @@ if [[ "$RELEASE_TYPE" == "release" ]]; then
     patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime.6.2.2608
 else
     patch -p 1 < $REPODIR/ngsolve/patches/01-petsc-external-libs
-    patch -p 1 < $REPODIR/ngsolve/patches/02-revert-load-mkl-pardiso-at-runtime
 fi
 mkdir -p /tmp/ngsolve-src/build
 cd /tmp/ngsolve-src/build
